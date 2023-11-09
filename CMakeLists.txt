@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.6.3)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMake;${CMAKE_MODULE_PATH}")
 include(Utilities)
-project(KinesisVideoProducerC VERSION 1.5.1 LANGUAGES C)
+project(KinesisVideoProducerC VERSION 1.5.1 LANGUAGES C CXX)
 
 include(GNUInstallDirs)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-Wno-error=deprecated-declarations -Wno-deprecated-declarations")
 
 # User Flags
 option(ADD_MUCLIBC "Add -muclibc c flag" OFF)
@@ -311,9 +313,6 @@ if(BUILD_COMMON_CURL)
       "${CMAKE_CURRENT_BINARY_DIR}/libcproducer.pc" @ONLY)
 
     set(TYPE_OF_LIB SHARED)
-    if (BUILD_STATIC)
-      set(TYPE_OF_LIB STATIC)
-    endif()
 
     if (WIN32)
       add_library(cproducer STATIC ${PRODUCER_C_SOURCE_FILES})
@@ -337,13 +336,69 @@ if(BUILD_COMMON_CURL)
     add_executable(kvsVideoOnlyOfflineStreamingSample ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsVideoOnlyOfflineStreamingSample.c)
     target_link_libraries(kvsVideoOnlyOfflineStreamingSample cproducer)
 
-    add_executable(kvsAudioVideoStreamingSample ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSample.c)
+    project(kvsAudioVideoStreamingSample
+            LANGUAGES C CXX
+            DESCRIPTION "kvsAudioVideoStreamingSample"
+            VERSION 0.0.1
+    )
+    add_executable(kvsAudioVideoStreamingSample
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSample.c)
     target_link_libraries(kvsAudioVideoStreamingSample cproducer)
+
+    add_executable(kvsAudioVideoStreamingSampleNew
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSampleNew.c)
+    target_link_libraries(kvsAudioVideoStreamingSampleNew cproducer)
+
+#    add_executable(kvsProducerService
+#            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp)
+#    target_link_libraries(kvsProducerService cproducer)
 
     add_executable(kvsAudioOnlyStreamingSample ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioOnlyStreamingSample.c)
     target_link_libraries(kvsAudioOnlyStreamingSample cproducer)
+
+#    project(kvsProducerService
+#            LANGUAGES C CXX
+#            DESCRIPTION "kvsProducerService"
+#            VERSION 0.0.1
+#    )
+
+    find_package(PkgConfig REQUIRED)
+    pkg_check_modules(GIO REQUIRED gio-2.0)
+    pkg_check_modules(GLIB REQUIRED glib-2.0)
+    pkg_check_modules(GIO_UNIX REQUIRED IMPORTED_TARGET gio-unix-2.0)
+    pkg_check_modules(JSONCPP REQUIRED jsoncpp)
+
+    add_executable(kvsProducerService
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/JsonUtility.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/MethodQueue.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/ServiceBase.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsProducer.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/StreamSource.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsService.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceStub.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceProxy.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/ComponentProvider.cpp)
+
+    target_include_directories(kvsProducerService
+            PUBLIC
+            ${GIO_INCLUDE_DIRS}
+            ${GLIB_INCLUDE_DIRS}
+            ${GIO_UNIX_INCLUDE_DIRS}
+            ${JSONCPP_INCLUDE_DIRS})
+
+    target_link_libraries(kvsProducerService
+            PUBLIC ${GIO_LIBRARIES}
+            ${GLIB_LIBRARIES}
+            ${GIO_UNIX_LIBRARIES}
+            ${JSONCPP_LIBRARIES}
+            cproducer)
 
     if (BUILD_TEST)
         add_subdirectory(tst)
     endif()
 endif()
+
+#
+#
+#add_subdirectory(KVSService)
