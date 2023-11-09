@@ -44,20 +44,79 @@ typedef struct {
     UINT64 startTime;
 } SampleCustomData, *PSampleCustomData;
 
+PSampleCustomData gStreamSource;
+
+int StreamSource_Init() {
+    CHAR audioCodec[AUDIO_CODEC_NAME_MAX_LENGTH] = {0};
+    CHAR videoCodec[VIDEO_CODEC_NAME_MAX_LENGTH] = {0};
+
+    STRNCPY(audioCodec, AUDIO_CODEC_NAME_AAC, STRLEN(AUDIO_CODEC_NAME_AAC));   // aac audio by default
+    STRNCPY(videoCodec, VIDEO_CODEC_NAME_H264, STRLEN(VIDEO_CODEC_NAME_H264)); // h264 video by default
+    CHAR filePath[MAX_PATH_LEN + 1];
+    UINT64 fileSize = 0;
+
+    // Load Audio
+    int i = 0;
+    for (i = 0; i < NUMBER_OF_AUDIO_FRAME_FILES; ++i) {
+        SNPRINTF(filePath, MAX_PATH_LEN, "%s/%sSampleFrames/sample-%03d.%s", gStreamSource->sampleDir, audioCodec, i + 1, audioCodec);
+        readFile(filePath, TRUE, NULL, &fileSize);
+        gStreamSource->audioFrames[i].buffer = (PBYTE) MEMALLOC(fileSize);
+        gStreamSource->audioFrames[i].size = fileSize;
+        readFile(filePath, TRUE, gStreamSource->audioFrames[i].buffer, &fileSize);
+    }
+
+    // Load Video
+    for (i = 0; i < NUMBER_OF_VIDEO_FRAME_FILES; ++i) {
+        SNPRINTF(filePath, MAX_PATH_LEN, "%s/%sSampleFrames/frame-%03d.%s", gStreamSource->sampleDir, videoCodec, i + 1, videoCodec);
+        readFile(filePath, TRUE, NULL, &fileSize);
+        gStreamSource->videoFrames[i].buffer = (PBYTE) MEMALLOC(fileSize);
+        gStreamSource->videoFrames[i].size = fileSize;
+        readFile(filePath, TRUE, gStreamSource->videoFrames[i].buffer, &fileSize);
+    }
+    return 0;
+}
+
+int StreamSource_SetDataSource(PCHAR _path) {
+    STRCPY(gStreamSource->sampleDir, (PCHAR) _path);
+    return 0;
+}
+
+int StreamSource_Deinit() {
+    return 0;
+}
+
+int StreamSource_GetCurrentIndex() {
+    return -1;
+}
+
+// return size;
+int StreamSource_GetVideoFrame(int index, PBYTE* pdata, UINT32 *psize) {
+    *pdata = gStreamSource->videoFrames[index].buffer;
+    *psize = gStreamSource->videoFrames[index].size;
+    return 0;
+}
+
+int StreamSource_GetAudioFrame(int index, PBYTE* pdata, UINT32 *psize) {
+    *pdata = gStreamSource->audioFrames[index].buffer;
+    *psize = gStreamSource->audioFrames[index].size;
+    return 0;
+}
+
 PVOID putVideoFrameRoutine(PVOID args)
 {
     STATUS retStatus = STATUS_SUCCESS;
-    PSampleCustomData data = (PSampleCustomData) args;
+    //PSampleCustomData data = (PSampleCustomData) args;
     Frame frame;
     UINT32 fileIndex = 0;
     STATUS status;
     UINT64 runningTime;
     DOUBLE startUpLatency;
 
-    CHK(data != NULL, STATUS_NULL_ARG);
+    CHK(gStreamSource != NULL, STATUS_NULL_ARG);
 
-    frame.frameData = data->videoFrames[fileIndex].buffer;
-    frame.size = data->videoFrames[fileIndex].size;
+    StreamSource_GetVideoFrame(fileIndex, &frame.frameData, &frame.size);
+    //frame.frameData = gStreamSource->videoFrames[fileIndex].buffer;
+    //frame.size = gStreamSource->videoFrames[fileIndex].size;
     frame.version = FRAME_CURRENT_VERSION;
     frame.trackId = DEFAULT_VIDEO_TRACK_ID;
     frame.duration = 0;
@@ -68,20 +127,24 @@ PVOID putVideoFrameRoutine(PVOID args)
     // video track is used to mark new fragment. A new fragment is generated for every frame with FRAME_FLAG_KEY_FRAME
     frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
 
-    while (GETTIME() < data->streamStopTime) {
-        status = putKinesisVideoFrame(data->streamHandle, &frame);
-        if (data->firstFrame) {
-            startUpLatency = (DOUBLE) (GETTIME() - data->startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
+    while (GETTIME() < gStreamSource->streamStopTime) {
+        //status = putKinesisVideoFrame(data->streamHandle, &frame);
+        //putKinesisVideoFrame(gStreamSource->streamHandle, &frame);
+        status = putKinesisVideoFrame(gStreamSource->streamHandle, &frame);
+        if (gStreamSource->firstFrame) {
+            startUpLatency = (DOUBLE) (GETTIME() - gStreamSource->startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
             DLOGD("Start up latency: %lf ms", startUpLatency);
-            data->firstFrame = FALSE;
+            gStreamSource->firstFrame = FALSE;
         } else if (frame.flags == FRAME_FLAG_KEY_FRAME && gEventsEnabled) {
             // generate an image and notification event at the start of the video stream.
-            putKinesisVideoEventMetadata(data->streamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
+            //putKinesisVideoEventMetadata(data->streamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
+            putKinesisVideoEventMetadata(gStreamSource->streamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
             // only push this once in this sample. A customer may use this whenever it is necessary though
             gEventsEnabled = 0;
         }
 
-        ATOMIC_STORE_BOOL(&data->firstVideoFramePut, TRUE);
+        ATOMIC_STORE_BOOL(&gStreamSource->firstVideoFramePut, TRUE);
+        //ATOMIC_STORE_BOOL(&data->firstVideoFramePut, TRUE);
         if (STATUS_FAILED(status)) {
             printf("putKinesisVideoFrame failed with 0x%08x\n", status);
             status = STATUS_SUCCESS;
@@ -93,11 +156,12 @@ PVOID putVideoFrameRoutine(PVOID args)
 
         fileIndex = (fileIndex + 1) % NUMBER_OF_VIDEO_FRAME_FILES;
         frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
-        frame.frameData = data->videoFrames[fileIndex].buffer;
-        frame.size = data->videoFrames[fileIndex].size;
+        StreamSource_GetVideoFrame(fileIndex, &frame.frameData, &frame.size);
+        // frame.frameData = data->videoFrames[fileIndex].buffer;
+        // frame.size = data->videoFrames[fileIndex].size;
 
         // synchronize putKinesisVideoFrame to running time
-        runningTime = GETTIME() - data->streamStartTime;
+        runningTime = GETTIME() - gStreamSource->streamStartTime;
         if (runningTime < frame.presentationTs) {
             // reduce sleep time a little for smoother video
             THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
@@ -116,16 +180,17 @@ CleanUp:
 PVOID putAudioFrameRoutine(PVOID args)
 {
     STATUS retStatus = STATUS_SUCCESS;
-    PSampleCustomData data = (PSampleCustomData) args;
+    //PSampleCustomData data = (PSampleCustomData) args;
     Frame frame;
     UINT32 fileIndex = 0;
     STATUS status;
     UINT64 runningTime;
 
-    CHK(data != NULL, STATUS_NULL_ARG);
+    CHK(gStreamSource != NULL, STATUS_NULL_ARG);
 
-    frame.frameData = data->audioFrames[fileIndex].buffer;
-    frame.size = data->audioFrames[fileIndex].size;
+    StreamSource_GetAudioFrame(fileIndex, &frame.frameData, &frame.size);
+    //frame.frameData = data->audioFrames[fileIndex].buffer;
+    //frame.size = data->audioFrames[fileIndex].size;
     frame.version = FRAME_CURRENT_VERSION;
     frame.trackId = DEFAULT_AUDIO_TRACK_ID;
     frame.duration = 0;
@@ -134,10 +199,11 @@ PVOID putAudioFrameRoutine(PVOID args)
     frame.index = 0;
     frame.flags = FRAME_FLAG_NONE; // audio track is not used to cut fragment
 
-    while (GETTIME() < data->streamStopTime) {
+    while (GETTIME() < gStreamSource->streamStopTime) {
         // no audio can be put until first video frame is put
-        if (ATOMIC_LOAD_BOOL(&data->firstVideoFramePut)) {
-            status = putKinesisVideoFrame(data->streamHandle, &frame);
+        //if (ATOMIC_LOAD_BOOL(&data->firstVideoFramePut)) {
+        if (ATOMIC_LOAD_BOOL(&gStreamSource->firstVideoFramePut)) {
+            status = putKinesisVideoFrame(gStreamSource->streamHandle, &frame);
             if (STATUS_FAILED(status)) {
                 printf("putKinesisVideoFrame for audio failed with 0x%08x\n", status);
                 status = STATUS_SUCCESS;
@@ -148,11 +214,12 @@ PVOID putAudioFrameRoutine(PVOID args)
             frame.index++;
 
             fileIndex = (fileIndex + 1) % NUMBER_OF_AUDIO_FRAME_FILES;
-            frame.frameData = data->audioFrames[fileIndex].buffer;
-            frame.size = data->audioFrames[fileIndex].size;
+            //frame.frameData = data->audioFrames[fileIndex].buffer;
+            //frame.size = data->audioFrames[fileIndex].size;
+            StreamSource_GetAudioFrame(fileIndex, &frame.frameData, &frame.size);
 
             // synchronize putKinesisVideoFrame to running time
-            runningTime = GETTIME() - data->streamStartTime;
+            runningTime = GETTIME() - gStreamSource->streamStartTime;
             if (runningTime < frame.presentationTs) {
                 THREAD_SLEEP(frame.presentationTs - runningTime);
             }
@@ -177,93 +244,102 @@ INT32 main(INT32 argc, CHAR* argv[])
     CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
     STREAM_HANDLE streamHandle = INVALID_STREAM_HANDLE_VALUE;
     STATUS retStatus = STATUS_SUCCESS;
-    PCHAR accessKey = NULL, secretKey = NULL, sessionToken = NULL, streamName = NULL, region = NULL, cacertPath = NULL;
-    UINT64 streamStopTime, streamingDuration = DEFAULT_STREAM_DURATION, fileSize = 0;
+    //PCHAR accessKey = NULL, secretKey = NULL, sessionToken = NULL;
+    PCHAR streamName = NULL;
+    //PCHAR region = NULL, cacertPath = NULL;
+    UINT64 streamStopTime, streamingDuration = DEFAULT_STREAM_DURATION;
+    //UINT64 fileSize = 0;
     TID audioSendTid, videoSendTid;
     SampleCustomData data;
     UINT32 i;
-    CHAR filePath[MAX_PATH_LEN + 1];
+    //CHAR filePath[MAX_PATH_LEN + 1];
     PTrackInfo pAudioTrack = NULL;
-    CHAR audioCodec[AUDIO_CODEC_NAME_MAX_LENGTH] = {0};
-    CHAR videoCodec[VIDEO_CODEC_NAME_MAX_LENGTH] = {0};
+    //CHAR audioCodec[AUDIO_CODEC_NAME_MAX_LENGTH] = {0};
+    //CHAR videoCodec[VIDEO_CODEC_NAME_MAX_LENGTH] = {0};
     BYTE aacAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
     BYTE alawAudioCpd[KVS_PCM_CPD_SIZE_BYTE];
     VIDEO_CODEC_ID videoCodecID = VIDEO_CODEC_ID_H264;
 
     MEMSET(&data, 0x00, SIZEOF(SampleCustomData));
+    gStreamSource = &data;
 
-    STRNCPY(audioCodec, AUDIO_CODEC_NAME_AAC, STRLEN(AUDIO_CODEC_NAME_AAC));   // aac audio by default
-    STRNCPY(videoCodec, VIDEO_CODEC_NAME_H264, STRLEN(VIDEO_CODEC_NAME_H264)); // h264 video by default
+    //STRNCPY(audioCodec, AUDIO_CODEC_NAME_AAC, STRLEN(AUDIO_CODEC_NAME_AAC));   // aac audio by default
+    //STRNCPY(videoCodec, VIDEO_CODEC_NAME_H264, STRLEN(VIDEO_CODEC_NAME_H264)); // h264 video by default
 
-    if (argc == 7) {
-        if (!STRCMP(argv[6], "1")) {
-            gEventsEnabled = 1;
-        }
-    }
-    if (argc >= 6) {
-        if (!STRCMP(argv[4], AUDIO_CODEC_NAME_ALAW)) {
-            STRNCPY(audioCodec, AUDIO_CODEC_NAME_ALAW, STRLEN(AUDIO_CODEC_NAME_ALAW));
-        }
-        if (!STRCMP(argv[5], VIDEO_CODEC_NAME_H265)) {
-            STRNCPY(videoCodec, VIDEO_CODEC_NAME_H265, STRLEN(VIDEO_CODEC_NAME_H265));
-            videoCodecID = VIDEO_CODEC_ID_H265;
-        }
-    }
-    if (argc < 2) {
-        printf("Usage: AWS_ACCESS_KEY_ID=SAMPLEKEY AWS_SECRET_ACCESS_KEY=SAMPLESECRET %s <stream_name> <duration_in_seconds> <frame_files_path> "
-               "[audio_codec] [video_codec] [events_enabled]\n",
-               argv[0]);
-        CHK(FALSE, STATUS_INVALID_ARG);
-    }
+//    if (argc == 7) {
+//        if (!STRCMP(argv[6], "1")) {
+//            gEventsEnabled = 1;
+//        }
+//    }
+//    if (argc >= 6) {
+//        if (!STRCMP(argv[4], AUDIO_CODEC_NAME_ALAW)) {
+//            STRNCPY(audioCodec, AUDIO_CODEC_NAME_ALAW, STRLEN(AUDIO_CODEC_NAME_ALAW));
+//        }
+//        if (!STRCMP(argv[5], VIDEO_CODEC_NAME_H265)) {
+//            STRNCPY(videoCodec, VIDEO_CODEC_NAME_H265, STRLEN(VIDEO_CODEC_NAME_H265));
+//            videoCodecID = VIDEO_CODEC_ID_H265;
+//        }
+//    }
+//    if (argc < 2) {
+//        printf("Usage: AWS_ACCESS_KEY_ID=SAMPLEKEY AWS_SECRET_ACCESS_KEY=SAMPLESECRET %s <stream_name> <duration_in_seconds> <frame_files_path> "
+//               "[audio_codec] [video_codec] [events_enabled]\n",
+//               argv[0]);
+//        CHK(FALSE, STATUS_INVALID_ARG);
+//    }
+//
+//    if ((accessKey = getenv(ACCESS_KEY_ENV_VAR)) == NULL || (secretKey = getenv(SECRET_KEY_ENV_VAR)) == NULL) {
+//        printf("Error missing credentials\n");
+//        CHK(FALSE, STATUS_INVALID_ARG);
+//    }
 
-    if ((accessKey = getenv(ACCESS_KEY_ENV_VAR)) == NULL || (secretKey = getenv(SECRET_KEY_ENV_VAR)) == NULL) {
-        printf("Error missing credentials\n");
-        CHK(FALSE, STATUS_INVALID_ARG);
-    }
 
-    MEMSET(data.sampleDir, 0x00, MAX_PATH_LEN + 1);
-    if (argc < 4) {
-        STRCPY(data.sampleDir, (PCHAR) "../samples");
-    } else {
-        STRNCPY(data.sampleDir, argv[3], MAX_PATH_LEN);
-        if (data.sampleDir[STRLEN(data.sampleDir) - 1] == '/') {
-            data.sampleDir[STRLEN(data.sampleDir) - 1] = '\0';
-        }
-    }
+    //MEMSET(gStreamSource->sampleDir, 0x00, MAX_PATH_LEN + 1);
+    StreamSource_SetDataSource((PCHAR) "../samples");
+//    if (argc < 4) {
+//        STRCPY(data.sampleDir, (PCHAR) "../samples");
+//    } else {
+//        STRNCPY(data.sampleDir, argv[3], MAX_PATH_LEN);
+//        if (data.sampleDir[STRLEN(data.sampleDir) - 1] == '/') {
+//            data.sampleDir[STRLEN(data.sampleDir) - 1] = '\0';
+//        }
+//    }
+    printf("StreamSource Initing.\n");
+    StreamSource_Init();
+    printf("StreamSource Init Done\n");
+//    printf("Loading audio frames...\n");
+//    for (i = 0; i < NUMBER_OF_AUDIO_FRAME_FILES; ++i) {
+//        SNPRINTF(filePath, MAX_PATH_LEN, "%s/%sSampleFrames/sample-%03d.%s", data.sampleDir, audioCodec, i + 1, audioCodec);
+//        CHK_STATUS(readFile(filePath, TRUE, NULL, &fileSize));
+//        data.audioFrames[i].buffer = (PBYTE) MEMALLOC(fileSize);
+//        data.audioFrames[i].size = fileSize;
+//        CHK_STATUS(readFile(filePath, TRUE, data.audioFrames[i].buffer, &fileSize));
+//    }
+//    printf("Done loading audio frames.\n");
 
-    printf("Loading audio frames...\n");
-    for (i = 0; i < NUMBER_OF_AUDIO_FRAME_FILES; ++i) {
-        SNPRINTF(filePath, MAX_PATH_LEN, "%s/%sSampleFrames/sample-%03d.%s", data.sampleDir, audioCodec, i + 1, audioCodec);
-        CHK_STATUS(readFile(filePath, TRUE, NULL, &fileSize));
-        data.audioFrames[i].buffer = (PBYTE) MEMALLOC(fileSize);
-        data.audioFrames[i].size = fileSize;
-        CHK_STATUS(readFile(filePath, TRUE, data.audioFrames[i].buffer, &fileSize));
-    }
-    printf("Done loading audio frames.\n");
+//    printf("Loading video frames...\n");
+//    for (i = 0; i < NUMBER_OF_VIDEO_FRAME_FILES; ++i) {
+//        SNPRINTF(filePath, MAX_PATH_LEN, "%s/%sSampleFrames/frame-%03d.%s", data.sampleDir, videoCodec, i + 1, videoCodec);
+//        CHK_STATUS(readFile(filePath, TRUE, NULL, &fileSize));
+//        data.videoFrames[i].buffer = (PBYTE) MEMALLOC(fileSize);
+//        data.videoFrames[i].size = fileSize;
+//        CHK_STATUS(readFile(filePath, TRUE, data.videoFrames[i].buffer, &fileSize));
+//    }
+//    printf("Done loading video frames.\n");
 
-    printf("Loading video frames...\n");
-    for (i = 0; i < NUMBER_OF_VIDEO_FRAME_FILES; ++i) {
-        SNPRINTF(filePath, MAX_PATH_LEN, "%s/%sSampleFrames/frame-%03d.%s", data.sampleDir, videoCodec, i + 1, videoCodec);
-        CHK_STATUS(readFile(filePath, TRUE, NULL, &fileSize));
-        data.videoFrames[i].buffer = (PBYTE) MEMALLOC(fileSize);
-        data.videoFrames[i].size = fileSize;
-        CHK_STATUS(readFile(filePath, TRUE, data.videoFrames[i].buffer, &fileSize));
-    }
-    printf("Done loading video frames.\n");
+    //cacertPath = getenv(CACERT_PATH_ENV_VAR);
+    //sessionToken = getenv(SESSION_TOKEN_ENV_VAR);
+    //streamName = argv[1];
+    streamName = "SH20-eventStream-db-B813329BB08C";
+//    if ((region = getenv(DEFAULT_REGION_ENV_VAR)) == NULL) {
+//        region = (PCHAR) DEFAULT_AWS_REGION;
+//    }
 
-    cacertPath = getenv(CACERT_PATH_ENV_VAR);
-    sessionToken = getenv(SESSION_TOKEN_ENV_VAR);
-    streamName = argv[1];
-    if ((region = getenv(DEFAULT_REGION_ENV_VAR)) == NULL) {
-        region = (PCHAR) DEFAULT_AWS_REGION;
-    }
-
-    if (argc >= 3) {
-        // Get the duration and convert to an integer
-        CHK_STATUS(STRTOUI64(argv[2], NULL, 10, &streamingDuration));
-        printf("streaming for %" PRIu64 " seconds\n", streamingDuration);
-        streamingDuration *= HUNDREDS_OF_NANOS_IN_A_SECOND;
-    }
+//    if (argc >= 3) {
+//        // Get the duration and convert to an integer
+//        CHK_STATUS(STRTOUI64(argv[2], NULL, 10, &streamingDuration));
+//        printf("streaming for %" PRIu64 " seconds\n", streamingDuration);
+//        streamingDuration *= HUNDREDS_OF_NANOS_IN_A_SECOND;
+//    }
 
     streamStopTime = GETTIME() + streamingDuration;
 
@@ -273,20 +349,21 @@ INT32 main(INT32 argc, CHAR* argv[])
     pDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
 
     // generate audio cpd
-    if (!STRCMP(audioCodec, AUDIO_CODEC_NAME_ALAW)) {
-        CHK_STATUS(createRealtimeAudioVideoStreamInfoProviderWithCodecs(streamName, DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, videoCodecID,
-                                                                        AUDIO_CODEC_ID_PCM_ALAW, &pStreamInfo));
-
-        // adjust members of pStreamInfo here if needed
-
-        // set up audio cpd.
-        pAudioTrack = pStreamInfo->streamCaps.trackInfoList[0].trackId == DEFAULT_AUDIO_TRACK_ID ? &pStreamInfo->streamCaps.trackInfoList[0]
-                                                                                                 : &pStreamInfo->streamCaps.trackInfoList[1];
-        pAudioTrack->codecPrivateData = alawAudioCpd;
-        pAudioTrack->codecPrivateDataSize = KVS_PCM_CPD_SIZE_BYTE;
-        CHK_STATUS(mkvgenGeneratePcmCpd(KVS_PCM_FORMAT_CODE_ALAW, ALAW_AUDIO_TRACK_SAMPLING_RATE, ALAW_AUDIO_TRACK_CHANNEL_CONFIG,
-                                        pAudioTrack->codecPrivateData, pAudioTrack->codecPrivateDataSize));
-    } else {
+//    if (!STRCMP(audioCodec, AUDIO_CODEC_NAME_ALAW)) {
+//        CHK_STATUS(createRealtimeAudioVideoStreamInfoProviderWithCodecs(streamName, DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, videoCodecID,
+//                                                                        AUDIO_CODEC_ID_PCM_ALAW, &pStreamInfo));
+//
+//        // adjust members of pStreamInfo here if needed
+//
+//        // set up audio cpd.
+//        pAudioTrack = pStreamInfo->streamCaps.trackInfoList[0].trackId == DEFAULT_AUDIO_TRACK_ID ? &pStreamInfo->streamCaps.trackInfoList[0]
+//                                                                                                 : &pStreamInfo->streamCaps.trackInfoList[1];
+//        pAudioTrack->codecPrivateData = alawAudioCpd;
+//        pAudioTrack->codecPrivateDataSize = KVS_PCM_CPD_SIZE_BYTE;
+//        CHK_STATUS(mkvgenGeneratePcmCpd(KVS_PCM_FORMAT_CODE_ALAW, ALAW_AUDIO_TRACK_SAMPLING_RATE, ALAW_AUDIO_TRACK_CHANNEL_CONFIG,
+//                                        pAudioTrack->codecPrivateData, pAudioTrack->codecPrivateDataSize));
+//    } else
+    {
         CHK_STATUS(createRealtimeAudioVideoStreamInfoProviderWithCodecs(streamName, DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, videoCodecID,
                                                                         AUDIO_CODEC_ID_AAC, &pStreamInfo));
 
@@ -307,10 +384,28 @@ INT32 main(INT32 argc, CHAR* argv[])
     // use relative time mode. Buffer timestamps start from 0
     pStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
 
-    data.startTime = GETTIME();
-    data.firstFrame = TRUE;
-    CHK_STATUS(createDefaultCallbacksProviderWithAwsCredentials(accessKey, secretKey, sessionToken, MAX_UINT64, region, cacertPath, NULL, NULL,
-                                                                &pClientCallbacks));
+    gStreamSource->startTime = GETTIME();
+    gStreamSource->firstFrame = TRUE;
+    PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
+    PCHAR pIotCoreCert = "/tmp/cert";
+    PCHAR pIotCorePrivateKey = "/tmp/privkey";
+    PCHAR pCaCert = "/tmp/rootca.pem";
+    PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
+    PCHAR pThingName = "db-B813329BB08C";
+    PCHAR pRegion = "ca-central-1";
+    CHK_STATUS(createDefaultCallbacksProviderWithIotCertificate(
+        pIotCoreCredentialEndPoint,
+        pIotCoreCert,
+        pIotCorePrivateKey,
+        pCaCert,
+        pIotCoreRoleAlias,
+        pThingName,
+        pRegion,
+        NULL,
+        NULL,
+        &pClientCallbacks));
+    //CHK_STATUS(createDefaultCallbacksProviderWithAwsCredentials(accessKey, secretKey, sessionToken, MAX_UINT64, region, cacertPath, NULL, NULL,
+//                                                            &pClientCallbacks));
 
     if (NULL != getenv(ENABLE_FILE_LOGGING)) {
         if ((retStatus = addFileLoggerPlatformCallbacksProvider(pClientCallbacks, FILE_LOGGING_BUFFER_SIZE, MAX_NUMBER_OF_LOG_FILES,
@@ -325,13 +420,16 @@ INT32 main(INT32 argc, CHAR* argv[])
     CHK_STATUS(createKinesisVideoClient(pDeviceInfo, pClientCallbacks, &clientHandle));
     CHK_STATUS(createKinesisVideoStreamSync(clientHandle, pStreamInfo, &streamHandle));
 
-    data.streamStopTime = streamStopTime;
-    data.streamHandle = streamHandle;
-    data.streamStartTime = GETTIME();
-    ATOMIC_STORE_BOOL(&data.firstVideoFramePut, FALSE);
+//    data.streamStopTime = streamStopTime;
+//    data.streamHandle = streamHandle;
+//    data.streamStartTime = GETTIME();
+    gStreamSource->streamStopTime = streamStopTime;
+    gStreamSource->streamHandle = streamHandle;
+    gStreamSource->streamStartTime = GETTIME();
+    ATOMIC_STORE_BOOL(&gStreamSource->firstVideoFramePut, FALSE);
 
-    THREAD_CREATE(&videoSendTid, putVideoFrameRoutine, (PVOID) &data);
-    THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, (PVOID) &data);
+    THREAD_CREATE(&videoSendTid, putVideoFrameRoutine, (PVOID) &gStreamSource);
+    THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, (PVOID) &gStreamSource);
 
     THREAD_JOIN(videoSendTid, NULL);
     THREAD_JOIN(audioSendTid, NULL);
@@ -347,11 +445,11 @@ CleanUp:
     }
 
     for (i = 0; i < NUMBER_OF_AUDIO_FRAME_FILES; ++i) {
-        SAFE_MEMFREE(data.audioFrames[i].buffer);
+        SAFE_MEMFREE(gStreamSource->audioFrames[i].buffer);
     }
 
     for (i = 0; i < NUMBER_OF_VIDEO_FRAME_FILES; ++i) {
-        SAFE_MEMFREE(data.videoFrames[i].buffer);
+        SAFE_MEMFREE(gStreamSource->videoFrames[i].buffer);
     }
     freeDeviceInfo(&pDeviceInfo);
     freeStreamInfoProvider(&pStreamInfo);

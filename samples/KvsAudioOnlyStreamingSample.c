@@ -110,21 +110,21 @@ INT32 main(INT32 argc, CHAR* argv[])
 
     STRNCPY(audioCodec, AUDIO_CODEC_NAME_AAC, STRLEN(AUDIO_CODEC_NAME_AAC)); // aac audio by default
 
-    if (argc >= 5) {
-        if (!STRCMP(argv[2], AUDIO_CODEC_NAME_ALAW)) {
-            STRNCPY(audioCodec, AUDIO_CODEC_NAME_ALAW, STRLEN(AUDIO_CODEC_NAME_ALAW));
-        }
-    }
-    if (argc < 2) {
-        printf("Usage: AWS_ACCESS_KEY_ID=SAMPLEKEY AWS_SECRET_ACCESS_KEY=SAMPLESECRET %s <stream_name> <duration_in_seconds> <frame_files_path>\n",
-               argv[0]);
-        CHK(FALSE, STATUS_INVALID_ARG);
-    }
-
-    if ((accessKey = getenv(ACCESS_KEY_ENV_VAR)) == NULL || (secretKey = getenv(SECRET_KEY_ENV_VAR)) == NULL) {
-        printf("Error missing credentials\n");
-        CHK(FALSE, STATUS_INVALID_ARG);
-    }
+//    if (argc >= 5) {
+//        if (!STRCMP(argv[2], AUDIO_CODEC_NAME_ALAW)) {
+//            STRNCPY(audioCodec, AUDIO_CODEC_NAME_ALAW, STRLEN(AUDIO_CODEC_NAME_ALAW));
+//        }
+//    }
+//    if (argc < 2) {
+//        printf("Usage: AWS_ACCESS_KEY_ID=SAMPLEKEY AWS_SECRET_ACCESS_KEY=SAMPLESECRET %s <stream_name> <duration_in_seconds> <frame_files_path>\n",
+//               argv[0]);
+//        CHK(FALSE, STATUS_INVALID_ARG);
+//    }
+//
+//    if ((accessKey = getenv(ACCESS_KEY_ENV_VAR)) == NULL || (secretKey = getenv(SECRET_KEY_ENV_VAR)) == NULL) {
+//        printf("Error missing credentials\n");
+//        CHK(FALSE, STATUS_INVALID_ARG);
+//    }
 
     MEMSET(data.sampleDir, 0x00, MAX_PATH_LEN + 1);
     if (argc < 4) {
@@ -146,12 +146,12 @@ INT32 main(INT32 argc, CHAR* argv[])
     }
     printf("Done loading audio frames.\n");
 
-    cacertPath = getenv(CACERT_PATH_ENV_VAR);
-    sessionToken = getenv(SESSION_TOKEN_ENV_VAR);
-    streamName = argv[1];
-    if ((region = getenv(DEFAULT_REGION_ENV_VAR)) == NULL) {
-        region = (PCHAR) DEFAULT_AWS_REGION;
-    }
+    //cacertPath = getenv(CACERT_PATH_ENV_VAR);
+    //sessionToken = getenv(SESSION_TOKEN_ENV_VAR);
+    streamName = "SH20-eventStream-db-B813329BB08C";
+    //if ((region = getenv(DEFAULT_REGION_ENV_VAR)) == NULL) {
+    //    region = (PCHAR) DEFAULT_AWS_REGION;
+    //}
 
     if (argc >= 3) {
         // Get the duration and convert to an integer
@@ -202,8 +202,26 @@ INT32 main(INT32 argc, CHAR* argv[])
 
     data.startTime = GETTIME();
     data.firstFrame = TRUE;
-    CHK_STATUS(createDefaultCallbacksProviderWithAwsCredentials(accessKey, secretKey, sessionToken, MAX_UINT64, region, cacertPath, NULL, NULL,
-                                                                &pClientCallbacks));
+    PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
+    PCHAR pIotCoreCert = "/tmp/cert";
+    PCHAR pIotCorePrivateKey = "/tmp/privkey";
+    PCHAR pCaCert = "/tmp/rootca.pem";
+    PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
+    PCHAR pThingName = "db-B813329BB08C";
+    PCHAR pRegion = "ca-central-1";
+    CHK_STATUS(createDefaultCallbacksProviderWithIotCertificate(
+                pIotCoreCredentialEndPoint,
+                pIotCoreCert,
+                pIotCorePrivateKey,
+                pCaCert,
+                pIotCoreRoleAlias,
+                pThingName,
+                pRegion,
+                NULL,
+                NULL,
+                &pClientCallbacks));
+    //CHK_STATUS(createDefaultCallbacksProviderWithAwsCredentials(accessKey, secretKey, sessionToken, MAX_UINT64, region, cacertPath, NULL, NULL,
+    //                                                            &pClientCallbacks));
 
     if (NULL != getenv(ENABLE_FILE_LOGGING)) {
         if ((retStatus = addFileLoggerPlatformCallbacksProvider(pClientCallbacks, FILE_LOGGING_BUFFER_SIZE, MAX_NUMBER_OF_LOG_FILES,

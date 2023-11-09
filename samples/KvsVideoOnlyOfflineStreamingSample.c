@@ -66,17 +66,17 @@ INT32 main(INT32 argc, CHAR* argv[])
     STRNCPY(videoCodec, VIDEO_CODEC_NAME_H264, STRLEN(VIDEO_CODEC_NAME_H264)); // h264 video by default
     VIDEO_CODEC_ID videoCodecID = VIDEO_CODEC_ID_H264;
 
-    if (argc < 2) {
-        DLOGE("Usage: AWS_ACCESS_KEY_ID=SAMPLEKEY AWS_SECRET_ACCESS_KEY=SAMPLESECRET %s <stream_name> <codec> <duration_in_seconds> "
-              "<frame_files_path>\n",
-              argv[0]);
-        CHK(FALSE, STATUS_INVALID_ARG);
-    }
-
-    if ((accessKey = getenv(ACCESS_KEY_ENV_VAR)) == NULL || (secretKey = getenv(SECRET_KEY_ENV_VAR)) == NULL) {
-        DLOGE("Error missing credentials");
-        CHK(FALSE, STATUS_INVALID_ARG);
-    }
+//    if (argc < 2) {
+//        DLOGE("Usage: AWS_ACCESS_KEY_ID=SAMPLEKEY AWS_SECRET_ACCESS_KEY=SAMPLESECRET %s <stream_name> <codec> <duration_in_seconds> "
+//              "<frame_files_path>\n",
+//              argv[0]);
+//        CHK(FALSE, STATUS_INVALID_ARG);
+//    }
+//
+//    if ((accessKey = getenv(ACCESS_KEY_ENV_VAR)) == NULL || (secretKey = getenv(SECRET_KEY_ENV_VAR)) == NULL) {
+//        DLOGE("Error missing credentials");
+//        CHK(FALSE, STATUS_INVALID_ARG);
+//    }
 
     MEMSET(frameFilePath, 0x00, MAX_PATH_LEN + 1);
     if (argc < 5) {
@@ -85,25 +85,25 @@ INT32 main(INT32 argc, CHAR* argv[])
         STRNCPY(frameFilePath, argv[4], MAX_PATH_LEN);
     }
 
-    cacertPath = getenv(CACERT_PATH_ENV_VAR);
-    sessionToken = getenv(SESSION_TOKEN_ENV_VAR);
-    streamName = argv[1];
-    if ((region = getenv(DEFAULT_REGION_ENV_VAR)) == NULL) {
-        region = (PCHAR) DEFAULT_AWS_REGION;
-    }
+//    cacertPath = getenv(CACERT_PATH_ENV_VAR);
+//    sessionToken = getenv(SESSION_TOKEN_ENV_VAR);
+    streamName = "SH20-eventStream-db-B813329BB08C";
+//    if ((region = getenv(DEFAULT_REGION_ENV_VAR)) == NULL) {
+//        region = (PCHAR) DEFAULT_AWS_REGION;
+//    }
 
-    if (argc >= 3) {
-        if (!STRCMP(argv[2], VIDEO_CODEC_NAME_H265)) {
-            STRNCPY(videoCodec, VIDEO_CODEC_NAME_H265, STRLEN(VIDEO_CODEC_NAME_H265));
-            videoCodecID = VIDEO_CODEC_ID_H265;
-        }
-    }
-
-    if (argc >= 4) {
-        // Get the duration and convert to an integer
-        CHK_STATUS(STRTOUI64(argv[3], NULL, 10, &streamingDuration));
-        streamingDuration *= HUNDREDS_OF_NANOS_IN_A_SECOND;
-    }
+//    if (argc >= 3) {
+//        if (!STRCMP(argv[2], VIDEO_CODEC_NAME_H265)) {
+//            STRNCPY(videoCodec, VIDEO_CODEC_NAME_H265, STRLEN(VIDEO_CODEC_NAME_H265));
+//            videoCodecID = VIDEO_CODEC_ID_H265;
+//        }
+//    }
+//
+//    if (argc >= 4) {
+//        // Get the duration and convert to an integer
+//        CHK_STATUS(STRTOUI64(argv[3], NULL, 10, &streamingDuration));
+//        streamingDuration *= HUNDREDS_OF_NANOS_IN_A_SECOND;
+//    }
 
     streamStopTime = GETTIME() + streamingDuration;
 
@@ -119,8 +119,27 @@ INT32 main(INT32 argc, CHAR* argv[])
     // adjust members of pStreamInfo here if needed
 
     startTime = GETTIME();
-    CHK_STATUS(createDefaultCallbacksProviderWithAwsCredentials(accessKey, secretKey, sessionToken, MAX_UINT64, region, cacertPath, NULL, NULL,
-                                                                &pClientCallbacks));
+
+    PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
+    PCHAR pIotCoreCert = "/tmp/cert";
+    PCHAR pIotCorePrivateKey = "/tmp/privkey";
+    PCHAR pCaCert = "/tmp/rootca.pem";
+    PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
+    PCHAR pThingName = "db-B813329BB08C";
+    PCHAR pRegion = "ca-central-1";
+    CHK_STATUS(createDefaultCallbacksProviderWithIotCertificate(
+        pIotCoreCredentialEndPoint,
+        pIotCoreCert,
+        pIotCorePrivateKey,
+        pCaCert,
+        pIotCoreRoleAlias,
+        pThingName,
+        pRegion,
+        NULL,
+        NULL,
+        &pClientCallbacks));
+    //CHK_STATUS(createDefaultCallbacksProviderWithAwsCredentials(accessKey, secretKey, sessionToken, MAX_UINT64, region, cacertPath, NULL, NULL,
+    //                                                            &pClientCallbacks));
 
     if (NULL != getenv(ENABLE_FILE_LOGGING)) {
         if ((retStatus = addFileLoggerPlatformCallbacksProvider(pClientCallbacks, FILE_LOGGING_BUFFER_SIZE, MAX_NUMBER_OF_LOG_FILES,
