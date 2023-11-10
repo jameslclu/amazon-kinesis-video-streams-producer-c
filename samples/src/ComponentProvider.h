@@ -8,7 +8,7 @@ enum StreamSourceType {
     ORYX
 };
 
-enum PlayerType {
+enum RenderType {
     EMPTY = 0,
     AWSPRODUCKER = 1
 };
@@ -25,8 +25,8 @@ class ComponentProvider {
     static int SetStreamSource(StreamSourceType type, IStreamSource *pStreamSource);
     static IStreamSource* GetStreamSource(StreamSourceType type);
 
-    static int SetKvsPlayer(PlayerType type, IKvsPlayer *pKvsPlayer);
-    static IKvsPlayer* GetKvsPlayer(PlayerType type);
+    static int SetKvsRender(RenderType type, IKvsRender *pKvsPlayer);
+    static IKvsRender* GetKvsRender(RenderType type);
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_RESOURCEPROVIDER_H

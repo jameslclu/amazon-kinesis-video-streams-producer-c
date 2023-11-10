@@ -12,7 +12,7 @@ enum KvsPlayerState {
     Deinited = 6
 };
 
-class KvsPlayer: IKvsPlayer {
+class KvsPlayer {
   public:
     KvsPlayer();
     ~KvsPlayer();

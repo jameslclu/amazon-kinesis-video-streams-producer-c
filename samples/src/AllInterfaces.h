@@ -13,12 +13,9 @@ class IStreamSource {
   public:
     virtual int GetVideoFrame(int index, PBYTE* pdata, UINT32 *psize) = 0;
     virtual int GetAudioFrame(int index, PBYTE* pdata, UINT32 *psize) = 0;
-    //virtual UINT64 GetStopTime();
-    //virtual int GetStreamHandle(STREAM_HANDLE* mStreamHandle);
-    //virtual STREAM_HANDLE GetStreamHandle();
 };
 
-class IKvsPlayer {
+class IKvsRender {
   public:
     virtual STATUS PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame) = 0;
 };

@@ -36,7 +36,7 @@ int main() {
     KvsServiceStub serviceStub(&service);
 
     ComponentProvider::GetInstance()->SetStreamSource(FAKE, &mStreamSource);
-    ComponentProvider::GetInstance()->SetKvsPlayer(AWSPRODUCKER, &mKvsProducer);
+    ComponentProvider::GetInstance()->SetKvsRender(AWSPRODUCKER, &mKvsProducer);
 
 //    ComponentProvider::GetInstance()->GetKvsPlayer(AWSPRODUCKER);
 //    ComponentProvider::GetInstance()->GetStreamSource(FAKE);

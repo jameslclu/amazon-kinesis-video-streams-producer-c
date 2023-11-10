@@ -369,16 +369,18 @@ if(BUILD_COMMON_CURL)
     pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 
     add_executable(kvsProducerService
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/JsonUtility.cpp
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/MethodQueue.cpp
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/ServiceBase.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsProducer.cpp
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/StreamSource.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsPlayer.cpp
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsService.cpp
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceStub.cpp
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceProxy.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/ComponentProvider.cpp)
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/ComponentProvider.cpp
+            samples/src/KvsPlayer.cpp)
 
     target_include_directories(kvsProducerService
             PUBLIC

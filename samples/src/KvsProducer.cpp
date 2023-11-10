@@ -1,6 +1,7 @@
 #include "KvsProducer.h"
 #include "AllInterfaces.h"
 #include "ComponentProvider.h"
+#include "KvsServiceConfig.h"
 
 static PDeviceInfo mpDeviceInfo;
 static PStreamInfo mpStreamInfo = NULL;
@@ -13,11 +14,12 @@ static CLIENT_HANDLE mClientHandle = INVALID_CLIENT_HANDLE_VALUE;
 static UINT64 gStartTime;
 static UINT64 gStreamStartTime;
 static UINT64 gStreamStopTime;
-static BOOL gIsFirstFrameSent;
+//static BOOL gIsFirstFrameSent;
 static PSEMAPHORE_HANDLE mpStreamHandle;
 
 static BYTE mAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 static UINT8 gEventsEnabled = 0;
+volatile ATOMIC_BOOL gIsFirstVideoFramePut;
 static StreamSource* psStreamSource;
 PVOID putVideoFrameRoutine(PVOID args)
 {
@@ -43,11 +45,10 @@ PVOID putVideoFrameRoutine(PVOID args)
 
     while (GETTIME() < gStreamStopTime) {
         status = putKinesisVideoFrame(psStreamSource->streamHandle, &frame);
-        if (gIsFirstFrameSent) {
-            startUpLatency = (DOUBLE) (GETTIME() - psStreamSource->startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
+        if (gIsFirstVideoFramePut) {
+            startUpLatency = (DOUBLE) (GETTIME() - gStartTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
             DLOGD("Start up latency: %lf ms", startUpLatency);
-            //psStreamSource->firstFrame = FALSE;
-            gIsFirstFrameSent = FALSE;
+            gIsFirstVideoFramePut = FALSE;
         } else if (frame.flags == FRAME_FLAG_KEY_FRAME && gEventsEnabled) {
             // generate an image and notification event at the start of the video stream.
             //putKinesisVideoEventMetadata(data->streamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
@@ -56,9 +57,7 @@ PVOID putVideoFrameRoutine(PVOID args)
             gEventsEnabled = 0;
         }
 
-        if (STATUS_SUCCEEDED(status)) {
-            ATOMIC_STORE_BOOL(&psStreamSource->firstVideoFramePut, TRUE);
-        }
+        ATOMIC_STORE_BOOL(&gIsFirstVideoFramePut, TRUE);
 
         if (STATUS_FAILED(status)) {
             printf("putKinesisVideoFrame failed with 0x%08x\n", status);
@@ -111,7 +110,7 @@ PVOID putAudioFrameRoutine(PVOID args)
 
     while (GETTIME() < gStreamStopTime) {
         // no audio can be put until first video frame is put
-        if (ATOMIC_LOAD_BOOL(&psStreamSource->firstVideoFramePut)) {
+        if (ATOMIC_LOAD_BOOL(&gIsFirstVideoFramePut)) {
             status = putKinesisVideoFrame(psStreamSource->streamHandle, &frame);
             if (STATUS_FAILED(status)) {
                 printf("putKinesisVideoFrame for audio failed with 0x%08x\n", status);
@@ -126,7 +125,7 @@ PVOID putAudioFrameRoutine(PVOID args)
             ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetAudioFrame(fileIndex, &frame.frameData, &frame.size);
 
             // synchronize putKinesisVideoFrame to running time
-            runningTime = GETTIME() - psStreamSource->streamStartTime;
+            runningTime = GETTIME() - gStreamStartTime;
             if (runningTime < frame.presentationTs) {
                 THREAD_SLEEP(frame.presentationTs - runningTime);
             }
@@ -153,8 +152,7 @@ int KvsProducer::StartUpload() {
     gStreamStartTime = GETTIME();
     gStartTime = gStreamStartTime;
     gStreamStopTime = gStreamStartTime + DEFAULT_STREAM_DURATION;
-    psStreamSource->Init_Time(TRUE, GETTIME(), gStreamStopTime, GETTIME());
-    gIsFirstFrameSent = TRUE;
+    gIsFirstVideoFramePut = FALSE;
 
     THREAD_CREATE(&videoSendTid, putVideoFrameRoutine, NULL);
     THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, NULL);
@@ -184,7 +182,6 @@ int KvsProducer::Init() {
                              mpAudioTrack->codecPrivateDataSize);
     }
     mpStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
-
     // Init2
     {
         PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
@@ -231,6 +228,6 @@ int KvsProducer::SetStreamName(PCHAR name) {
 }
 
 STATUS KvsProducer::PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame) {
-    return putKinesisVideoFrame(streamHandle, pFrame);
+    return putKinesisVideoFrame(*mpStreamHandle, pFrame);
     //return STATUS_SUCCESS;
 }

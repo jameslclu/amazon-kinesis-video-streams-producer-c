@@ -29,10 +29,10 @@ typedef struct {
 class StreamSource: public IStreamSource {
   public:
     volatile ATOMIC_BOOL firstVideoFramePut;
-        UINT64 startTime;
-        UINT64 streamStartTime;
-        UINT64 streamStopTime;
-    BOOL firstFrame;
+    //UINT64 startTime;
+    //UINT64 streamStartTime;
+    //UINT64 streamStopTime;
+    //BOOL firstFrame;
     CHAR sampleDir[MAX_PATH_LEN + 1];
     STREAM_HANDLE streamHandle;
     FrameData audioFrames[NUMBER_OF_AUDIO_FRAME];
@@ -74,10 +74,10 @@ class StreamSource: public IStreamSource {
                                UINT64 startTime,
                                UINT64 streamStopTime,
                                UINT64 streamStartTime) {
-        this->firstFrame = firstFrame;
-        this->startTime = startTime;
-        this->streamStartTime = streamStartTime;
-        this->streamStopTime = streamStopTime;
+        //this->firstFrame = firstFrame;
+        //this->startTime = startTime;
+        //this->streamStartTime = streamStartTime;
+        //this->streamStopTime = streamStopTime;
         return 0;
     }
 

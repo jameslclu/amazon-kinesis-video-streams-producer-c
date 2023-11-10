@@ -7,7 +7,7 @@
 #include "KvsServiceConfig.h"
 #include "StreamSource.h"
 #include "AllInterfaces.h"
-class KvsProducer : public IKvsPlayer{
+class KvsProducer: public IKvsRender {
   public:
     KvsProducer();
     virtual ~KvsProducer();
