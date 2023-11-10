@@ -1,5 +1,5 @@
 <h1 align="center">
-  Amazon Kinesis Video Streams C Producer
+  Amazon Kinesis Video Streams C Producer - James Version
   <br>
 </h1>
 
