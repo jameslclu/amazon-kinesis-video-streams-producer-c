@@ -10,7 +10,10 @@ static PClientCallbacks mpClientCallbacks = NULL;
 static PStreamCallbacks mpStreamCallbacks = NULL;
 static CLIENT_HANDLE mClientHandle = INVALID_CLIENT_HANDLE_VALUE;
 
-//static STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
+static UINT64 gStartTime;
+static UINT64 gStreamStartTime;
+static UINT64 gStreamStopTime;
+static BOOL gIsFirstFrameSent;
 static PSEMAPHORE_HANDLE mpStreamHandle;
 
 static BYTE mAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
@@ -35,16 +38,16 @@ PVOID putVideoFrameRoutine(PVOID args)
     frame.presentationTs = 0;
     frame.index = 0;
 
-    psStreamSource->streamStopTime = GETTIME() + DEFAULT_STREAM_DURATION;
     // video track is used to mark new fragment. A new fragment is generated for every frame with FRAME_FLAG_KEY_FRAME
     frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
 
-    while (GETTIME() < psStreamSource->streamStopTime) {
+    while (GETTIME() < gStreamStopTime) {
         status = putKinesisVideoFrame(psStreamSource->streamHandle, &frame);
-        if (psStreamSource->firstFrame) {
+        if (gIsFirstFrameSent) {
             startUpLatency = (DOUBLE) (GETTIME() - psStreamSource->startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
             DLOGD("Start up latency: %lf ms", startUpLatency);
-            psStreamSource->firstFrame = FALSE;
+            //psStreamSource->firstFrame = FALSE;
+            gIsFirstFrameSent = FALSE;
         } else if (frame.flags == FRAME_FLAG_KEY_FRAME && gEventsEnabled) {
             // generate an image and notification event at the start of the video stream.
             //putKinesisVideoEventMetadata(data->streamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
@@ -56,7 +59,6 @@ PVOID putVideoFrameRoutine(PVOID args)
         if (STATUS_SUCCEEDED(status)) {
             ATOMIC_STORE_BOOL(&psStreamSource->firstVideoFramePut, TRUE);
         }
-        //ATOMIC_STORE_BOOL(&data->firstVideoFramePut, TRUE);
 
         if (STATUS_FAILED(status)) {
             printf("putKinesisVideoFrame failed with 0x%08x\n", status);
@@ -70,11 +72,9 @@ PVOID putVideoFrameRoutine(PVOID args)
         fileIndex = (fileIndex + 1) % NUMBER_OF_VIDEO_FRAME_FILES;
         frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
         ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(fileIndex, &frame.frameData, &frame.size);
-        // frame.frameData = data->videoFrames[fileIndex].buffer;
-        // frame.size = data->videoFrames[fileIndex].size;
 
         // synchronize putKinesisVideoFrame to running time
-        runningTime = GETTIME() - psStreamSource->streamStartTime;
+        runningTime = GETTIME() - gStreamStartTime;//psStreamSource->streamStartTime;
         if (runningTime < frame.presentationTs) {
             // reduce sleep time a little for smoother video
             THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
@@ -98,8 +98,6 @@ PVOID putAudioFrameRoutine(PVOID args)
     STATUS status;
     UINT64 runningTime;
 
-    //CHK(gStreamSource != NULL, STATUS_NULL_ARG);
-    //psStreamSource->streamStopTime = GETTIME() + DEFAULT_STREAM_DURATION;
     ComponentProvider::GetInstance()->GetStreamSource(FAKE)
         ->GetAudioFrame(fileIndex, &frame.frameData, &frame.size);
 
@@ -111,7 +109,7 @@ PVOID putAudioFrameRoutine(PVOID args)
     frame.index = 0;
     frame.flags = FRAME_FLAG_NONE; // audio track is not used to cut fragment
 
-    while (GETTIME() < psStreamSource->streamStopTime) {
+    while (GETTIME() < gStreamStopTime) {
         // no audio can be put until first video frame is put
         if (ATOMIC_LOAD_BOOL(&psStreamSource->firstVideoFramePut)) {
             status = putKinesisVideoFrame(psStreamSource->streamHandle, &frame);
@@ -125,8 +123,6 @@ PVOID putAudioFrameRoutine(PVOID args)
             frame.index++;
 
             fileIndex = (fileIndex + 1) % NUMBER_OF_AUDIO_FRAME_FILES;
-            //frame.frameData = data->audioFrames[fileIndex].buffer;
-            //frame.size = data->audioFrames[fileIndex].size;
             ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetAudioFrame(fileIndex, &frame.frameData, &frame.size);
 
             // synchronize putKinesisVideoFrame to running time
@@ -154,9 +150,11 @@ int KvsProducer::SetDataSource(StreamSource* psource) {
 }
 
 int KvsProducer::StartUpload() {
-    static UINT64 streamingDuration = DEFAULT_STREAM_DURATION;
-    UINT64 streamStopTime = GETTIME() + streamingDuration;
-    psStreamSource->Init_Time(TRUE, GETTIME(), streamStopTime, GETTIME());
+    gStreamStartTime = GETTIME();
+    gStartTime = gStreamStartTime;
+    gStreamStopTime = gStreamStartTime + DEFAULT_STREAM_DURATION;
+    psStreamSource->Init_Time(TRUE, GETTIME(), gStreamStopTime, GETTIME());
+    gIsFirstFrameSent = TRUE;
 
     THREAD_CREATE(&videoSendTid, putVideoFrameRoutine, NULL);
     THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, NULL);
@@ -223,15 +221,6 @@ int KvsProducer::Deinit() {
     freeStreamInfoProvider(&mpStreamInfo);
     freeKinesisVideoStream(mpStreamHandle);
     freeKinesisVideoClient(&mClientHandle);
-
-    //        for (int i = 0; i < NUMBER_OF_AUDIO_FRAME_FILES; ++i) {
-    //            SAFE_MEMFREE(gStreamSource->audioFrames[i].buffer);
-    //        }
-    //
-    //        for (int i = 0; i < NUMBER_OF_VIDEO_FRAME_FILES; ++i) {
-    //            SAFE_MEMFREE(gStreamSource->videoFrames[i].buffer);
-    //        }
-
     freeCallbacksProvider(&mpClientCallbacks);
     return 0;
 }
@@ -241,7 +230,7 @@ int KvsProducer::SetStreamName(PCHAR name) {
     return 0;
 }
 
-STATUS PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame) {
+STATUS KvsProducer::PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame) {
     return putKinesisVideoFrame(streamHandle, pFrame);
     //return STATUS_SUCCESS;
 }

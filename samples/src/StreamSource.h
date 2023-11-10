@@ -29,9 +29,9 @@ typedef struct {
 class StreamSource: public IStreamSource {
   public:
     volatile ATOMIC_BOOL firstVideoFramePut;
-    UINT64 startTime;
-    UINT64 streamStartTime;
-    UINT64 streamStopTime;
+        UINT64 startTime;
+        UINT64 streamStartTime;
+        UINT64 streamStopTime;
     BOOL firstFrame;
     CHAR sampleDir[MAX_PATH_LEN + 1];
     STREAM_HANDLE streamHandle;
