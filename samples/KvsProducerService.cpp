@@ -12,7 +12,7 @@ int main() {
     KvsProducer mKvsProducer;
 
     // StreamSource Init
-//dbus-send --system --type=method_call --print-reply --dest=fxn.kvsservice /fxn/kvsservice fxn.kvsservice.cmd1 string:'{"key":"audio_speaker_volume"}'
+    // dbus-send --system --type=method_call --print-reply --dest=fxn.kvsservice /fxn/kvsservice fxn.kvsservice.cmd1 string:'{"key":"audio_speaker_volume"}'
     {
         static UINT64 streamingDuration = DEFAULT_STREAM_DURATION;
         mStreamSource.SetDataSource((PCHAR) "../samples");
@@ -21,18 +21,13 @@ int main() {
         static PCHAR streamName = "SH20-eventStream-db-B813329BB08C";
         mKvsProducer.SetStreamName(streamName);
 
-        //UINT64 streamStopTime = GETTIME() + streamingDuration;
         mKvsProducer.SetHandler(&mStreamHandle);
         mKvsProducer.Init();
         mStreamSource.SetHandler(mStreamHandle);
 
-        //mStreamSource.Init_Time(TRUE, GETTIME(), streamStopTime, GETTIME());
         ATOMIC_STORE_BOOL(&mStreamSource.firstVideoFramePut, FALSE);
     }
 
-//    SampleCustomData data;
-//    MEMSET(&data, 0x00, SIZEOF(SampleCustomData));
-//    gStreamSource = &data;
     mKvsProducer.SetDataSource(&mStreamSource);
 
     KvsService service(&mStreamSource, &mKvsProducer);

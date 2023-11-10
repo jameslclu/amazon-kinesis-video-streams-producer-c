@@ -17,6 +17,7 @@ class KvsProducer : public IKvsPlayer{
     int Init();
     int Deinit();
     int SetStreamName(PCHAR name);
+    STATUS PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame);
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_KVSPRODUCER_H

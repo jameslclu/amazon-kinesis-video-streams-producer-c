@@ -1,13 +1,13 @@
 #include "KvsService.h"
-StreamSource* spStreamSource;
+//StreamSource* spStreamSource;
 KvsProducer* spKvsProducer;
 
 KvsService::KvsService(): ServiceBase("KvsService") {
 }
 
 KvsService::KvsService(StreamSource* pSource, KvsProducer* pProducer): ServiceBase("KvsService") {
-    this->mpStreamSource = pSource;
-    spStreamSource = pSource;
+    //this->mpStreamSource = pSource;
+    //spStreamSource = pSource;
     this->mpKvsProducer = pProducer;
     spKvsProducer=  pProducer;
 }
@@ -54,7 +54,7 @@ int KvsService::HandleAsyncMethod(const MethodItem& method) {
     if ("cmd1" == method.m_method) {
         printf("cmd1");
         mpKvsProducer->StartUpload();
-        mpStreamSource->Deinit();
+        //mpStreamSource->Deinit();
         mpKvsProducer->Deinit();
     }
     return 0;
