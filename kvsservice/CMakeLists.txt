@@ -16,11 +16,11 @@ pkg_check_modules(GLIB REQUIRED glib-2.0)
 pkg_check_modules(GIO_UNIX REQUIRED IMPORTED_TARGET gio-unix-2.0)
 pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 
-# In the project, there are 3 kind of libraries:
-if (DEFINED Doorbell)
+if (DEFINED DOORBELL)
 ####      Doorbell    Build    #########
 set (PREBUILD_OSS_DIR "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a")
 set (FAKE_ROOT_DIR "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib")
+set (KVS_PRODUCER_LIBS_INC_DIR "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer")
 set (KVS_PRODUCER_LIBS_DIR "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/libs/kvsProducer")
 
 set(kvsproducer_inc
@@ -30,8 +30,7 @@ set(kvsproducer_inc
         ${PREBUILD_OSS_DIR}/glib2/include/gio-unix-2.0
 )
 
-set (kvsproducer_dep_inc
-)
+
 set(commone_includes
 		${PREBUILD_OSS_DIR}/jsoncpp/include
 		${PREBUILD_OSS_DIR}/glib2/include
@@ -88,16 +87,19 @@ target_include_directories(${modulename}
 		${GIO_UNIX_INCLUDE_DIRS}
 		${JSONCPP_INCLUDE_DIRS}
 		${commone_includes}
-		./../dependency/libkvspic/kvspic-src/src/client/include
-		./../dependency/libkvspic/kvspic-src/src/common/include
-		./../dependency/libkvspic/kvspic-src/src/duration/include
-		./../dependency/libkvspic/kvspic-src/src/heap/include
-		./../dependency/libkvspic/kvspic-src/src/mkvgen/include
-		./../dependency/libkvspic/kvspic-src/src/state/include
-		./../dependency/libkvspic/kvspic-src/src/trace/include
-		./../dependency/libkvspic/kvspic-src/src/utils/include
-		./../dependency/libkvspic/kvspic-src/src/view/include
-		./../dependency/producersdk)
+		${KVS_PRODUCER_LIBS_INC_DIR}
+)
+
+##		./../dependency/libkvspic/kvspic-src/src/client/include
+##		./../dependency/libkvspic/kvspic-src/src/common/include
+##		./../dependency/libkvspic/kvspic-src/src/duration/include
+##		./../dependency/libkvspic/kvspic-src/src/heap/include
+##		./../dependency/libkvspic/kvspic-src/src/mkvgen/include
+##		./../dependency/libkvspic/kvspic-src/src/state/include
+##		./../dependency/libkvspic/kvspic-src/src/trace/include
+##		./../dependency/libkvspic/kvspic-src/src/utils/include
+##		./../dependency/libkvspic/kvspic-src/src/view/include
+##		./../dependency/producersdk)
 
 target_link_libraries(${modulename}
 		PUBLIC ${GIO_LIBRARIES}

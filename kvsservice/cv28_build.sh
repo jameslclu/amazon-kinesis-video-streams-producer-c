@@ -1,6 +1,8 @@
 #!/bin/bash
 #
 
+export doorbell=1
+
 AARCH64_TOOLCHAIN_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin
 CROSS_COMPILE=${AARCH64_TOOLCHAIN_PATH}/aarch64-linux-gnu
 
@@ -17,10 +19,23 @@ export OBJDUMP="${CROSS_COMPILE}-objdump"
 export READELF="${CROSS_COMPILE}-readelf"
 export NM="${CROSS_COMPILE}-nm"
 
+
+echo ${CC}
+echo ${CXX}
+echo ${AR}
+echo ${LD}
+echo ${AS}
+echo ${STRIP}
+echo ${RANLIB}
+echo ${OBJCOPY}
+echo ${OBJDUMP}
+echo ${READELF}
+echo ${NM}
+
 rm -r doorbell-build
 mkdir doorbell-build
 cd doorbell-build
-cmake ./../kvsservice
+cmake ./.. -DDOORBELL=1
 make -j4
 
 echo "cv28 env setup success."
