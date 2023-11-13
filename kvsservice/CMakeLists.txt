@@ -18,6 +18,7 @@ pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 
 # In the project, there are 3 kind of libraries:
 if (DEFINED Doorbell)
+####      Doorbell    Build    #########
 set (PREBUILD_OSS_DIR "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a")
 set (FAKE_ROOT_DIR "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib")
 set (KVS_PRODUCER_LIBS_DIR "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/libs/kvsProducer")
@@ -106,6 +107,7 @@ target_link_libraries(${modulename}
 		${common_libs}
 		-lpthread -lm)
 else()
+	####      SDK     BUILD #########
 	set(kvsproducer_inc
 			${PREBUILD_OSS_DIR}/jsoncpp/include
 			${PREBUILD_OSS_DIR}/glib2/include
@@ -143,8 +145,8 @@ else()
 			${GLIB_INCLUDE_DIRS}
 			${GIO_UNIX_INCLUDE_DIRS}
 			${JSONCPP_INCLUDE_DIRS}
-			/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/src/include
-			/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug
+#			/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/src/include
+#			/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug
 			./../dependency/libkvspic/kvspic-src/src/client/include
 			./../dependency/libkvspic/kvspic-src/src/common/include
 			./../dependency/libkvspic/kvspic-src/src/duration/include
@@ -162,8 +164,9 @@ else()
 			${GLIB_LIBRARIES}
 			${GIO_UNIX_LIBRARIES}
 			${JSONCPP_LIBRARIES}
-			-lcproducer
-			-L/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug/ -lcproducer
+            cproducer
+#			-lcproducer
+#			-L/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug/ -lcproducer
 			-lpthread -lm)
 
 endif()
