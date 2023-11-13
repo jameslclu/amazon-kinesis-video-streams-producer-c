@@ -401,6 +401,4 @@ if(BUILD_COMMON_CURL)
     endif()
 endif()
 
-#
-#
-#add_subdirectory(KVSService)
+add_subdirectory(KvsService)
