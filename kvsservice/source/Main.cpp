@@ -11,14 +11,17 @@ int main() {
     StreamSource mStreamSource;
     KvsProducer mKvsProducer;
 
+    printf("main: +\n");
+
     // StreamSource Init
     // dbus-send --system --type=method_call --print-reply --dest=fxn.kvsservice /fxn/kvsservice fxn.kvsservice.cmd1 string:'{"key":"audio_speaker_volume"}'
     {
 
         static UINT64 streamingDuration = DEFAULT_STREAM_DURATION;
         mStreamSource.SetDataSource((PCHAR) "../../samples");
+        printf("main: 1\n");
         mStreamSource.Init();
-
+        printf("main: 2\n");
         static PCHAR streamName = "SH20-eventStream-db-B813329BB08C";
         mKvsProducer.SetStreamName(streamName);
 
@@ -44,6 +47,8 @@ int main() {
     serviceStub.Init();
     (void)serviceStub.Deinit();
     (void)service.Deinit();
+
+    printf("main: -");
     //(void)MLogger::Instance().Deinit();
     return 0;
 

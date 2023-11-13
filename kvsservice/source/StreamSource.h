@@ -100,6 +100,7 @@ class StreamSource: public IStreamSource {
     int GetStatus() { return 0; }
     int SetHandler(STREAM_HANDLE handler) {
         this->streamHandle = handler;
+        return 0;
     }
 
     int GetVideoFrame(int index, PBYTE* pdata, UINT32 *psize) {
