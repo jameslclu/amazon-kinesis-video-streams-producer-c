@@ -24,16 +24,14 @@ int main() {
     (void)MLogger::Instance().Init("MSProvider", "/data/tmp/middleware", "msprovider", 0, 10);
     MLogger::Instance().SetPrintLevel(Level::DEBUG);
     int retStatus;
-    SampleStreamSource mStreamSource;
-    mStreamSource.SetDataSource("/home/camera/kvs/samples");
-    mStreamSource.Init();
-    MLogger::LOG(Level::INFO, "main: 1");
-    ComponentProvider::GetInstance()->SetStreamSource(FAKE, &mStreamSource);
+    SampleStreamSource mSampleStreamSource;
+    mSampleStreamSource.SetDataSource("/home/camera/kvs/samples");
+    mSampleStreamSource.Init();
+    ComponentProvider::GetInstance()->SetStreamSource(FAKE, &mSampleStreamSource);
 
     retStatus = EXIT_FAILURE;
     JamesService service;
     JamesServiceStub serviceStub(&service);
-    MLogger::LOG(Level::INFO, "main: 2");
     //if( LIB_UTILS_PROGRAM_ALREADY_EXECUTE ==
     //  LibUtilProgramIsExecute( FXN_PROGRAM_NAME ) )
     //  FXNLOGD( "%s Already Execute ..", FXN_PROGRAM_NAME );
@@ -48,7 +46,6 @@ int main() {
 #ifdef CV28_BUILD
     retStatus = OryxStreamingCreate();
 #endif
-    MLogger::LOG(Level::INFO, "main: 3");
     //}
 
 //    if( EXIT_SUCCESS == retStatus ) {
@@ -59,7 +56,7 @@ int main() {
     //    LibDBusClientLoop();
     // }
     service.Init();
-    //MLogger::LOG(Level::INFO, "main: 4");
+    MLogger::LOG(Level::INFO, "main: service stub init");
     serviceStub.Init();
     //MLogger::LOG(Level::INFO, "main: 5");
 #ifdef CV28_BUILD
