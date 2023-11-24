@@ -1,0 +1,3 @@
+/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/kvsservice/doorbell-build/CMakeFiles/rebuild_cache.dir
+/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/kvsservice/doorbell-build/CMakeFiles/edit_cache.dir
+/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/kvsservice/doorbell-build/CMakeFiles/kvsservice.dir

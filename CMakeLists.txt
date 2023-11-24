@@ -399,6 +399,104 @@ if(BUILD_COMMON_CURL)
     if (BUILD_TEST)
         add_subdirectory(tst)
     endif()
+
+
+    #set(CV28_BUILD 0)
+    set(fxnMediaStreamProvider_root ${KINESIS_VIDEO_PRODUCER_C_SRC}/MediaStreamProvider_cpp)
+    set(kvsproducer_inc
+            ${PREBUILD_OSS_DIR}/jsoncpp/include
+            ${PREBUILD_OSS_DIR}/glib2/include
+            ${PREBUILD_OSS_DIR}/glib2/include/glib-2.0
+            ${PREBUILD_OSS_DIR}/glib2/include/gio-unix-2.0
+    )
+
+    #set(kvsproducer_libs
+    #        -L${PREBUILD_OSS_DIR}/glib2/usr/lib/ -lgio-2.0
+    #)
+    list(APPEND common_src
+            ${fxnMediaStreamProvider_root}/common/JsonUtility.cpp
+            ${fxnMediaStreamProvider_root}/common/MethodQueue.cpp
+            ${fxnMediaStreamProvider_root}/common/ServiceBase.cpp
+            ${fxnMediaStreamProvider_root}/common/MLogger.cpp)
+
+    list(APPEND common_inc
+            ${fxnMediaStreamProvider_root}/common)
+
+    list(APPEND james_src
+            ${fxnMediaStreamProvider_root}/james/JamesService.cpp
+            ${fxnMediaStreamProvider_root}/james/JamesServiceStub.cpp)
+
+    list(APPEND james_inc
+            ${fxnMediaStreamProvider_root}/james)
+
+    list(APPEND player_src
+            ${fxnMediaStreamProvider_root}/player/ComponentProvider.cpp
+            ${fxnMediaStreamProvider_root}/player/KvsPlayer.cpp
+            ${fxnMediaStreamProvider_root}/player/KvsProducer.cpp)
+
+    list(APPEND player_inc
+            ${fxnMediaStreamProvider_root}/player)
+
+    list(APPEND oryx_src
+            ${fxnMediaStreamProvider_root}/oryx/OryxStreaming.cpp)
+
+    list(APPEND oryx_inc
+            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include
+            ${fxnMediaStreamProvider_root}/oryx)
+
+    list(APPEND cv28_inc
+            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/kvs/inc
+            ${oryx_inc}
+    )
+
+    list(APPEND SDK_ROOT
+            ./..
+    )
+
+    list(APPEND sdk_inc
+            SDK_ROOT/amazon-kinesis-video-streams-producer-c/dependency/producersdk
+            ./../../amazon-kinesis-video-streams-producer-c/dependency/libkvspic/kvspic-src/src/client/include
+            ./../../amazon-kinesis-video-streams-producer-c/dependency/libkvspic/kvspic-src/src/common/include
+            ./../../amazon-kinesis-video-streams-producer-c/ependency/libkvspic/kvspic-src/src/duration/include
+            ./../../amazon-kinesis-video-streams-producer-c/dependency/libkvspic/kvspic-src/src/heap/include
+            ./../../amazon-kinesis-video-streams-producer-c/dependency/libkvspic/kvspic-src/src/mkvgen/include
+            ./../../amazon-kinesis-video-streams-producer-c/dependency/libkvspic/kvspic-src/src/state/include
+            ./../../amazon-kinesis-video-streams-producer-c/dependency/libkvspic/kvspic-src/src/trace/include
+            ./../../amazon-kinesis-video-streams-producer-c/dependency/libkvspic/kvspic-src/src/utils/include
+            ./../../amazon-kinesis-video-streams-producer-c/dependency/libkvspic/kvspic-src/src/view/include)
+
+    add_executable(fxnMediaStreamProvider
+            ${common_src}
+            ${player_src}
+            ${james_src}
+            #        ${cv28_src}
+            #        FmspServer.c
+            ${fxnMediaStreamProvider_root}/main.cpp
+    )
+
+    target_include_directories(fxnMediaStreamProvider
+            PUBLIC
+            ${GIO_INCLUDE_DIRS}
+            ${GLIB_INCLUDE_DIRS}
+            ${GIO_UNIX_INCLUDE_DIRS}
+            ${JSONCPP_INCLUDE_DIRS}
+            ${common_inc}
+            ${james_inc}
+            ${player_inc}
+            #           ${cv28_inc}
+    )
+    target_link_libraries(fxnMediaStreamProvider
+            #PRIVATE teec
+            PUBLIC
+            ${GIO_LIBRARIES}
+            ${GLIB_LIBRARIES}
+            ${GIO_UNIX_LIBRARIES}
+            ${JSONCPP_LIBRARIES}
+            cproducer
+            #-L/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug/ -lcproducer
+            -lpthread -lm)
+
 endif()
 
-add_subdirectory(kvsservice)
+#add_subdirectory(kvsservice)
+#add_subdirectory(MediaStreamProvider_cpp)

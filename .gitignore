@@ -10,3 +10,6 @@ open-source
 outputs
 dependency/
 cmake-build-producerc/
+doorbell-build
+kvsservice/doorbell-build
+

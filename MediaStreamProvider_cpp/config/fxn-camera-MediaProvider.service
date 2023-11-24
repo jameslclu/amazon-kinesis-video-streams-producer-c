@@ -1,0 +1,13 @@
+[Unit]
+Description=Foxconn Media Provider service
+After=dbus.service fxn-camera-camera.service
+
+[Service]
+Type=simple
+ExecStartPre=/bin/sleep 2
+ExecStart=/usr/bin/fxnMediaStreamProvider
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

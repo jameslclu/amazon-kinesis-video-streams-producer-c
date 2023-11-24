@@ -193,7 +193,7 @@ INT32 main(INT32 argc, CHAR* argv[])
     CHK_STATUS(freeKinesisVideoClient(&clientHandle));
 
 CleanUp:
-/**/
+
     if (STATUS_FAILED(retStatus)) {
         DLOGE("Failed with status 0x%08x", retStatus);
     }
