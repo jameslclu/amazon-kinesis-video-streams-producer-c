@@ -9,10 +9,10 @@
 
 class KvsService : public IKvsService, public ServiceBase {
   public:
-    StreamSource* mpStreamSource;
+    SampleStreamSource* mpStreamSource;
     KvsProducer* mpKvsProducer;
     KvsService();
-    KvsService(StreamSource* pSource, KvsProducer* pProducer);
+    KvsService(SampleStreamSource* pSource, KvsProducer* pProducer);
 
     virtual ~KvsService();
 

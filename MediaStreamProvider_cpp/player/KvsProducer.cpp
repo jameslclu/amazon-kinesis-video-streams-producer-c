@@ -22,7 +22,7 @@ static PSEMAPHORE_HANDLE mpStreamHandle;
 static BYTE mAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 static UINT8 gEventsEnabled = 0;
 volatile ATOMIC_BOOL gIsFirstVideoFramePut = false;
-static StreamSource* psStreamSource;
+static SampleStreamSource* psStreamSource;
 PVOID putVideoFrameRoutine(PVOID args)
 {
     /*
@@ -158,7 +158,7 @@ TID audioSendTid, videoSendTid;
 KvsProducer::KvsProducer() {}
 KvsProducer::~KvsProducer() {}
 
-int KvsProducer::SetDataSource(StreamSource* psource) {
+int KvsProducer::SetDataSource(SampleStreamSource* psource) {
     psStreamSource = psource;
 }
 

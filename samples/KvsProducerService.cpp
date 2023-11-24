@@ -8,7 +8,7 @@
 
 STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
 int main() {
-    StreamSource mStreamSource;
+    SampleStreamSource mStreamSource;
     KvsProducer mKvsProducer;
 
     // StreamSource Init

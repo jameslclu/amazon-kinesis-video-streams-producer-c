@@ -26,7 +26,7 @@ typedef struct {
 //static PSampleCustomData gStreamSource;
 //static SampleCustomData data;
 
-class StreamSource: public IStreamSource {
+class SampleStreamSource : public IStreamSource {
   public:
     volatile ATOMIC_BOOL firstVideoFramePut;
     //UINT64 startTime;

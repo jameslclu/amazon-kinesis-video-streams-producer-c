@@ -6,7 +6,7 @@ KvsProducer* spKvsProducer;
 KvsService::KvsService(): ServiceBase("KvsService") {
 }
 
-KvsService::KvsService(StreamSource* pSource, KvsProducer* pProducer): ServiceBase("KvsService") {
+KvsService::KvsService(SampleStreamSource* pSource, KvsProducer* pProducer): ServiceBase("KvsService") {
     //this->mpStreamSource = pSource;
     //spStreamSource = pSource;
     this->mpKvsProducer = pProducer;

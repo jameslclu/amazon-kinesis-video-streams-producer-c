@@ -18,13 +18,13 @@
 #include "james/JamesService.h"
 #include "james/JamesServiceStub.h"
 #include "player/ComponentProvider.h"
-#include "player/StreamSource.h"
+#include "player/SampleStreamSource.h"
 
 int main() {
     (void)MLogger::Instance().Init("MSProvider", "/data/tmp/middleware", "msprovider", 0, 10);
     MLogger::Instance().SetPrintLevel(Level::DEBUG);
     int retStatus;
-    StreamSource mStreamSource;
+    SampleStreamSource mStreamSource;
     mStreamSource.SetDataSource("/home/camera/kvs/samples");
     mStreamSource.Init();
     MLogger::LOG(Level::INFO, "main: 1");

@@ -11,7 +11,7 @@ class KvsProducer: public IKvsRender {
   public:
     KvsProducer();
     virtual ~KvsProducer();
-    int SetDataSource(StreamSource* psource);
+    int SetDataSource(SampleStreamSource* psource);
     int StartUpload();
     int SetHandler(STREAM_HANDLE* handler);
     int Init();
