@@ -7,11 +7,11 @@
 
 //#include "LibFxnDBus.h"
 //#include "LibFxnUtils.h"
-
 //#include "FmspCommon.h"
+
 #ifdef CV28_BUILD
-//#include "FmspServer.h"
-//#include "OryxStreaming.h"
+#include "FmspServer.h"
+#include "OryxStreaming.h"
 #endif
 #include "inc/FmspConfig.h"
 #include "common/MLogger.h"
@@ -43,7 +43,7 @@ int main() {
     //( void )LibUtilHWTimerOpen();
 
     //LibDBusClientInit();
-#ifdef CV28_BUILD
+#ifdef DOORBELL
     retStatus = OryxStreamingCreate();
 #endif
     //}

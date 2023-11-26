@@ -413,6 +413,7 @@ if(BUILD_COMMON_CURL)
     #set(kvsproducer_libs
     #        -L${PREBUILD_OSS_DIR}/glib2/usr/lib/ -lgio-2.0
     #)
+    #----
     list(APPEND common_src
             ${fxnMediaStreamProvider_root}/common/JsonUtility.cpp
             ${fxnMediaStreamProvider_root}/common/MethodQueue.cpp
@@ -421,14 +422,14 @@ if(BUILD_COMMON_CURL)
 
     list(APPEND common_inc
             ${fxnMediaStreamProvider_root}/common)
-
-    list(APPEND james_src
+    # {
+        list(APPEND james_src
             ${fxnMediaStreamProvider_root}/james/JamesService.cpp
             ${fxnMediaStreamProvider_root}/james/JamesServiceStub.cpp)
 
-    list(APPEND james_inc
+        list(APPEND james_inc
             ${fxnMediaStreamProvider_root}/james)
-
+    # }
     list(APPEND player_src
             ${fxnMediaStreamProvider_root}/player/ComponentProvider.cpp
             ${fxnMediaStreamProvider_root}/player/KvsPlayer.cpp
@@ -436,18 +437,19 @@ if(BUILD_COMMON_CURL)
 
     list(APPEND player_inc
             ${fxnMediaStreamProvider_root}/player)
-
+    #
     list(APPEND oryx_src
             ${fxnMediaStreamProvider_root}/oryx/OryxStreaming.cpp)
 
     list(APPEND oryx_inc
             /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include
             ${fxnMediaStreamProvider_root}/oryx)
-
+    #
     list(APPEND cv28_inc
             /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/kvs/inc
             ${oryx_inc}
     )
+    #
 
     list(APPEND SDK_ROOT
             ./..
@@ -495,7 +497,6 @@ if(BUILD_COMMON_CURL)
             cproducer
             #-L/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug/ -lcproducer
             -lpthread -lm)
-
 endif()
 
 #add_subdirectory(kvsservice)

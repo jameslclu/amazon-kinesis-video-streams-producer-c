@@ -373,8 +373,8 @@ james/JamesServiceStub.h
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.h
 player/ComponentProvider.h
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/ComponentProvider.h
-player/StreamSource.h
-/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/StreamSource.h
+player/SampleStreamSource.h
+/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/SampleStreamSource.h
 
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/AllInterfaces.h
 com/amazonaws/kinesis/video/mkvgen/Include.h
@@ -401,8 +401,6 @@ KvsServiceConfig.h
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsServiceConfig.h
 MLogger.h
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/MLogger.h
-KvsPlayer.h
-/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsPlayer.h
 
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsPlayer.h
 AllInterfaces.h
@@ -425,14 +423,14 @@ com/amazonaws/kinesis/video/cproducer/Include.h
 -
 KvsServiceConfig.h
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsServiceConfig.h
-StreamSource.h
-/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/StreamSource.h
+SampleStreamSource.h
+/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/SampleStreamSource.h
 AllInterfaces.h
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/AllInterfaces.h
 
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsServiceConfig.h
 
-/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/StreamSource.h
+/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/SampleStreamSource.h
 com/amazonaws/kinesis/video/common/CommonDefs.h
 /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/com/amazonaws/kinesis/video/common/CommonDefs.h
 com/amazonaws/kinesis/video/cproducer/Include.h

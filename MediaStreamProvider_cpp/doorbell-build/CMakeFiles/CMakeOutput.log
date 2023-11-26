@@ -28,13 +28,13 @@ The CXX compiler identification is GNU, found in "/home/jh/workspaces/aws/amazon
 Determining if the C compiler works passed with the following output:
 Change Dir: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_181c4/fast && /usr/bin/make -f CMakeFiles/cmTC_181c4.dir/build.make CMakeFiles/cmTC_181c4.dir/build
+Run Build Command(s):/usr/bin/make cmTC_8a818/fast && /usr/bin/make -f CMakeFiles/cmTC_8a818.dir/build.make CMakeFiles/cmTC_8a818.dir/build
 make[1]: Entering directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_181c4.dir/testCCompiler.c.o
-/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto    -o CMakeFiles/cmTC_181c4.dir/testCCompiler.c.o   -c /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp/testCCompiler.c
-Linking C executable cmTC_181c4
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_181c4.dir/link.txt --verbose=1
-/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto      CMakeFiles/cmTC_181c4.dir/testCCompiler.c.o  -o cmTC_181c4 
+Building C object CMakeFiles/cmTC_8a818.dir/testCCompiler.c.o
+/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto    -o CMakeFiles/cmTC_8a818.dir/testCCompiler.c.o   -c /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp/testCCompiler.c
+Linking C executable cmTC_8a818
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_8a818.dir/link.txt --verbose=1
+/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto      CMakeFiles/cmTC_8a818.dir/testCCompiler.c.o  -o cmTC_8a818 
 make[1]: Leaving directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp'
 
 
@@ -42,10 +42,10 @@ make[1]: Leaving directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams
 Detecting C compiler ABI info compiled with the following output:
 Change Dir: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_c122a/fast && /usr/bin/make -f CMakeFiles/cmTC_c122a.dir/build.make CMakeFiles/cmTC_c122a.dir/build
+Run Build Command(s):/usr/bin/make cmTC_7c0ef/fast && /usr/bin/make -f CMakeFiles/cmTC_7c0ef.dir/build.make CMakeFiles/cmTC_7c0ef.dir/build
 make[1]: Entering directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp'
-Building C object CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o
-/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto   -v -o CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.16/Modules/CMakeCCompilerABI.c
+Building C object CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o
+/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto   -v -o CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.16/Modules/CMakeCCompilerABI.c
 Using built-in specs.
 COLLECT_GCC=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc
 Target: aarch64-linux-gnu
@@ -53,8 +53,8 @@ Configured with: '/development/abe-toolchain-build/abe.build/ambarella/../../tar
 Thread model: posix
 Supported LTO compression algorithms: zlib
 gcc version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (GCC) 
-COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
- /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/cc1 -quiet -v -imultiarch aarch64-linux-gnu -iprefix /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/ -isysroot /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc /usr/share/cmake-3.16/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -march=armv8-a -mcpu=cortex-a53+crypto -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o -version -o /tmp/ccxBF73W.s
+COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
+ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/cc1 -quiet -v -imultiarch aarch64-linux-gnu -iprefix /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/ -isysroot /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc /usr/share/cmake-3.16/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -march=armv8-a -mcpu=cortex-a53+crypto -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o -version -o /tmp/ccv1lHuB.s
 GNU C17 (GCC) version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (aarch64-linux-gnu)
 	compiled by GNU C version 8.2.1 20180905 (Red Hat 8.2.1-3), GMP version 6.1.2, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22-GMP
 
@@ -77,15 +77,15 @@ GNU C17 (GCC) version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf
 
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: 77ec11c353775ccbe2985edad12cd3ab
-COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
- /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/as -v -EL -march=armv8-a -march=armv8-a+crypto+crc -mabi=lp64 -o CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o /tmp/ccxBF73W.s
+COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
+ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/as -v -EL -march=armv8-a -march=armv8-a+crypto+crc -mabi=lp64 -o CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o /tmp/ccv1lHuB.s
 GNU assembler version 2.35 (aarch64-linux-gnu) using BFD version (Binutils-2.35-20200724) 2.35
 COMPILER_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/
 LIBRARY_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/
-COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
-Linking C executable cmTC_c122a
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c122a.dir/link.txt --verbose=1
-/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto     -v CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o  -o cmTC_c122a 
+COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64'
+Linking C executable cmTC_7c0ef
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7c0ef.dir/link.txt --verbose=1
+/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto     -v CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o  -o cmTC_7c0ef 
 Using built-in specs.
 COLLECT_GCC=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc
 COLLECT_LTO_WRAPPER=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper
@@ -96,9 +96,9 @@ Supported LTO compression algorithms: zlib
 gcc version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (GCC) 
 COMPILER_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/
 LIBRARY_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/
-COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'cmTC_c122a' '-mlittle-endian' '-mabi=lp64'
- /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2 -plugin /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so -plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/cc5htZcs.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc --build-id --eh-frame-hdr -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-835769 --fix-cortex-a53-843419 -o cmTC_c122a /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1 -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtend.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crtn.o
-COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'cmTC_c122a' '-mlittle-endian' '-mabi=lp64'
+COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'cmTC_7c0ef' '-mlittle-endian' '-mabi=lp64'
+ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2 -plugin /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so -plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccpzLgO5.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc --build-id --eh-frame-hdr -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-835769 --fix-cortex-a53-843419 -o cmTC_7c0ef /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1 -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtend.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crtn.o
+COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'cmTC_7c0ef' '-mlittle-endian' '-mabi=lp64'
 make[1]: Leaving directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp'
 
 
@@ -122,10 +122,10 @@ Parsed C implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command(s):/usr/bin/make cmTC_c122a/fast && /usr/bin/make -f CMakeFiles/cmTC_c122a.dir/build.make CMakeFiles/cmTC_c122a.dir/build]
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_7c0ef/fast && /usr/bin/make -f CMakeFiles/cmTC_7c0ef.dir/build.make CMakeFiles/cmTC_7c0ef.dir/build]
   ignore line: [make[1]: Entering directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp']
-  ignore line: [Building C object CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o]
-  ignore line: [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto   -v -o CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.16/Modules/CMakeCCompilerABI.c]
+  ignore line: [Building C object CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o]
+  ignore line: [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto   -v -o CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o   -c /usr/share/cmake-3.16/Modules/CMakeCCompilerABI.c]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc]
   ignore line: [Target: aarch64-linux-gnu]
@@ -133,8 +133,8 @@ Parsed C implicit link information from above output:
   ignore line: [Thread model: posix]
   ignore line: [Supported LTO compression algorithms: zlib]
   ignore line: [gcc version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (GCC) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
-  ignore line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/cc1 -quiet -v -imultiarch aarch64-linux-gnu -iprefix /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/ -isysroot /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc /usr/share/cmake-3.16/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -march=armv8-a -mcpu=cortex-a53+crypto -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o -version -o /tmp/ccxBF73W.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
+  ignore line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/cc1 -quiet -v -imultiarch aarch64-linux-gnu -iprefix /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/ -isysroot /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc /usr/share/cmake-3.16/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -march=armv8-a -mcpu=cortex-a53+crypto -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o -version -o /tmp/ccv1lHuB.s]
   ignore line: [GNU C17 (GCC) version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (aarch64-linux-gnu)]
   ignore line: [	compiled by GNU C version 8.2.1 20180905 (Red Hat 8.2.1-3)  GMP version 6.1.2  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22-GMP]
   ignore line: []
@@ -157,15 +157,15 @@ Parsed C implicit link information from above output:
   ignore line: []
   ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
   ignore line: [Compiler executable checksum: 77ec11c353775ccbe2985edad12cd3ab]
-  ignore line: [COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
-  ignore line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/as -v -EL -march=armv8-a -march=armv8-a+crypto+crc -mabi=lp64 -o CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o /tmp/ccxBF73W.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
+  ignore line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/as -v -EL -march=armv8-a -march=armv8-a+crypto+crc -mabi=lp64 -o CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o /tmp/ccv1lHuB.s]
   ignore line: [GNU assembler version 2.35 (aarch64-linux-gnu) using BFD version (Binutils-2.35-20200724) 2.35]
   ignore line: [COMPILER_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/]
   ignore line: [LIBRARY_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
-  ignore line: [Linking C executable cmTC_c122a]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c122a.dir/link.txt --verbose=1]
-  ignore line: [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto     -v CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o  -o cmTC_c122a ]
+  ignore line: [COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o' '-c' '-mlittle-endian' '-mabi=lp64']
+  ignore line: [Linking C executable cmTC_7c0ef]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_7c0ef.dir/link.txt --verbose=1]
+  ignore line: [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc  -march=armv8-a -mcpu=cortex-a53+crypto     -v CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o  -o cmTC_7c0ef ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-gcc]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper]
@@ -176,13 +176,13 @@ Parsed C implicit link information from above output:
   ignore line: [gcc version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (GCC) ]
   ignore line: [COMPILER_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/]
   ignore line: [LIBRARY_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'cmTC_c122a' '-mlittle-endian' '-mabi=lp64']
-  link line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2 -plugin /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so -plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/cc5htZcs.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc --build-id --eh-frame-hdr -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-835769 --fix-cortex-a53-843419 -o cmTC_c122a /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1 -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtend.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-march=armv8-a' '-mcpu=cortex-a53+crypto' '-v' '-o' 'cmTC_7c0ef' '-mlittle-endian' '-mabi=lp64']
+  link line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2 -plugin /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so -plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccpzLgO5.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --sysroot=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc --build-id --eh-frame-hdr -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-835769 --fix-cortex-a53-843419 -o cmTC_7c0ef /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1 -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtend.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crtn.o]
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/cc5htZcs.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccpzLgO5.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -199,7 +199,7 @@ Parsed C implicit link information from above output:
     arg [--fix-cortex-a53-835769] ==> ignore
     arg [--fix-cortex-a53-843419] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_c122a] ==> ignore
+    arg [cmTC_7c0ef] ==> ignore
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o] ==> ignore
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o] ==> ignore
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o] ==> ignore
@@ -208,7 +208,7 @@ Parsed C implicit link information from above output:
     arg [-L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc] ==> dir [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc]
     arg [-L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib] ==> dir [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib]
     arg [-L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib] ==> dir [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib]
-    arg [CMakeFiles/cmTC_c122a.dir/CMakeCCompilerABI.c.o] ==> ignore
+    arg [CMakeFiles/cmTC_7c0ef.dir/CMakeCCompilerABI.c.o] ==> ignore
     arg [-lgcc] ==> lib [gcc]
     arg [--push-state] ==> ignore
     arg [--as-needed] ==> ignore
@@ -235,13 +235,13 @@ Parsed C implicit link information from above output:
 Determining if the CXX compiler works passed with the following output:
 Change Dir: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_fed17/fast && /usr/bin/make -f CMakeFiles/cmTC_fed17.dir/build.make CMakeFiles/cmTC_fed17.dir/build
+Run Build Command(s):/usr/bin/make cmTC_5811a/fast && /usr/bin/make -f CMakeFiles/cmTC_5811a.dir/build.make CMakeFiles/cmTC_5811a.dir/build
 make[1]: Entering directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_fed17.dir/testCXXCompiler.cxx.o
-/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++     -o CMakeFiles/cmTC_fed17.dir/testCXXCompiler.cxx.o -c /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
-Linking CXX executable cmTC_fed17
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_fed17.dir/link.txt --verbose=1
-/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++       CMakeFiles/cmTC_fed17.dir/testCXXCompiler.cxx.o  -o cmTC_fed17 
+Building CXX object CMakeFiles/cmTC_5811a.dir/testCXXCompiler.cxx.o
+/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++     -o CMakeFiles/cmTC_5811a.dir/testCXXCompiler.cxx.o -c /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp/testCXXCompiler.cxx
+Linking CXX executable cmTC_5811a
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5811a.dir/link.txt --verbose=1
+/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++       CMakeFiles/cmTC_5811a.dir/testCXXCompiler.cxx.o  -o cmTC_5811a 
 make[1]: Leaving directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp'
 
 
@@ -249,10 +249,10 @@ make[1]: Leaving directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams
 Detecting CXX compiler ABI info compiled with the following output:
 Change Dir: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp
 
-Run Build Command(s):/usr/bin/make cmTC_60f28/fast && /usr/bin/make -f CMakeFiles/cmTC_60f28.dir/build.make CMakeFiles/cmTC_60f28.dir/build
+Run Build Command(s):/usr/bin/make cmTC_28d16/fast && /usr/bin/make -f CMakeFiles/cmTC_28d16.dir/build.make CMakeFiles/cmTC_28d16.dir/build
 make[1]: Entering directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp'
-Building CXX object CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o
-/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++    -v -o CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp
+Building CXX object CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o
+/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++    -v -o CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp
 Using built-in specs.
 COLLECT_GCC=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++
 Target: aarch64-linux-gnu
@@ -260,8 +260,8 @@ Configured with: '/development/abe-toolchain-build/abe.build/ambarella/../../tar
 Thread model: posix
 Supported LTO compression algorithms: zlib
 gcc version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (GCC) 
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
- /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -iprefix /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/ -isysroot /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc -D_GNU_SOURCE /usr/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -march=armv8-a -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o -version -o /tmp/ccTk4AYW.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
+ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -iprefix /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/ -isysroot /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc -D_GNU_SOURCE /usr/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -march=armv8-a -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o -version -o /tmp/ccU2DKUz.s
 GNU C++14 (GCC) version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (aarch64-linux-gnu)
 	compiled by GNU C version 8.2.1 20180905 (Red Hat 8.2.1-3), GMP version 6.1.2, MPFR version 4.0.2, MPC version 1.1.0, isl version isl-0.22-GMP
 
@@ -290,15 +290,15 @@ GNU C++14 (GCC) version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272
 
 GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 Compiler executable checksum: 73d837209c49109b419850f8a0b44933
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
- /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/as -v -EL -march=armv8-a -mabi=lp64 -o CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccTk4AYW.s
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
+ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/as -v -EL -march=armv8-a -mabi=lp64 -o CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccU2DKUz.s
 GNU assembler version 2.35 (aarch64-linux-gnu) using BFD version (Binutils-2.35-20200724) 2.35
 COMPILER_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/
 LIBRARY_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
-Linking CXX executable cmTC_60f28
-/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_60f28.dir/link.txt --verbose=1
-/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++      -v CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_60f28 
+COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
+Linking CXX executable cmTC_28d16
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_28d16.dir/link.txt --verbose=1
+/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++      -v CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_28d16 
 Using built-in specs.
 COLLECT_GCC=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++
 COLLECT_LTO_WRAPPER=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper
@@ -309,9 +309,9 @@ Supported LTO compression algorithms: zlib
 gcc version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (GCC) 
 COMPILER_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/
 LIBRARY_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_60f28' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
- /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2 -plugin /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so -plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccl30vDn.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc --build-id --eh-frame-hdr -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-835769 --fix-cortex-a53-843419 -o cmTC_60f28 /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1 -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtend.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crtn.o
-COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_60f28' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_28d16' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
+ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2 -plugin /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so -plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccZe4Kk1.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc --build-id --eh-frame-hdr -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-835769 --fix-cortex-a53-843419 -o cmTC_28d16 /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1 -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtend.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crtn.o
+COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_28d16' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64'
 make[1]: Leaving directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp'
 
 
@@ -341,10 +341,10 @@ Parsed CXX implicit link information from above output:
   link line regex: [^( *|.*[/\])(ld|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\]+-)?ld|collect2)[^/\]*( |$)]
   ignore line: [Change Dir: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp]
   ignore line: []
-  ignore line: [Run Build Command(s):/usr/bin/make cmTC_60f28/fast && /usr/bin/make -f CMakeFiles/cmTC_60f28.dir/build.make CMakeFiles/cmTC_60f28.dir/build]
+  ignore line: [Run Build Command(s):/usr/bin/make cmTC_28d16/fast && /usr/bin/make -f CMakeFiles/cmTC_28d16.dir/build.make CMakeFiles/cmTC_28d16.dir/build]
   ignore line: [make[1]: Entering directory '/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/CMakeTmp']
-  ignore line: [Building CXX object CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o]
-  ignore line: [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++    -v -o CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp]
+  ignore line: [Building CXX object CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o]
+  ignore line: [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++    -v -o CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++]
   ignore line: [Target: aarch64-linux-gnu]
@@ -352,8 +352,8 @@ Parsed CXX implicit link information from above output:
   ignore line: [Thread model: posix]
   ignore line: [Supported LTO compression algorithms: zlib]
   ignore line: [gcc version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (GCC) ]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64']
-  ignore line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -iprefix /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/ -isysroot /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc -D_GNU_SOURCE /usr/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -march=armv8-a -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o -version -o /tmp/ccTk4AYW.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64']
+  ignore line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/cc1plus -quiet -v -imultiarch aarch64-linux-gnu -iprefix /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/ -isysroot /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc -D_GNU_SOURCE /usr/share/cmake-3.16/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -march=armv8-a -mlittle-endian -mabi=lp64 -auxbase-strip CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o -version -o /tmp/ccU2DKUz.s]
   ignore line: [GNU C++14 (GCC) version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (aarch64-linux-gnu)]
   ignore line: [	compiled by GNU C version 8.2.1 20180905 (Red Hat 8.2.1-3)  GMP version 6.1.2  MPFR version 4.0.2  MPC version 1.1.0  isl version isl-0.22-GMP]
   ignore line: []
@@ -382,15 +382,15 @@ Parsed CXX implicit link information from above output:
   ignore line: []
   ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
   ignore line: [Compiler executable checksum: 73d837209c49109b419850f8a0b44933]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64']
-  ignore line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/as -v -EL -march=armv8-a -mabi=lp64 -o CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccTk4AYW.s]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64']
+  ignore line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/as -v -EL -march=armv8-a -mabi=lp64 -o CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccU2DKUz.s]
   ignore line: [GNU assembler version 2.35 (aarch64-linux-gnu) using BFD version (Binutils-2.35-20200724) 2.35]
   ignore line: [COMPILER_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/]
   ignore line: [LIBRARY_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64']
-  ignore line: [Linking CXX executable cmTC_60f28]
-  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_60f28.dir/link.txt --verbose=1]
-  ignore line: [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++      -v CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_60f28 ]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64']
+  ignore line: [Linking CXX executable cmTC_28d16]
+  ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_28d16.dir/link.txt --verbose=1]
+  ignore line: [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++      -v CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o  -o cmTC_28d16 ]
   ignore line: [Using built-in specs.]
   ignore line: [COLLECT_GCC=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++]
   ignore line: [COLLECT_LTO_WRAPPER=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper]
@@ -401,13 +401,13 @@ Parsed CXX implicit link information from above output:
   ignore line: [gcc version 10.2.1 20200907 [ revision ce3001ff1d734e0763a1a5e434272bf89df1fe06] (GCC) ]
   ignore line: [COMPILER_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/../../../../aarch64-linux-gnu/bin/]
   ignore line: [LIBRARY_PATH=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib/:/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/]
-  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_60f28' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64']
-  link line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2 -plugin /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so -plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccl30vDn.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc --build-id --eh-frame-hdr -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-835769 --fix-cortex-a53-843419 -o cmTC_60f28 /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1 -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtend.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crtn.o]
+  ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_28d16' '-shared-libgcc' '-march=armv8-a' '-mlittle-endian' '-mabi=lp64']
+  link line: [ /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2 -plugin /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so -plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper -plugin-opt=-fresolution=/tmp/ccZe4Kk1.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --sysroot=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc --build-id --eh-frame-hdr -dynamic-linker /lib/ld-linux-aarch64.so.1 -X -EL -maarch64linux --fix-cortex-a53-835769 --fix-cortex-a53-843419 -o cmTC_28d16 /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1 -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib -L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtend.o /usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crtn.o]
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/collect2] ==> ignore
     arg [-plugin] ==> ignore
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/liblto_plugin.so] ==> ignore
     arg [-plugin-opt=/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../libexec/gcc/aarch64-linux-gnu/10.2.1/lto-wrapper] ==> ignore
-    arg [-plugin-opt=-fresolution=/tmp/ccl30vDn.res] ==> ignore
+    arg [-plugin-opt=-fresolution=/tmp/ccZe4Kk1.res] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
     arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
     arg [-plugin-opt=-pass-through=-lc] ==> ignore
@@ -424,7 +424,7 @@ Parsed CXX implicit link information from above output:
     arg [--fix-cortex-a53-835769] ==> ignore
     arg [--fix-cortex-a53-843419] ==> ignore
     arg [-o] ==> ignore
-    arg [cmTC_60f28] ==> ignore
+    arg [cmTC_28d16] ==> ignore
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crt1.o] ==> ignore
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib/crti.o] ==> ignore
     arg [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc/aarch64-linux-gnu/10.2.1/crtbegin.o] ==> ignore
@@ -433,7 +433,7 @@ Parsed CXX implicit link information from above output:
     arg [-L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc] ==> dir [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../lib/gcc]
     arg [-L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib] ==> dir [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/lib]
     arg [-L/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib] ==> dir [/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/../aarch64-linux-gnu/libc/usr/lib]
-    arg [CMakeFiles/cmTC_60f28.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+    arg [CMakeFiles/cmTC_28d16.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
     arg [-lstdc++] ==> lib [stdc++]
     arg [-lm] ==> lib [m]
     arg [-lgcc_s] ==> lib [gcc_s]

@@ -22,5 +22,3 @@ mkdir doorbell-build
 cd doorbell-build
 cmake ./../makefile_doorbell -DDOORBELL=1
 make -j4
-
-

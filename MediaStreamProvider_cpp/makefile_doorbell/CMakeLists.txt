@@ -9,7 +9,9 @@ project(${modulename}
 )
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-Wno-error=deprecated-declarations -Wno-deprecated-declarations")
-
+add_definitions(-DDOORBELL)
+#set(DOORBELL 11)
+#option(DOORBELL "Use openssl as crypto library" ON)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GIO REQUIRED gio-2.0)
 pkg_check_modules(GLIB REQUIRED glib-2.0)
@@ -45,9 +47,9 @@ set(oryxv2_libs
         ${FAKEROOT_DIR}/usr/lib/liboryx-osal.so.2
         ${FAKEROOT_DIR}/usr/lib/liboryx-video-address.so.2
         /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a/json-c/usr/lib/libjson-c.so
-        /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnConfig.a
-        /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnDBus.a
-        /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnUtils.a
+        #/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnConfig.a
+        #/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnDBus.a
+        #/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnUtils.a
 )
 
 set(kvsproducer_inc

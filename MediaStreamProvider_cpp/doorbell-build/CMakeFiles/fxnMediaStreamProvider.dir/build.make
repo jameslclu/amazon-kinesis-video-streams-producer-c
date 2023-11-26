@@ -204,17 +204,11 @@ fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarel
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib/liboryx-osal.so.2
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib/liboryx-video-address.so.2
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a/json-c/usr/lib/libjson-c.so
-fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnConfig.a
-fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnDBus.a
-fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnUtils.a
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib/liboryx-export-client.so
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib/liboryx-util.so.2
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib/liboryx-osal.so.2
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib/liboryx-video-address.so.2
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a/json-c/usr/lib/libjson-c.so
-fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnConfig.a
-fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnDBus.a
-fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/kvsapp/libs/libFxnUtils.a
 fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable fxnMediaStreamProvider"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/fxnMediaStreamProvider.dir/link.txt --verbose=$(VERBOSE)

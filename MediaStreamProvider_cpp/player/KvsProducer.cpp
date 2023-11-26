@@ -160,6 +160,7 @@ KvsProducer::~KvsProducer() {}
 
 int KvsProducer::SetDataSource(SampleStreamSource* psource) {
     psStreamSource = psource;
+    return 0;
 }
 
 int KvsProducer::StartUpload() {
@@ -173,6 +174,7 @@ int KvsProducer::StartUpload() {
 
     THREAD_JOIN(videoSendTid, nullptr);
     THREAD_JOIN(audioSendTid, nullptr);
+    return 0;
 }
 
 int KvsProducer::SetHandler(STREAM_HANDLE* handler) {
@@ -206,18 +208,18 @@ int KvsProducer::Init() {
     mpStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
     // Init2
     {
-        PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
+        const PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
         /*
         PCHAR pIotCoreCert = "/media/sf_workspaces/kvs_files/cert";
         PCHAR pIotCorePrivateKey = "/media/sf_workspaces/kvs_files/privkey";
         PCHAR pCaCert = "/media/sf_workspaces/kvs_files/rootca.pem";
         */
-        PCHAR pIotCoreCert = "/tmp/kvs_files/cert";
-        PCHAR pIotCorePrivateKey = "/tmp/kvs_files/privkey";
-        PCHAR pCaCert = "/tmp/kvs_files/rootca.pem";
-        PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
-        PCHAR pThingName = "db-B813329BB08C";
-        PCHAR pRegion = "ca-central-1";
+        const PCHAR pIotCoreCert = "/tmp/kvs_files/cert";
+        const PCHAR pIotCorePrivateKey = "/tmp/kvs_files/privkey";
+        const PCHAR pCaCert = "/tmp/kvs_files/rootca.pem";
+        const PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
+        const PCHAR pThingName = "db-B813329BB08C";
+        const PCHAR pRegion = "ca-central-1";
         createDefaultCallbacksProviderWithIotCertificate(pIotCoreCredentialEndPoint, pIotCoreCert, pIotCorePrivateKey, pCaCert,
                                                          pIotCoreRoleAlias, pThingName, pRegion, nullptr, nullptr, &mpClientCallbacks);
     }
