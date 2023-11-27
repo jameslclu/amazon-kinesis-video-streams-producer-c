@@ -4,8 +4,8 @@ static ComponentProvider* psComponentProvider = nullptr;
 static IStreamSource* psFakeStreamSource = nullptr;
 static IStreamSource* psOryxStreamSource = nullptr;
 
-static IKvsRender* psEMPTYRender = nullptr;
-static IKvsRender* psAwsProducer = nullptr;
+static IKVSRender* psEMPTYRender = nullptr;
+static IKVSRender* psAwsProducer = nullptr;
 
 ComponentProvider::ComponentProvider() {}
 
@@ -40,11 +40,11 @@ IStreamSource* ComponentProvider::GetStreamSource(StreamSourceType type) {
     }
 }
 
-int ComponentProvider::SetKvsRender(RenderType type, IKvsRender *pKvsPlayer) {
+int ComponentProvider::SetKvsRender(RenderType type, IKVSRender *pKvsPlayer) {
     int result = 0;
     if (type == RenderType::EMPTY) {
         psEMPTYRender = pKvsPlayer;
-    } else if (type == RenderType::AWSPRODUCKER) {
+    } else if (type == RenderType::AWSPRODUCER) {
         psAwsProducer = pKvsPlayer;
     } else {
         result = 1;
@@ -52,10 +52,10 @@ int ComponentProvider::SetKvsRender(RenderType type, IKvsRender *pKvsPlayer) {
     return result;
 }
 
-IKvsRender* ComponentProvider::GetKvsRender(RenderType type) {
+IKVSRender* ComponentProvider::GetKvsRender(RenderType type) {
     if (type == RenderType::EMPTY) {
         return psEMPTYRender;
-    } else if (type == RenderType::AWSPRODUCKER) {
+    } else if (type == RenderType::AWSPRODUCER) {
         return psAwsProducer;
     } else {
         return nullptr;

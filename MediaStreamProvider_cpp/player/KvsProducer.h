@@ -7,7 +7,7 @@
 #include "KvsServiceConfig.h"
 #include "SampleStreamSource.h"
 #include "AllInterfaces.h"
-class KvsProducer: public IKvsRender {
+class KvsProducer: public IKVSRender {
 public:
     KvsProducer();
     virtual ~KvsProducer();
@@ -19,7 +19,7 @@ public:
     int SetStreamName(PCHAR name);
     virtual int BaseInit();
     virtual int BaseDeinit();
-    virtual STATUS PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame);
+    virtual STATUS PutVideoFrame(PFrame pFrame);
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_KVSPRODUCER_H

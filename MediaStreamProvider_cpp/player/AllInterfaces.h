@@ -11,11 +11,19 @@ class IStreamSource {
     virtual int GetAudioFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) = 0;
 };
 
-class IKvsRender {
+enum class KVSState {
+
+};
+
+class IKVSRenderCallback {
+
+};
+
+class IKVSRender {
   public:
     virtual int BaseInit() = 0;
     virtual int BaseDeinit() = 0;
-    virtual STATUS PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame) = 0;
+    virtual STATUS PutVideoFrame(PFrame pFrame) = 0;
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_ALLINTERFACES_H

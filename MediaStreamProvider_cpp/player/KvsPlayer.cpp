@@ -46,7 +46,45 @@ typedef struct {
 BYTE aacAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 //STREAM_HANDLE streamHandle = INVALID_STREAM_HANDLE_VALUE;
 
+
+
 static PVOID putVideoFrameRoutine(PVOID args) {
+    int64_t _targtpts = 0L;
+    STATUS status;
+    UINT64 pts = 0;
+    static Frame frame;
+    //memset(&frame, 0x00, sizeof (Frame));
+    frame.index = 0;
+    frame.trackId = DEFAULT_VIDEO_TRACK_ID;
+    frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
+    frame.version = FRAME_CURRENT_VERSION;
+    frame.decodingTs = 0;
+    frame.presentationTs = 0;
+    uint32_t frameID = 0;
+
+    MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: +");
+    while( 0 == ComponentProvider::GetInstance()->GetStreamSource(FAKE)->
+                GetVideoFrame(&frame.frameData, &frame.size, &pts) ) {
+        // Put it into KvsRender();
+        frame.index = frameID;
+        frame.flags = frameID % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
+        status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutVideoFrame(&frame);
+        usleep(frame.duration/HUNDREDS_OF_NANOS_IN_A_MICROSECOND);
+        //        if (i == 0) {
+        //            status = putKinesisVideoEventMetadata(sStreamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
+        //            MLogger::LOG(Level::DEBUG, "putKinesisVideoEventMetadata: status = %X", status);
+        //        }
+        frame.decodingTs += frame.duration;
+        frame.presentationTs = frame.decodingTs;
+        MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame, (index=%d), status = %X", frameID, status);
+        frameID++;
+    }
+
+    MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: -");
+    return 0;
+}
+// The sample is corrent. let's frozen it.
+static PVOID putVideoFrameRoutineDone(PVOID args) {
     //FmspFramePlaybackInfo_u _package;
     //KvsProducerFrameConfig_t video;
     int64_t _targtpts = 0L;
@@ -469,7 +507,7 @@ int KvsPlayer::Pause() {
 }
 
 int KvsPlayer::Stop() {
-    ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCKER)->BaseDeinit();
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseDeinit();
     return 0;
 }
 

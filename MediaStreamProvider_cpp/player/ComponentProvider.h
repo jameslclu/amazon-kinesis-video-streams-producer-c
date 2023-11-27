@@ -1,5 +1,5 @@
-#ifndef KVSAUDIOVIDEOSTREAMINGSAMPLE_COMPONENTPROVIDER_H
-#define KVSAUDIOVIDEOSTREAMINGSAMPLE_RESOURCEPROVIDER_H
+#ifndef _COMPONENTPROVIDER_H
+#define _RESOURCEPROVIDER_H
 
 #include "AllInterfaces.h"
 
@@ -10,7 +10,7 @@ enum StreamSourceType {
 
 enum RenderType {
     EMPTY = 0,
-    AWSPRODUCKER = 1
+    AWSPRODUCER = 1
 };
 
 class ComponentProvider {
@@ -24,8 +24,8 @@ class ComponentProvider {
     static int SetStreamSource(StreamSourceType type, IStreamSource *pStreamSource);
     static IStreamSource* GetStreamSource(StreamSourceType type);
 
-    static int SetKvsRender(RenderType type, IKvsRender *pKvsPlayer);
-    static IKvsRender* GetKvsRender(RenderType type);
+    static int SetKvsRender(RenderType type, IKVSRender *pKvsPlayer);
+    static IKVSRender* GetKvsRender(RenderType type);
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_RESOURCEPROVIDER_H

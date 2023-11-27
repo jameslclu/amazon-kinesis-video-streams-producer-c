@@ -2,6 +2,7 @@
 #include "AllInterfaces.h"
 #include "ComponentProvider.h"
 #include "KvsServiceConfig.h"
+#include "MLogger.h"
 
 static PDeviceInfo mpDeviceInfo;
 static PStreamInfo mpStreamInfo = NULL;
@@ -177,10 +178,10 @@ int KvsProducer::StartUpload() {
     return 0;
 }
 
-int KvsProducer::SetHandler(STREAM_HANDLE* handler) {
-    mpStreamHandle = handler;
-    return 0;
-}
+//int KvsProducer::SetHandler(STREAM_HANDLE* handler) {
+//  //  mpStreamHandle = handler;
+//    return 0;
+//}
 
 int KvsProducer::BaseInit() {
     return Init();
@@ -190,56 +191,122 @@ int KvsProducer::BaseDeinit() {
     return Deinit();
 }
 
+static PDeviceInfo sPDeviceInfo;
+#define DEFAULT_STORAGE_SIZE              20 * 1024 * 1024
+#define RECORDED_FRAME_AVG_BITRATE_BIT_PS 3800000
+static STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
+static PSTREAM_HANDLE sPStreamHandle = &mStreamHandle;
+static PCHAR sStreamName = (PCHAR) "SH20-eventStream-db-B813329BB08C";
+static PCHAR pIotCoreCredentialEndPoint = (PCHAR) "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
+static PCHAR pIotCoreCert = (PCHAR) "/home/camera/kvs/cert";
+static PCHAR pIotCorePrivateKey = (PCHAR) "/home/camera/kvs/privkey";
+static PCHAR pCaCert = (PCHAR) "/home/camera/kvs/rootca.pem";
+static PCHAR pIotCoreRoleAlias = (PCHAR) "KvsCameraIoTRoleAlias";
+static PCHAR pThingName = (PCHAR) "db-B813329BB08C";
+static PCHAR pRegion = (PCHAR) "ca-central-1";
+static PStreamInfo pStreamInfo = NULL;
+static PTrackInfo spAudioTrack;
+static BYTE sAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
+static PClientCallbacks pClientCallbacks = NULL;
+static PStreamCallbacks pStreamCallbacks = NULL;
+static CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
+
 int KvsProducer::Init() {
-    createDefaultDeviceInfo(&mpDeviceInfo);
-    mpDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
-    //Init-001
-    {
-        createRealtimeAudioVideoStreamInfoProviderWithCodecs(mStreamName, DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
-                                                             AUDIO_CODEC_ID_AAC, &mpStreamInfo);
-        // set up audio cpd.
-        mpAudioTrack = mpStreamInfo->streamCaps.trackInfoList[0].trackId == DEFAULT_AUDIO_TRACK_ID ? &mpStreamInfo->streamCaps.trackInfoList[0]
-                                                                                                   : &mpStreamInfo->streamCaps.trackInfoList[1];
-        mpAudioTrack->codecPrivateData = mAACAudioCpd;
-        mpAudioTrack->codecPrivateDataSize = KVS_AAC_CPD_SIZE_BYTE;
-        mkvgenGenerateAacCpd(AAC_LC, AAC_AUDIO_TRACK_SAMPLING_RATE, AAC_AUDIO_TRACK_CHANNEL_CONFIG, mpAudioTrack->codecPrivateData,
-                             mpAudioTrack->codecPrivateDataSize);
-    }
-    mpStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
-    // Init2
-    {
-        const PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
-        /*
-        PCHAR pIotCoreCert = "/media/sf_workspaces/kvs_files/cert";
-        PCHAR pIotCorePrivateKey = "/media/sf_workspaces/kvs_files/privkey";
-        PCHAR pCaCert = "/media/sf_workspaces/kvs_files/rootca.pem";
-        */
-        const PCHAR pIotCoreCert = "/tmp/kvs_files/cert";
-        const PCHAR pIotCorePrivateKey = "/tmp/kvs_files/privkey";
-        const PCHAR pCaCert = "/tmp/kvs_files/rootca.pem";
-        const PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
-        const PCHAR pThingName = "db-B813329BB08C";
-        const PCHAR pRegion = "ca-central-1";
-        createDefaultCallbacksProviderWithIotCertificate(pIotCoreCredentialEndPoint, pIotCoreCert, pIotCorePrivateKey, pCaCert,
-                                                         pIotCoreRoleAlias, pThingName, pRegion, nullptr, nullptr, &mpClientCallbacks);
-    }
+    STATUS status;
+    createDefaultDeviceInfo(&sPDeviceInfo);
+    sPDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
+    sPDeviceInfo->storageInfo.storageSize = DEFAULT_STORAGE_SIZE;
+
+    // Step 1:
+    status = createOfflineVideoStreamInfoProviderWithCodecs(sStreamName, DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
+                                                            &pStreamInfo);
+    MLogger::LOG(Level::DEBUG, "createDefaultCallbacksProviderWithIotCertificate: %X", status);
+    status = setStreamInfoBasedOnStorageSize(DEFAULT_STORAGE_SIZE, RECORDED_FRAME_AVG_BITRATE_BIT_PS, 1, pStreamInfo);
+    MLogger::LOG(Level::DEBUG, "setStreamInfoBasedOnStorageSize: %X", status);
+
+    pStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
+
+    status = createDefaultCallbacksProviderWithIotCertificate(pIotCoreCredentialEndPoint, pIotCoreCert, pIotCorePrivateKey,
+                                                              pCaCert, pIotCoreRoleAlias, pThingName, pRegion,
+                                                              NULL, NULL, &pClientCallbacks);
+    MLogger::LOG(Level::DEBUG, "createDefaultCallbacksProviderWithIotCertificate: %X", status);
+
+    // step 4: addFileLoggerPlatformCallbacksProvider();
     STATUS retStatus = STATUS_SUCCESS;
     if (NULL != getenv(ENABLE_FILE_LOGGING)) {
-        if ((retStatus = addFileLoggerPlatformCallbacksProvider(mpClientCallbacks, FILE_LOGGING_BUFFER_SIZE, MAX_NUMBER_OF_LOG_FILES,
-                                                                (PCHAR) FILE_LOGGER_LOG_FILE_DIRECTORY_PATH, TRUE) != STATUS_SUCCESS)) {
+        if ((retStatus = addFileLoggerPlatformCallbacksProvider(pClientCallbacks, FILE_LOGGING_BUFFER_SIZE, MAX_NUMBER_OF_LOG_FILES,
+                                                                (PCHAR) "/data/tmp/middleware/", TRUE) != STATUS_SUCCESS)) {
             printf("File logging enable option failed with 0x%08x error code\n", retStatus);
         }
     }
-    // Init3
-    {
-        createStreamCallbacks(&mpStreamCallbacks);
-        addStreamCallbacks(mpClientCallbacks, mpStreamCallbacks);
-    }
-    // Init4
-    createKinesisVideoClient(mpDeviceInfo, mpClientCallbacks, &mClientHandle);
-    createKinesisVideoStreamSync(mClientHandle, mpStreamInfo, mpStreamHandle);//&mStreamHandle);
+
+    // step 5: createStreamCallbacks();
+    MLogger::LOG(Level::DEBUG, "Create Stream Callbacks: %X", createStreamCallbacks(&pStreamCallbacks));
+
+    // step 6: addStreamCallbacks();
+    MLogger::LOG(Level::DEBUG, "Add Stream Callbacks: %X", addStreamCallbacks(pClientCallbacks, pStreamCallbacks));
+
+    // step 7: createKinesisVideoClient();
+    status = createKinesisVideoClient(sPDeviceInfo, pClientCallbacks, &clientHandle);
+    MLogger::LOG(Level::DEBUG, "7. Create Kinesis Video Client: result = %X", status);
+
+    // step 8: createKinesisVideoStreamSync();
+    status = createKinesisVideoStreamSync(clientHandle, pStreamInfo, sPStreamHandle);
+    MLogger::LOG(Level::DEBUG, "8. createKinesisVideoStreamSync: result = %X", status);
+
     return 0;
 }
+
+//int KvsProducer::Init() {
+//    createDefaultDeviceInfo(&mpDeviceInfo);
+//    mpDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
+//    //Init-001
+//    {
+//        createRealtimeAudioVideoStreamInfoProviderWithCodecs(mStreamName, DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
+//                                                             AUDIO_CODEC_ID_AAC, &mpStreamInfo);
+//        // set up audio cpd.
+//        mpAudioTrack = mpStreamInfo->streamCaps.trackInfoList[0].trackId == DEFAULT_AUDIO_TRACK_ID ? &mpStreamInfo->streamCaps.trackInfoList[0]
+//                                                                                                   : &mpStreamInfo->streamCaps.trackInfoList[1];
+//        mpAudioTrack->codecPrivateData = mAACAudioCpd;
+//        mpAudioTrack->codecPrivateDataSize = KVS_AAC_CPD_SIZE_BYTE;
+//        mkvgenGenerateAacCpd(AAC_LC, AAC_AUDIO_TRACK_SAMPLING_RATE, AAC_AUDIO_TRACK_CHANNEL_CONFIG, mpAudioTrack->codecPrivateData,
+//                             mpAudioTrack->codecPrivateDataSize);
+//    }
+//    mpStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
+//    // Init2
+//    {
+//        const PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
+//        /*
+//        PCHAR pIotCoreCert = "/media/sf_workspaces/kvs_files/cert";
+//        PCHAR pIotCorePrivateKey = "/media/sf_workspaces/kvs_files/privkey";
+//        PCHAR pCaCert = "/media/sf_workspaces/kvs_files/rootca.pem";
+//        */
+//        const PCHAR pIotCoreCert = "/tmp/kvs_files/cert";
+//        const PCHAR pIotCorePrivateKey = "/tmp/kvs_files/privkey";
+//        const PCHAR pCaCert = "/tmp/kvs_files/rootca.pem";
+//        const PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
+//        const PCHAR pThingName = "db-B813329BB08C";
+//        const PCHAR pRegion = "ca-central-1";
+//        createDefaultCallbacksProviderWithIotCertificate(pIotCoreCredentialEndPoint, pIotCoreCert, pIotCorePrivateKey, pCaCert,
+//                                                         pIotCoreRoleAlias, pThingName, pRegion, nullptr, nullptr, &mpClientCallbacks);
+//    }
+//    STATUS retStatus = STATUS_SUCCESS;
+//    if (NULL != getenv(ENABLE_FILE_LOGGING)) {
+//        if ((retStatus = addFileLoggerPlatformCallbacksProvider(mpClientCallbacks, FILE_LOGGING_BUFFER_SIZE, MAX_NUMBER_OF_LOG_FILES,
+//                                                                (PCHAR) FILE_LOGGER_LOG_FILE_DIRECTORY_PATH, TRUE) != STATUS_SUCCESS)) {
+//            printf("File logging enable option failed with 0x%08x error code\n", retStatus);
+//        }
+//    }
+//    // Init3
+//    {
+//        createStreamCallbacks(&mpStreamCallbacks);
+//        addStreamCallbacks(mpClientCallbacks, mpStreamCallbacks);
+//    }
+//    // Init4
+//    createKinesisVideoClient(mpDeviceInfo, mpClientCallbacks, &mClientHandle);
+//    createKinesisVideoStreamSync(mClientHandle, mpStreamInfo, mpStreamHandle);//&mStreamHandle);
+//    return 0;
+//}
 
 int KvsProducer::Deinit() {
     stopKinesisVideoStreamSync(*mpStreamHandle);
@@ -256,6 +323,6 @@ int KvsProducer::SetStreamName(PCHAR name) {
     return 0;
 }
 
-STATUS KvsProducer::PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame) {
-    return putKinesisVideoFrame(*mpStreamHandle, pFrame);
+STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
+    return putKinesisVideoFrame(*sPStreamHandle, pFrame);
 }

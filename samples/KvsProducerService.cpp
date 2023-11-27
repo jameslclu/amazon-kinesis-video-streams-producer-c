@@ -22,7 +22,8 @@ int main() {
         mKvsProducer.SetStreamName(streamName);
 
         mKvsProducer.SetHandler(&mStreamHandle);
-        //mKvsProducer.Init();
+        mKvsProducer.Init();
+
         mStreamSource.SetHandler(mStreamHandle);
 
         ATOMIC_STORE_BOOL(&mStreamSource.firstVideoFramePut, FALSE);

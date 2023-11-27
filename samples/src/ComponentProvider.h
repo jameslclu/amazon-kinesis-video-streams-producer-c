@@ -16,7 +16,6 @@ enum RenderType {
 class ComponentProvider {
   public:
 
-
     ComponentProvider();
     ~ComponentProvider();
 

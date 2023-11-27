@@ -345,9 +345,9 @@ if(BUILD_COMMON_CURL)
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSample.c)
     target_link_libraries(kvsAudioVideoStreamingSample cproducer)
 
-    add_executable(kvsAudioVideoStreamingSampleNew
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSampleNew.c)
-    target_link_libraries(kvsAudioVideoStreamingSampleNew cproducer)
+#    add_executable(kvsAudioVideoStreamingSampleNew
+#            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSampleNew.c)
+#    target_link_libraries(kvsAudioVideoStreamingSampleNew cproducer)
 
 #    add_executable(kvsProducerService
 #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp)
@@ -368,33 +368,33 @@ if(BUILD_COMMON_CURL)
     pkg_check_modules(GIO_UNIX REQUIRED IMPORTED_TARGET gio-unix-2.0)
     pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 
-    add_executable(kvsProducerService
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/JsonUtility.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/MethodQueue.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/ServiceBase.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsProducer.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/StreamSource.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsPlayer.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsService.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceStub.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceProxy.cpp
-            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/ComponentProvider.cpp
-            samples/src/KvsPlayer.cpp)
+#    add_executable(kvsProducerService
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/JsonUtility.cpp
+    ##            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/MethodQueue.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/ServiceBase.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsProducer.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/StreamSource.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsPlayer.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsService.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceStub.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceProxy.cpp
+    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/ComponentProvider.cpp
+    #            samples/src/KvsPlayer.cpp)
 
-    target_include_directories(kvsProducerService
-            PUBLIC
-            ${GIO_INCLUDE_DIRS}
-            ${GLIB_INCLUDE_DIRS}
-            ${GIO_UNIX_INCLUDE_DIRS}
-            ${JSONCPP_INCLUDE_DIRS})
+    #target_include_directories(kvsProducerService
+    #            PUBLIC
+    #            ${GIO_INCLUDE_DIRS}
+    #            ${GLIB_INCLUDE_DIRS}
+    #            ${GIO_UNIX_INCLUDE_DIRS}
+    #            ${JSONCPP_INCLUDE_DIRS})
 
-    target_link_libraries(kvsProducerService
-            PUBLIC ${GIO_LIBRARIES}
-            ${GLIB_LIBRARIES}
-            ${GIO_UNIX_LIBRARIES}
-            ${JSONCPP_LIBRARIES}
-            cproducer)
+    #target_link_libraries(kvsProducerService
+    #            PUBLIC ${GIO_LIBRARIES}
+    #            ${GLIB_LIBRARIES}
+    #        ${GIO_UNIX_LIBRARIES}
+    #            ${JSONCPP_LIBRARIES}
+    #       cproducer)
 
     if (BUILD_TEST)
         add_subdirectory(tst)

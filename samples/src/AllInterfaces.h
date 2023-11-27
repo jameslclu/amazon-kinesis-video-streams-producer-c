@@ -19,7 +19,7 @@ class IKvsRender {
   public:
     virtual int BaseInit() = 0;
     virtual int BaseDeinit() = 0;
-    virtual STATUS PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame) = 0;
+    virtual STATUS PutVideoFrame(PFrame pFrame) = 0;
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_ALLINTERFACES_H

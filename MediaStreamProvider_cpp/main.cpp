@@ -19,11 +19,17 @@
 #include "james/JamesServiceStub.h"
 #include "player/ComponentProvider.h"
 #include "player/SampleStreamSource.h"
+#include "KvsProducer.h"
 
 int main() {
     (void)MLogger::Instance().Init("MSProvider", "/data/tmp/middleware", "msprovider", 0, 10);
     MLogger::Instance().SetPrintLevel(Level::DEBUG);
     int retStatus;
+
+    KvsProducer mKvsProducer;
+    mKvsProducer.Init();
+    ComponentProvider::GetInstance()->SetKvsRender(AWSPRODUCER, &mKvsProducer);
+
     SampleStreamSource mSampleStreamSource;
     mSampleStreamSource.SetDataSource("/home/camera/kvs/samples");
     mSampleStreamSource.Init();
