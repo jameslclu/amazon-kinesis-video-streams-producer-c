@@ -7,6 +7,8 @@
 #include "KvsServiceConfig.h"
 #include "SampleStreamSource.h"
 #include "AllInterfaces.h"
+#include "Settings.h"
+
 class KvsProducer: public IKVSRender {
 public:
     KvsProducer();
@@ -20,6 +22,16 @@ public:
     virtual int BaseInit();
     virtual int BaseDeinit();
     virtual STATUS PutVideoFrame(PFrame pFrame);
+  private:
+    std::string mStreamName;
+    std::string mIotCoreCredentialEndPoint;
+    std::string mIotCoreCert;
+    std::string mIotCorePrivateKey;
+    std::string mCaCert;
+    std::string mIotCoreRoleAlias;
+    std::string mThingName;
+    std::string mRegion;
+    Settings mSettings;
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_KVSPRODUCER_H

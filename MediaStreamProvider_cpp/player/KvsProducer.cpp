@@ -157,6 +157,7 @@ CleanUp:
 TID audioSendTid, videoSendTid;
 
 KvsProducer::KvsProducer() {}
+
 KvsProducer::~KvsProducer() {}
 
 int KvsProducer::SetDataSource(SampleStreamSource* psource) {
@@ -196,14 +197,14 @@ static PDeviceInfo sPDeviceInfo;
 #define RECORDED_FRAME_AVG_BITRATE_BIT_PS 3800000
 static STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
 static PSTREAM_HANDLE sPStreamHandle = &mStreamHandle;
-static PCHAR sStreamName = (PCHAR) "SH20-eventStream-db-B813329BB08C";
-static PCHAR pIotCoreCredentialEndPoint = (PCHAR) "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
-static PCHAR pIotCoreCert = (PCHAR) "/home/camera/kvs/cert";
-static PCHAR pIotCorePrivateKey = (PCHAR) "/home/camera/kvs/privkey";
-static PCHAR pCaCert = (PCHAR) "/home/camera/kvs/rootca.pem";
-static PCHAR pIotCoreRoleAlias = (PCHAR) "KvsCameraIoTRoleAlias";
-static PCHAR pThingName = (PCHAR) "db-B813329BB08C";
-static PCHAR pRegion = (PCHAR) "ca-central-1";
+//static PCHAR sStreamName = (PCHAR) "SH20-eventStream-db-B813329BB08C";
+//static PCHAR pIotCoreCredentialEndPoint = (PCHAR) "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
+//static PCHAR pIotCoreCert = (PCHAR) "/home/camera/kvs/cert";
+//static PCHAR pIotCorePrivateKey = (PCHAR) "/home/camera/kvs/privkey";
+//static PCHAR pCaCert = (PCHAR) "/home/camera/kvs/rootca.pem";
+//static PCHAR pIotCoreRoleAlias = (PCHAR) "KvsCameraIoTRoleAlias";
+//static PCHAR pThingName = (PCHAR) "db-B813329BB08C";
+//static PCHAR pRegion = (PCHAR) "ca-central-1";
 static PStreamInfo pStreamInfo = NULL;
 static PTrackInfo spAudioTrack;
 static BYTE sAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
@@ -212,13 +213,24 @@ static PStreamCallbacks pStreamCallbacks = NULL;
 static CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
 
 int KvsProducer::Init() {
+    mSettings.Init();
+    // Step: 0
+    mSettings.GetString(STREAM_NAME, mStreamName);
+    mSettings.GetString(END_POINT, mIotCoreCredentialEndPoint);
+    mSettings.GetString(CERT_LOCATION, mIotCoreCert);
+    mSettings.GetString(KEY_LOCATION, mIotCorePrivateKey);
+    mSettings.GetString(CA_LOCATION, mCaCert);
+    mSettings.GetString(ROLE_ALIAS, mIotCoreRoleAlias);
+    mSettings.GetString(THING_NAME, mThingName);
+    mSettings.GetString(REGION, mRegion);
+
     STATUS status;
     createDefaultDeviceInfo(&sPDeviceInfo);
     sPDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
     sPDeviceInfo->storageInfo.storageSize = DEFAULT_STORAGE_SIZE;
 
     // Step 1:
-    status = createOfflineVideoStreamInfoProviderWithCodecs(sStreamName, DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
+    status = createOfflineVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
                                                             &pStreamInfo);
     MLogger::LOG(Level::DEBUG, "createDefaultCallbacksProviderWithIotCertificate: %X", status);
     status = setStreamInfoBasedOnStorageSize(DEFAULT_STORAGE_SIZE, RECORDED_FRAME_AVG_BITRATE_BIT_PS, 1, pStreamInfo);
@@ -226,8 +238,8 @@ int KvsProducer::Init() {
 
     pStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
 
-    status = createDefaultCallbacksProviderWithIotCertificate(pIotCoreCredentialEndPoint, pIotCoreCert, pIotCorePrivateKey,
-                                                              pCaCert, pIotCoreRoleAlias, pThingName, pRegion,
+    status = createDefaultCallbacksProviderWithIotCertificate((PCHAR )mIotCoreCredentialEndPoint.data(), (PCHAR )mIotCoreCert.data(), (PCHAR )mIotCorePrivateKey.data(),
+                                                              (PCHAR )mCaCert.data(), (PCHAR )mIotCoreRoleAlias.data(), (PCHAR )mThingName.data(), (PCHAR )mRegion.data(),
                                                               NULL, NULL, &pClientCallbacks);
     MLogger::LOG(Level::DEBUG, "createDefaultCallbacksProviderWithIotCertificate: %X", status);
 

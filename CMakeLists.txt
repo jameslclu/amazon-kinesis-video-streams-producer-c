@@ -433,6 +433,7 @@ if(BUILD_COMMON_CURL)
     list(APPEND player_src
             ${fxnMediaStreamProvider_root}/player/ComponentProvider.cpp
             ${fxnMediaStreamProvider_root}/player/KvsPlayer.cpp
+            ${fxnMediaStreamProvider_root}/player/Settings.cpp
             ${fxnMediaStreamProvider_root}/player/KvsProducer.cpp)
 
     list(APPEND player_inc

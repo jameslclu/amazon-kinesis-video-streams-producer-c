@@ -47,6 +47,7 @@ list(APPEND james_inc
 list(APPEND player_src
     player/ComponentProvider.cpp
     player/KvsPlayer.cpp
+    player/Settings.cpp
     player/KvsProducer.cpp)
 
 list(APPEND player_inc
@@ -103,13 +104,13 @@ PUBLIC
     ${GLIB_INCLUDE_DIRS}
     ${GIO_UNIX_INCLUDE_DIRS}
     ${JSONCPP_INCLUDE_DIRS}
-        ${common_inc}
-        ${james_inc}
-        ${player_inc}
+    ${common_inc}
+    ${james_inc}
+    ${player_inc}
 #			/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/src/include
 #			/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug
 #           ${cv28_inc}
-        ${sdk_inc}
+    ${sdk_inc}
 )
 
 set(CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug/")

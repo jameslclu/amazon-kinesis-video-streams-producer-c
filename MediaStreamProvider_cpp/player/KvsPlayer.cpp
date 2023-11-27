@@ -46,8 +46,6 @@ typedef struct {
 BYTE aacAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 //STREAM_HANDLE streamHandle = INVALID_STREAM_HANDLE_VALUE;
 
-
-
 static PVOID putVideoFrameRoutine(PVOID args) {
     int64_t _targtpts = 0L;
     STATUS status;
@@ -83,6 +81,7 @@ static PVOID putVideoFrameRoutine(PVOID args) {
     MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: -");
     return 0;
 }
+
 // The sample is corrent. let's frozen it.
 static PVOID putVideoFrameRoutineDone(PVOID args) {
     //FmspFramePlaybackInfo_u _package;
