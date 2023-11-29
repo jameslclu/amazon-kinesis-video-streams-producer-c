@@ -61,6 +61,8 @@ static PVOID putVideoFrameRoutine(PVOID args) {
     uint32_t frameID = 0;
 
     MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: +");
+    ComponentProvider::GetInstance()->GetStreamSource(FAKE)->Reset();
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
     while( 0 == ComponentProvider::GetInstance()->GetStreamSource(FAKE)->
                 GetVideoFrame(&frame.frameData, &frame.size, &pts) ) {
         // Put it into KvsRender();
@@ -77,7 +79,7 @@ static PVOID putVideoFrameRoutine(PVOID args) {
         MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame, (index=%d), status = %X", frameID, status);
         frameID++;
     }
-
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseDeinit();
     MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: -");
     return 0;
 }

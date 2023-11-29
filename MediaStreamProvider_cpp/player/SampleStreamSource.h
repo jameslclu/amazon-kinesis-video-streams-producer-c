@@ -86,6 +86,12 @@ class SampleStreamSource : public IStreamSource {
         return 0;
     }
 
+    int Reset() {
+        mAudioIndex = 0;
+        mVideoIndex = 0;
+        return 0;
+    }
+
     int Deinit() {
         for (int i = 0; i < NUMBER_OF_AUDIO_FRAME_FILES; ++i) {
             SAFE_MEMFREE(audioFrames[i].buffer);
@@ -102,24 +108,23 @@ class SampleStreamSource : public IStreamSource {
         this->streamHandle = handler;
         return 0;
     }
-
+    int mVideoIndex;
+    int mAudioIndex;
     int GetVideoFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) {
-        static int index = 0;
-        if (index >= NUMBER_OF_VIDEO_FRAME_FILES) return 1;
-        *pdata = this->videoFrames[index].buffer;
-        *psize = this->videoFrames[index].size;
-        *pPTS = index / DEFAULT_TIME_UNIT_IN_NANOS;
-        index++;
+        if (mVideoIndex >= NUMBER_OF_VIDEO_FRAME_FILES) return 1;
+        *pdata = this->videoFrames[mVideoIndex].buffer;
+        *psize = this->videoFrames[mVideoIndex].size;
+        *pPTS = mVideoIndex / DEFAULT_TIME_UNIT_IN_NANOS;
+        mVideoIndex++;
         return 0;
     }
 
     int GetAudioFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) {
-        static int index = 0;
-        if (index >= NUMBER_OF_AUDIO_FRAME_FILES) return 1;
-        *pdata = this->audioFrames[index].buffer;
-        *psize = this->audioFrames[index].size;
-        *pPTS = index / DEFAULT_TIME_UNIT_IN_NANOS;
-        index++;
+        if (this->mAudioIndex >= NUMBER_OF_AUDIO_FRAME_FILES) return 1;
+        *pdata = this->audioFrames[this->mAudioIndex].buffer;
+        *psize = this->audioFrames[this->mAudioIndex].size;
+        *pPTS = this->mAudioIndex / DEFAULT_TIME_UNIT_IN_NANOS;
+        this->mAudioIndex++;
         return 0;
     }
 };

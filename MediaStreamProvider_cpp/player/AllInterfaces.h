@@ -7,6 +7,9 @@
 
 class IStreamSource {
   public:
+    virtual int Init() = 0;
+    virtual int Deinit() = 0;
+    virtual int Reset() = 0;
     virtual int GetVideoFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) = 0;
     virtual int GetAudioFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) = 0;
 };

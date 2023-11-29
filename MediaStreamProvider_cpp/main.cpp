@@ -21,13 +21,37 @@
 #include "player/SampleStreamSource.h"
 #include "KvsProducer.h"
 
+JamesServiceStub* sp_ServiceStub;
+
+static void signalHandler(int signal) {
+    switch (signal) {
+        case SIGINT:
+        case SIGQUIT:
+        case SIGKILL:
+        case SIGTERM:
+            if (sp_ServiceStub != nullptr) {
+                (void) sp_ServiceStub->Interrupt(1);
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+
 int main() {
     (void)MLogger::Instance().Init("MSProvider", "/data/tmp/middleware", "msprovider", 0, 10);
     MLogger::Instance().SetPrintLevel(Level::DEBUG);
+
+    (void)signal(SIGINT, signalHandler);
+    (void)signal(SIGQUIT, signalHandler);
+    (void)signal(SIGKILL, signalHandler);
+    (void)signal(SIGTERM, signalHandler);
+
     int retStatus;
 
     KvsProducer mKvsProducer;
-    mKvsProducer.Init();
+    //mKvsProducer.Init();
     ComponentProvider::GetInstance()->SetKvsRender(AWSPRODUCER, &mKvsProducer);
 
     SampleStreamSource mSampleStreamSource;
@@ -38,6 +62,7 @@ int main() {
     retStatus = EXIT_FAILURE;
     JamesService service;
     JamesServiceStub serviceStub(&service);
+    sp_ServiceStub = &serviceStub;
     //if( LIB_UTILS_PROGRAM_ALREADY_EXECUTE ==
     //  LibUtilProgramIsExecute( FXN_PROGRAM_NAME ) )
     //  FXNLOGD( "%s Already Execute ..", FXN_PROGRAM_NAME );

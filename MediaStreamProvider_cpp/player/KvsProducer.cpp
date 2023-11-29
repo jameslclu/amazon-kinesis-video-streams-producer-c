@@ -3,6 +3,7 @@
 #include "ComponentProvider.h"
 #include "KvsServiceConfig.h"
 #include "MLogger.h"
+#include "chrono"
 
 static PDeviceInfo mpDeviceInfo;
 static PStreamInfo mpStreamInfo = NULL;
@@ -18,7 +19,7 @@ static UINT64 gFirstVideoPTS;
 static UINT64 gFirstAudioPTS;
 static UINT64 gStreamStopTime;
 //static BOOL gIsFirstFrameSent;
-static PSEMAPHORE_HANDLE mpStreamHandle;
+//static PSEMAPHORE_HANDLE mpStreamHandle;
 
 static BYTE mAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 static UINT8 gEventsEnabled = 0;
@@ -197,14 +198,6 @@ static PDeviceInfo sPDeviceInfo;
 #define RECORDED_FRAME_AVG_BITRATE_BIT_PS 3800000
 static STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
 static PSTREAM_HANDLE sPStreamHandle = &mStreamHandle;
-//static PCHAR sStreamName = (PCHAR) "SH20-eventStream-db-B813329BB08C";
-//static PCHAR pIotCoreCredentialEndPoint = (PCHAR) "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
-//static PCHAR pIotCoreCert = (PCHAR) "/home/camera/kvs/cert";
-//static PCHAR pIotCorePrivateKey = (PCHAR) "/home/camera/kvs/privkey";
-//static PCHAR pCaCert = (PCHAR) "/home/camera/kvs/rootca.pem";
-//static PCHAR pIotCoreRoleAlias = (PCHAR) "KvsCameraIoTRoleAlias";
-//static PCHAR pThingName = (PCHAR) "db-B813329BB08C";
-//static PCHAR pRegion = (PCHAR) "ca-central-1";
 static PStreamInfo pStreamInfo = NULL;
 static PTrackInfo spAudioTrack;
 static BYTE sAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
@@ -215,6 +208,7 @@ static CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
 int KvsProducer::Init() {
     mSettings.Init();
     // Step: 0
+    auto start = std::chrono::high_resolution_clock::now();
     mSettings.GetString(STREAM_NAME, mStreamName);
     mSettings.GetString(END_POINT, mIotCoreCredentialEndPoint);
     mSettings.GetString(CERT_LOCATION, mIotCoreCert);
@@ -224,24 +218,38 @@ int KvsProducer::Init() {
     mSettings.GetString(THING_NAME, mThingName);
     mSettings.GetString(REGION, mRegion);
 
+
     STATUS status;
-    createDefaultDeviceInfo(&sPDeviceInfo);
+    status = createDefaultDeviceInfo(&sPDeviceInfo);
     sPDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
     sPDeviceInfo->storageInfo.storageSize = DEFAULT_STORAGE_SIZE;
 
     // Step 1:
+    start = std::chrono::high_resolution_clock::now();
     status = createOfflineVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
                                                             &pStreamInfo);
-    MLogger::LOG(Level::DEBUG, "createDefaultCallbacksProviderWithIotCertificate: %X", status);
+    //start = std::chrono::high_resolution_clock::now();
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Init: createDefaultCallbacksProviderWithIotCertificate: %X, (duration=%d)", status, duration);
+
+    start = std::chrono::high_resolution_clock::now();
     status = setStreamInfoBasedOnStorageSize(DEFAULT_STORAGE_SIZE, RECORDED_FRAME_AVG_BITRATE_BIT_PS, 1, pStreamInfo);
-    MLogger::LOG(Level::DEBUG, "setStreamInfoBasedOnStorageSize: %X", status);
+    //start = std::chrono::high_resolution_clock::now();
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Init: setStreamInfoBasedOnStorageSize: %X, (duration=%d)", status, duration);
 
     pStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
 
+    start = std::chrono::high_resolution_clock::now();
     status = createDefaultCallbacksProviderWithIotCertificate((PCHAR )mIotCoreCredentialEndPoint.data(), (PCHAR )mIotCoreCert.data(), (PCHAR )mIotCorePrivateKey.data(),
                                                               (PCHAR )mCaCert.data(), (PCHAR )mIotCoreRoleAlias.data(), (PCHAR )mThingName.data(), (PCHAR )mRegion.data(),
                                                               NULL, NULL, &pClientCallbacks);
-    MLogger::LOG(Level::DEBUG, "createDefaultCallbacksProviderWithIotCertificate: %X", status);
+    //start = std::chrono::high_resolution_clock::now();
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Init: createDefaultCallbacksProviderWithIotCertificate: %X, (duration=%d)", status, duration);
 
     // step 4: addFileLoggerPlatformCallbacksProvider();
     STATUS retStatus = STATUS_SUCCESS;
@@ -253,18 +261,33 @@ int KvsProducer::Init() {
     }
 
     // step 5: createStreamCallbacks();
-    MLogger::LOG(Level::DEBUG, "Create Stream Callbacks: %X", createStreamCallbacks(&pStreamCallbacks));
+    start = std::chrono::high_resolution_clock::now();
+    status = createStreamCallbacks(&pStreamCallbacks);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Init: Create Stream Callbacks: %X, (Duration=%d)", status, duration);
 
     // step 6: addStreamCallbacks();
-    MLogger::LOG(Level::DEBUG, "Add Stream Callbacks: %X", addStreamCallbacks(pClientCallbacks, pStreamCallbacks));
+    start = std::chrono::high_resolution_clock::now();
+    status = addStreamCallbacks(pClientCallbacks, pStreamCallbacks);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Init: Add Stream Callbacks: %X, (Duration=%d)", status, duration);
 
     // step 7: createKinesisVideoClient();
+    start = std::chrono::high_resolution_clock::now();
     status = createKinesisVideoClient(sPDeviceInfo, pClientCallbacks, &clientHandle);
-    MLogger::LOG(Level::DEBUG, "7. Create Kinesis Video Client: result = %X", status);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    //status = createKinesisVideoClient(sPDeviceInfo, pClientCallbacks, &clientHandle);
+    MLogger::LOG(Level::DEBUG, "Init: 7. Create Kinesis Video Client: result = %X, (Duration=%d)", status, duration);
 
     // step 8: createKinesisVideoStreamSync();
+    start = std::chrono::high_resolution_clock::now();
     status = createKinesisVideoStreamSync(clientHandle, pStreamInfo, sPStreamHandle);
-    MLogger::LOG(Level::DEBUG, "8. createKinesisVideoStreamSync: result = %X", status);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Init: 8. createKinesisVideoStreamSync: result = %X, (Duration=%d)", status, duration);
 
     return 0;
 }
@@ -321,12 +344,46 @@ int KvsProducer::Init() {
 //}
 
 int KvsProducer::Deinit() {
-    stopKinesisVideoStreamSync(*mpStreamHandle);
-    freeDeviceInfo(&mpDeviceInfo);
-    freeStreamInfoProvider(&mpStreamInfo);
-    freeKinesisVideoStream(mpStreamHandle);
-    freeKinesisVideoClient(&mClientHandle);
-    freeCallbacksProvider(&mpClientCallbacks);
+    //1
+    auto start = std::chrono::high_resolution_clock::now();
+    STATUS status = stopKinesisVideoStreamSync(*sPStreamHandle);
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Deinit: stopKinesisVideoStreamSync: result = %X, (Duration=%d)", status, duration);
+    //2
+    start = std::chrono::high_resolution_clock::now();
+    status = freeDeviceInfo(&mpDeviceInfo);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Deinit: freeDeviceInfo: result = %X, (Duration=%d)", status, duration);
+    // 3
+    start = std::chrono::high_resolution_clock::now();
+    status = freeStreamInfoProvider(&mpStreamInfo);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Deinit: freeStreamInfoProvider: result = %X, (Duration=%d)", status, duration);
+
+    // 4
+    start = std::chrono::high_resolution_clock::now();
+    status = freeKinesisVideoStream(sPStreamHandle);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Deinit: freeKinesisVideoStream: result = %X, (Duration=%d)", status, duration);
+
+    // 5
+    start = std::chrono::high_resolution_clock::now();
+    status = freeKinesisVideoClient(&mClientHandle);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Deinit: freeKinesisVideoClient: result = %X, (Duration=%d)", status, duration);
+
+    // 6
+    start = std::chrono::high_resolution_clock::now();
+    status = freeCallbacksProvider(&mpClientCallbacks);
+    stop = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+    MLogger::LOG(Level::DEBUG, "Deinit: freeCallbacksProvider: result = %X, (Duration=%d)", status, duration);
+
     return 0;
 }
 
