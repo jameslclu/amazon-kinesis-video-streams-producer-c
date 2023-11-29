@@ -3,34 +3,34 @@
 #include "KvsServiceConfig.h"
 #include "MLogger.h"
 
-static UINT64 gStartTime;
-static UINT64 gStreamStartTime;
-static UINT64 gStreamStopTime;
-static volatile ATOMIC_BOOL gIsFirstVideoFramePut = FALSE;
-STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
-static PSTREAM_HANDLE sPStreamHandle = &mStreamHandle;
-static UINT8 gEventsEnabled = 0;
+//static UINT64 gStartTime;
+//static UINT64 gStreamStartTime;
+//static UINT64 gStreamStopTime;
+//static volatile ATOMIC_BOOL gIsFirstVideoFramePut = FALSE;
+//STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
+//static PSTREAM_HANDLE sPStreamHandle = &mStreamHandle;
+//static UINT8 gEventsEnabled = 0;
 #define LIB_CONFIG_CA_PATH                     "/home/camera/kvs/rootca"
 #define LIB_CONFIG_CERT_PATH                   "/tmp/cert"
 #define LIB_CONFIG_PRIV_PATH                   "/tmp/privkey"
-PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
-PCHAR pIotCoreCert = "/home/camera/kvs/cert";
-PCHAR pIotCorePrivateKey = "/home/camera/kvs/privkey";
-PCHAR pCaCert = "/home/camera/kvs/rootca.pem";
-PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
-PCHAR pThingName = "db-B813329BB08C";
-PCHAR pRegion = "ca-central-1";
-PStreamInfo pStreamInfo = NULL;
-PTrackInfo spAudioTrack;
-BYTE sAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
-PClientCallbacks pClientCallbacks = NULL;
-PStreamCallbacks pStreamCallbacks = NULL;
-CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
+//PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
+//PCHAR pIotCoreCert = "/home/camera/kvs/cert";
+//PCHAR pIotCorePrivateKey = "/home/camera/kvs/privkey";
+//PCHAR pCaCert = "/home/camera/kvs/rootca.pem";
+//PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
+//PCHAR pThingName = "db-B813329BB08C";
+//PCHAR pRegion = "ca-central-1";
+//PStreamInfo pStreamInfo = NULL;
+//PTrackInfo spAudioTrack;
+//BYTE sAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
+//PClientCallbacks pClientCallbacks = NULL;
+//PStreamCallbacks pStreamCallbacks = NULL;
+//CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
 
-PDeviceInfo sPDeviceInfo;
-#define DEFAULT_STORAGE_SIZE              20 * 1024 * 1024
-#define RECORDED_FRAME_AVG_BITRATE_BIT_PS 3800000
-PCHAR sStreamName = "SH20-eventStream-db-B813329BB08C";
+//PDeviceInfo sPDeviceInfo;
+//#define DEFAULT_STORAGE_SIZE              20 * 1024 * 1024
+//#define RECORDED_FRAME_AVG_BITRATE_BIT_PS 3800000
+//PCHAR sStreamName = "SH20-eventStream-db-B813329BB08C";
 
 typedef struct {
     bool bFirstFrame;
@@ -85,6 +85,7 @@ static PVOID putVideoFrameRoutine(PVOID args) {
 }
 
 // The sample is corrent. let's frozen it.
+/*
 static PVOID putVideoFrameRoutineDone(PVOID args) {
     //FmspFramePlaybackInfo_u _package;
     //KvsProducerFrameConfig_t video;
@@ -193,7 +194,8 @@ static PVOID putVideoFrameRoutineDone(PVOID args) {
     MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame");
     return 0;
 }
-/*
+*/
+ /*
 static PVOID putVideoFrameRoutine(PVOID args) {
     FmspFramePlaybackInfo_u _package;
     KvsProducerFrameConfig_t video;
