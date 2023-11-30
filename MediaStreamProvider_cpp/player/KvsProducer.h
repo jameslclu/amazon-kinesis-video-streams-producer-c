@@ -22,6 +22,7 @@ public:
     virtual int BaseInit();
     virtual int BaseDeinit();
     virtual STATUS PutVideoFrame(PFrame pFrame);
+    virtual STATUS PutAudioFrame(PFrame pFrame);
   private:
     std::string mStreamName;
     std::string mIotCoreCredentialEndPoint;

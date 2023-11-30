@@ -27,6 +27,7 @@ class IKVSRender {
     virtual int BaseInit() = 0;
     virtual int BaseDeinit() = 0;
     virtual STATUS PutVideoFrame(PFrame pFrame) = 0;
+    virtual STATUS PutAudioFrame(PFrame pFrame) = 0;
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_ALLINTERFACES_H

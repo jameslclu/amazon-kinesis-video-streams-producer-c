@@ -220,13 +220,15 @@ int KvsProducer::Init() {
 
     STATUS status;
     status = createDefaultDeviceInfo(&sPDeviceInfo);
+    MLogger::LOG(Level::DEBUG, "Init: createDefaultDeviceInfo: %X", status);
     sPDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
     sPDeviceInfo->storageInfo.storageSize = DEFAULT_STORAGE_SIZE;
 
     // Step 1:
     start = std::chrono::high_resolution_clock::now();
-    status = createRealtimeVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
-                                                            &pStreamInfo);
+    status = createOfflineAudioVideoStreamInfoProvider((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, &pStreamInfo);
+    //status = createRealtimeVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
+    //                                                        &pStreamInfo);
     //start = std::chrono::high_resolution_clock::now();
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
@@ -240,6 +242,8 @@ int KvsProducer::Init() {
     MLogger::LOG(Level::DEBUG, "Init: setStreamInfoBasedOnStorageSize: %X, (duration=%d)", status, duration);
 
     pStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
+    pStreamInfo->streamCaps.frameOrderingMode =
+        FRAME_ORDERING_MODE_MULTI_TRACK_AV_COMPARE_PTS_ONE_MS_COMPENSATE_EOFR;
 
     // createDefaultCallbacksProviderWithIotCertificate
     start = std::chrono::high_resolution_clock::now();
@@ -392,5 +396,27 @@ int KvsProducer::SetStreamName(PCHAR name) {
 }
 
 STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
-    return putKinesisVideoFrame(*sPStreamHandle, pFrame);
+    static int i = 0;
+    if (i == 0) {
+        StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
+        CHAR tagName1[10] = {'\0'};
+        CHAR tagValue1[10] = {'\0'};
+        Meta.names[0] = tagName1;
+        Meta.values[0] = tagValue1;
+        MEMCPY(tagName1, (PCHAR) "TYPE", STRLEN("tagName"));
+        MEMCPY(tagValue1, (PCHAR) "Value", STRLEN("tagValue"));
+        STATUS s = putKinesisVideoEventMetadata(*sPStreamHandle,
+                                                STREAM_EVENT_TYPE_NOTIFICATION,
+                                                &Meta);
+        MLogger::LOG(Level::DEBUG, "putKinesisVideoEventMetadata: result=%H", s);
+        i++;
+    }
+    STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
+    return s;
+}
+
+STATUS KvsProducer::PutAudioFrame(PFrame pFrame) {
+    static int i = 0;
+    STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
+    return s;
 }

@@ -46,12 +46,29 @@ typedef struct {
 BYTE aacAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 //STREAM_HANDLE streamHandle = INVALID_STREAM_HANDLE_VALUE;
 
+static PVOID putAudioFrameRoutine(PVOID args) {
+    STATUS status;
+    UINT64 pts = 0;
+    static Frame frame;
+
+    frame.index = 0;
+    frame.trackId = DEFAULT_VIDEO_TRACK_ID;
+    frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
+    frame.version = FRAME_CURRENT_VERSION;
+    frame.decodingTs = 0;
+    frame.presentationTs = 0;
+    uint32_t frameID = 0;
+    MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine: +");
+    ComponentProvider::GetInstance()->GetStreamSource(FAKE)->Reset();
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
+}
+
 static PVOID putVideoFrameRoutine(PVOID args) {
     int64_t _targtpts = 0L;
     STATUS status;
     UINT64 pts = 0;
     static Frame frame;
-    //memset(&frame, 0x00, sizeof (Frame));
+
     frame.index = 0;
     frame.trackId = DEFAULT_VIDEO_TRACK_ID;
     frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
