@@ -218,7 +218,6 @@ int KvsProducer::Init() {
     mSettings.GetString(THING_NAME, mThingName);
     mSettings.GetString(REGION, mRegion);
 
-
     STATUS status;
     status = createDefaultDeviceInfo(&sPDeviceInfo);
     sPDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
@@ -232,9 +231,9 @@ int KvsProducer::Init() {
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     MLogger::LOG(Level::DEBUG, "Init: createDefaultCallbacksProviderWithIotCertificate: %X, (duration=%d)", status, duration);
-
     start = std::chrono::high_resolution_clock::now();
     status = setStreamInfoBasedOnStorageSize(DEFAULT_STORAGE_SIZE, RECORDED_FRAME_AVG_BITRATE_BIT_PS, 1, pStreamInfo);
+
     //start = std::chrono::high_resolution_clock::now();
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
@@ -242,11 +241,11 @@ int KvsProducer::Init() {
 
     pStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
 
+    // createDefaultCallbacksProviderWithIotCertificate
     start = std::chrono::high_resolution_clock::now();
     status = createDefaultCallbacksProviderWithIotCertificate((PCHAR )mIotCoreCredentialEndPoint.data(), (PCHAR )mIotCoreCert.data(), (PCHAR )mIotCorePrivateKey.data(),
                                                               (PCHAR )mCaCert.data(), (PCHAR )mIotCoreRoleAlias.data(), (PCHAR )mThingName.data(), (PCHAR )mRegion.data(),
                                                               NULL, NULL, &pClientCallbacks);
-    //start = std::chrono::high_resolution_clock::now();
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     MLogger::LOG(Level::DEBUG, "Init: createDefaultCallbacksProviderWithIotCertificate: %X, (duration=%d)", status, duration);
