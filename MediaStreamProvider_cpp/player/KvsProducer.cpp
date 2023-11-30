@@ -225,7 +225,7 @@ int KvsProducer::Init() {
 
     // Step 1:
     start = std::chrono::high_resolution_clock::now();
-    status = createOfflineVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
+    status = createRealtimeVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
                                                             &pStreamInfo);
     //start = std::chrono::high_resolution_clock::now();
     auto stop = std::chrono::high_resolution_clock::now();
