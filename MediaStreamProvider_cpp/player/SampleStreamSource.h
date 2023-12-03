@@ -11,21 +11,6 @@ typedef struct {
     UINT32 size;
 } FrameData, *PFrame_Data;
 
-//typedef struct {
-//    volatile ATOMIC_BOOL firstVideoFramePut;
-//    UINT64 streamStopTime;
-//    UINT64 streamStartTime;
-//    STREAM_HANDLE streamHandle;
-//    CHAR sampleDir[MAX_PATH_LEN + 1];
-//    FrameData audioFrames[NUMBER_OF_AUDIO_FRAME_FILES];
-//    FrameData videoFrames[NUMBER_OF_VIDEO_FRAME_FILES];
-//    BOOL firstFrame;
-//    UINT64 startTime;
-//} SampleCustomData, *PSampleCustomData;
-
-//static PSampleCustomData gStreamSource;
-//static SampleCustomData data;
-
 class SampleStreamSource : public IStreamSource {
   public:
     volatile ATOMIC_BOOL firstVideoFramePut;
@@ -108,23 +93,26 @@ class SampleStreamSource : public IStreamSource {
         this->streamHandle = handler;
         return 0;
     }
-    int mVideoIndex;
-    int mAudioIndex;
+    int mVideoIndex = 0;
+    int mAudioIndex = 0;
     int GetVideoFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) {
         if (mVideoIndex >= NUMBER_OF_VIDEO_FRAME_FILES) return 1;
         *pdata = this->videoFrames[mVideoIndex].buffer;
         *psize = this->videoFrames[mVideoIndex].size;
         *pPTS = mVideoIndex / DEFAULT_TIME_UNIT_IN_NANOS;
         mVideoIndex++;
+        mVideoIndex = mVideoIndex % NUMBER_OF_VIDEO_FRAME_FILES;
         return 0;
     }
 
     int GetAudioFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) {
+        //mAudioIndex
         if (this->mAudioIndex >= NUMBER_OF_AUDIO_FRAME_FILES) return 1;
         *pdata = this->audioFrames[this->mAudioIndex].buffer;
         *psize = this->audioFrames[this->mAudioIndex].size;
         *pPTS = this->mAudioIndex / DEFAULT_TIME_UNIT_IN_NANOS;
-        this->mAudioIndex++;
+        mAudioIndex++;
+        mAudioIndex = mAudioIndex % NUMBER_OF_AUDIO_FRAME_FILES;
         return 0;
     }
 };

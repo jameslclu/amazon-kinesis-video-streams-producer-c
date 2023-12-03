@@ -3,101 +3,104 @@
 #include "KvsServiceConfig.h"
 #include "MLogger.h"
 
-//static UINT64 gStartTime;
-//static UINT64 gStreamStartTime;
-//static UINT64 gStreamStopTime;
-//static volatile ATOMIC_BOOL gIsFirstVideoFramePut = FALSE;
-//STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
-//static PSTREAM_HANDLE sPStreamHandle = &mStreamHandle;
-//static UINT8 gEventsEnabled = 0;
-#define LIB_CONFIG_CA_PATH                     "/home/camera/kvs/rootca"
-#define LIB_CONFIG_CERT_PATH                   "/tmp/cert"
-#define LIB_CONFIG_PRIV_PATH                   "/tmp/privkey"
-//PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
-//PCHAR pIotCoreCert = "/home/camera/kvs/cert";
-//PCHAR pIotCorePrivateKey = "/home/camera/kvs/privkey";
-//PCHAR pCaCert = "/home/camera/kvs/rootca.pem";
-//PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
-//PCHAR pThingName = "db-B813329BB08C";
-//PCHAR pRegion = "ca-central-1";
-//PStreamInfo pStreamInfo = NULL;
-//PTrackInfo spAudioTrack;
-//BYTE sAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
-//PClientCallbacks pClientCallbacks = NULL;
-//PStreamCallbacks pStreamCallbacks = NULL;
-//CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
-
-//PDeviceInfo sPDeviceInfo;
-//#define DEFAULT_STORAGE_SIZE              20 * 1024 * 1024
-//#define RECORDED_FRAME_AVG_BITRATE_BIT_PS 3800000
-//PCHAR sStreamName = "SH20-eventStream-db-B813329BB08C";
-
-typedef struct {
-    bool bFirstFrame;
-    char StartFrameTimeUTCTs[ 64 ];
-    char LastFrameTimeUTCTs[ 64 ];
-
-    //KvsStreamingFrame_t Stream;
-    Frame frame;
-
-    INT64 prevPTS;
-} KvsProducerFrameConfig_t;
-#define AMBA_PACKET_PTS_SCALE 90000
-BYTE aacAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
-//STREAM_HANDLE streamHandle = INVALID_STREAM_HANDLE_VALUE;
-
+volatile ATOMIC_BOOL firstVideoFramePut = false;
+UINT64 streamStartTime;
+UINT64 streamStopTime;// = GETTIME() + DEFAULT_STREAM_DURATION;
+DOUBLE startUpLatency;
+UINT64 startTime = GETTIME();
 static PVOID putAudioFrameRoutine(PVOID args) {
     STATUS status;
     UINT64 pts = 0;
     static Frame frame;
-
-    frame.index = 0;
-    frame.trackId = DEFAULT_VIDEO_TRACK_ID;
-    frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
     frame.version = FRAME_CURRENT_VERSION;
+    frame.trackId = DEFAULT_AUDIO_TRACK_ID;
+    frame.duration = 0;
     frame.decodingTs = 0;
     frame.presentationTs = 0;
-    uint32_t frameID = 0;
+    frame.index = 0;
+    frame.flags = FRAME_FLAG_NONE; // Audio-only: FRAME_FLAG_KEY_FRAME;
+    UINT64 runningTime;
     MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine: +");
-    ComponentProvider::GetInstance()->GetStreamSource(FAKE)->Reset();
-    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
+    while( GETTIME() < streamStopTime) {
+        if (firstVideoFramePut) {
+            ComponentProvider::GetInstance()->GetStreamSource(FAKE)->
+                GetAudioFrame(&frame.frameData, &frame.size, &pts);
+            status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutAudioFrame(&frame);
+            if (STATUS_FAILED(status)) {
+                //printf("putKinesisVideoFrame for audio failed with 0x%08x\n", status);
+                MLogger::LOG(Level::ERROR, "putAudioFrameRoutine, (index=%d), status = 0x%08x", frame.index, status);
+            } else {
+                MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine, (index=%d), status = 0x%08x", frame.index, status);
+            }
+
+            frame.presentationTs += SAMPLE_AUDIO_FRAME_DURATION;
+            frame.decodingTs = frame.presentationTs;
+            frame.index++;
+
+            //fileIndex = (fileIndex + 1) % NUMBER_OF_AUDIO_FRAME_FILES;
+
+
+            // synchronize putKinesisVideoFrame to running time
+            runningTime = GETTIME() - streamStartTime;
+            if (runningTime < frame.presentationTs) {
+                THREAD_SLEEP(frame.presentationTs - runningTime);
+            }
+        }
+
+    }
+
+    MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine: -");
+    return 0;
 }
 
 static PVOID putVideoFrameRoutine(PVOID args) {
-    int64_t _targtpts = 0L;
     STATUS status;
     UINT64 pts = 0;
     static Frame frame;
-
-    frame.index = 0;
-    frame.trackId = DEFAULT_VIDEO_TRACK_ID;
-    frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
+    UINT64 runningTime;
+    UINT32 fileIndex = 0;
+    ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
     frame.version = FRAME_CURRENT_VERSION;
+    frame.trackId = DEFAULT_VIDEO_TRACK_ID;
+    frame.duration = 0;// Video-Only: HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;;
     frame.decodingTs = 0;
     frame.presentationTs = 0;
+    frame.index = 0;
     uint32_t frameID = 0;
+    frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
+    MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: +");
 
-    MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: +");
-    ComponentProvider::GetInstance()->GetStreamSource(FAKE)->Reset();
-    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
-    while( 0 == ComponentProvider::GetInstance()->GetStreamSource(FAKE)->
-                GetVideoFrame(&frame.frameData, &frame.size, &pts) ) {
-        // Put it into KvsRender();
-        frame.index = frameID;
-        frame.flags = frameID % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
+    //while( 0 == ComponentProvider::GetInstance()->GetStreamSource(FAKE)->
+//                GetVideoFrame(&frame.frameData, &frame.size, &pts) ) {
+    while (GETTIME() < streamStopTime) {
         status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutVideoFrame(&frame);
-        usleep(frame.duration/HUNDREDS_OF_NANOS_IN_A_MICROSECOND);
-        //        if (i == 0) {
-        //            status = putKinesisVideoEventMetadata(sStreamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
-        //            MLogger::LOG(Level::DEBUG, "putKinesisVideoEventMetadata: status = %X", status);
-        //        }
-        frame.decodingTs += frame.duration;
-        frame.presentationTs = frame.decodingTs;
-        MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame, (index=%d), status = %X", frameID, status);
+        // Put it into KvsRender();
+        if (!firstVideoFramePut) {
+            startUpLatency = (DOUBLE) (GETTIME() - startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
+            DLOGD("Start up latency: %lf ms", startUpLatency);
+            firstVideoFramePut = true;
+        } else if (frame.flags == FRAME_FLAG_KEY_FRAME) {
+            // generate an image and notification event at the start of the video stream.
+            //putKinesisVideoEventMetadata(streamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
+            // only push this once in this sample. A customer may use this whenever it is necessary though
+        }
+
+        frame.presentationTs += SAMPLE_VIDEO_FRAME_DURATION;
+        frame.decodingTs = frame.presentationTs;
+        frame.index++;
+
+        frame.flags = frame.index % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;;
+        ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
+
+        runningTime = GETTIME() - streamStartTime;
+        if (runningTime < frame.presentationTs) {
+            // reduce sleep time a little for smoother video
+            THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
+        }
+        MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame, (index=%d), status = 0x%08x", frameID, status);
         frameID++;
     }
-    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseDeinit();
-    MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: -");
+    MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: -");
     return 0;
 }
 
@@ -487,38 +490,48 @@ CleanUp:
     return (PVOID) (ULONG_PTR) retStatus;
 }
 */
-KvsPlayer::KvsPlayer() {
+
+static TID audioSendTid, videoSendTid;
+int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
+    startTime = GETTIME();
+    streamStartTime = GETTIME();
+    streamStopTime = streamStartTime + DEFAULT_STREAM_DURATION;
+    if ("Start" == method.m_method) {
+        ComponentProvider::GetInstance()->GetStreamSource(FAKE)->Reset();
+
+        ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
+        // Either of Video only or Audio Only: is avalable
+        THREAD_CREATE(&videoSendTid, putVideoFrameRoutine, NULL);
+        THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, NULL);
+
+        THREAD_JOIN(videoSendTid, nullptr);
+        THREAD_JOIN(audioSendTid, nullptr);
+        ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseDeinit();
+    }
+
+    return 0;
+}
+
+KvsPlayer::KvsPlayer(): ServiceBase("KvsPlayer") {
 }
 
 KvsPlayer::~KvsPlayer() {
 }
 
 int KvsPlayer::Init() {
+    ServiceBaseInit();
     return 0;
 }
 
 int KvsPlayer::Deinit()
 {
+    ServiceBaseDeinit();
     return 0;
 }
 
-// Get the data source from the ResourceProvider
-// int SetSource(IStreamSource &streamSource);
-// Get the render from the RenderPROVIDER
-// int SetRender(KvsOutput &kvsOutput);
-static TID audioSendTid, videoSendTid;
 int KvsPlayer::Start() {
-    //ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCKER)->BaseInit();
-    //gStreamStartTime = GETTIME();
-    //gStartTime = gStreamStartTime;
-    //gStreamStopTime = gStreamStartTime + DEFAULT_STREAM_DURATION;
-    //gIsFirstVideoFramePut = FALSE;
     MLogger::LOG(Level::DEBUG, "KvsPlayer::Start");
-    THREAD_CREATE(&videoSendTid, putVideoFrameRoutine, NULL);
-    //THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, NULL);
-
-    //THREAD_JOIN(videoSendTid, nullptr);
-    //THREAD_JOIN(audioSendTid, nullptr);
+    EnqueuenMethod(MethodItem("Start", "str"));
     return 0;
 }
 
@@ -530,6 +543,3 @@ int KvsPlayer::Stop() {
     ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseDeinit();
     return 0;
 }
-
-//int GetStatus(KvsPlayerState state);
-//#include "KvsPlayer.h"

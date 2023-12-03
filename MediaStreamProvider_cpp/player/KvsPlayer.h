@@ -1,6 +1,7 @@
 #ifndef KVSAUDIOVIDEOSTREAMINGSAMPLE_KVSPLAYER_H
 #define KVSAUDIOVIDEOSTREAMINGSAMPLE_KVSPLAYER_H
 #include "AllInterfaces.h"
+#include "ServiceBase.h"
 
 enum KvsPlayerState {
    None = 0,
@@ -12,7 +13,7 @@ enum KvsPlayerState {
     Deinited = 6
 };
 
-class KvsPlayer {
+class KvsPlayer: public ServiceBase {
   public:
     KvsPlayer();
     ~KvsPlayer();
@@ -26,6 +27,8 @@ class KvsPlayer {
     int Pause();
     int Stop();
     int GetStatus(KvsPlayerState state);
+
+    int HandleAsyncMethod(const MethodItem& method);
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_KVSPLAYER_H

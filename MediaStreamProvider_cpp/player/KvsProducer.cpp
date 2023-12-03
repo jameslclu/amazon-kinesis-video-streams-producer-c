@@ -192,7 +192,7 @@ int KvsProducer::BaseInit() {
 int KvsProducer::BaseDeinit() {
     return Deinit();
 }
-
+PTrackInfo pAudioTrack = NULL;
 static PDeviceInfo sPDeviceInfo;
 #define DEFAULT_STORAGE_SIZE              20 * 1024 * 1024
 #define RECORDED_FRAME_AVG_BITRATE_BIT_PS 3800000
@@ -204,6 +204,7 @@ static BYTE sAACAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 static PClientCallbacks pClientCallbacks = NULL;
 static PStreamCallbacks pStreamCallbacks = NULL;
 static CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
+BYTE aacAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 
 int KvsProducer::Init() {
     mSettings.Init();
@@ -224,15 +225,27 @@ int KvsProducer::Init() {
     sPDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
     sPDeviceInfo->storageInfo.storageSize = DEFAULT_STORAGE_SIZE;
 
-    // Step 1:
+    // Step 1: HERE HERE
     start = std::chrono::high_resolution_clock::now();
-    status = createOfflineAudioVideoStreamInfoProvider((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, &pStreamInfo);
-    //status = createRealtimeVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
-    //                                                        &pStreamInfo);
+    // Audio-Only : status = createRealtimeAudioStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, AUDIO_CODEC_ID_AAC, &pStreamInfo);
+    //status = createOfflineVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264, &pStreamInfo);
+    status = createRealtimeAudioVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
+                                                  AUDIO_CODEC_ID_AAC, &pStreamInfo);
+
     //start = std::chrono::high_resolution_clock::now();
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     MLogger::LOG(Level::DEBUG, "Init: createDefaultCallbacksProviderWithIotCertificate: %X, (duration=%d)", status, duration);
+
+    // set up audio cpd.
+    pAudioTrack = pStreamInfo->streamCaps.trackInfoList[0].trackId == DEFAULT_AUDIO_TRACK_ID ? &pStreamInfo->streamCaps.trackInfoList[0]
+                                                                                             : &pStreamInfo->streamCaps.trackInfoList[1];
+    pAudioTrack->codecPrivateData = aacAudioCpd;
+    pAudioTrack->codecPrivateDataSize = KVS_AAC_CPD_SIZE_BYTE;
+    status = mkvgenGenerateAacCpd(AAC_LC, AAC_AUDIO_TRACK_SAMPLING_RATE, AAC_AUDIO_TRACK_CHANNEL_CONFIG, pAudioTrack->codecPrivateData,
+                                    pAudioTrack->codecPrivateDataSize);
+    MLogger::LOG(Level::DEBUG, "Init: mkvgenGenerateAacCpd: %X", status);
+
     start = std::chrono::high_resolution_clock::now();
     status = setStreamInfoBasedOnStorageSize(DEFAULT_STORAGE_SIZE, RECORDED_FRAME_AVG_BITRATE_BIT_PS, 1, pStreamInfo);
 
@@ -242,9 +255,10 @@ int KvsProducer::Init() {
     MLogger::LOG(Level::DEBUG, "Init: setStreamInfoBasedOnStorageSize: %X, (duration=%d)", status, duration);
 
     pStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
-    pStreamInfo->streamCaps.frameOrderingMode =
-        FRAME_ORDERING_MODE_MULTI_TRACK_AV_COMPARE_PTS_ONE_MS_COMPENSATE_EOFR;
-
+    //pStreamInfo->streamCaps.frameTimecodes = FALSE;
+    //pStreamInfo->streamCaps.frameOrderingMode = FRAME_ORDER_MODE_PASS_THROUGH;
+    //FRAME_ORDERING_MODE_MULTI_TRACK_AV_COMPARE_PTS_ONE_MS_COMPENSATE_EOFR;
+    //FRAME_ORDERING_MODE_MULTI_TRACK_AV_COMPARE_PTS_ONE_MS_COMPENSATE_EOFR;
     // createDefaultCallbacksProviderWithIotCertificate
     start = std::chrono::high_resolution_clock::now();
     status = createDefaultCallbacksProviderWithIotCertificate((PCHAR )mIotCoreCredentialEndPoint.data(), (PCHAR )mIotCoreCert.data(), (PCHAR )mIotCorePrivateKey.data(),
@@ -268,14 +282,14 @@ int KvsProducer::Init() {
     status = createStreamCallbacks(&pStreamCallbacks);
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    MLogger::LOG(Level::DEBUG, "Init: Create Stream Callbacks: %X, (Duration=%d)", status, duration);
+    MLogger::LOG(Level::DEBUG, "Init: Create Stream Callbacks: %x, (Duration=%d)", status, duration);
 
     // step 6: addStreamCallbacks();
     start = std::chrono::high_resolution_clock::now();
     status = addStreamCallbacks(pClientCallbacks, pStreamCallbacks);
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    MLogger::LOG(Level::DEBUG, "Init: Add Stream Callbacks: %X, (Duration=%d)", status, duration);
+    MLogger::LOG(Level::DEBUG, "Init: Add Stream Callbacks: %x, (Duration=%d)", status, duration);
 
     // step 7: createKinesisVideoClient();
     start = std::chrono::high_resolution_clock::now();
@@ -283,14 +297,14 @@ int KvsProducer::Init() {
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     //status = createKinesisVideoClient(sPDeviceInfo, pClientCallbacks, &clientHandle);
-    MLogger::LOG(Level::DEBUG, "Init: 7. Create Kinesis Video Client: result = %X, (Duration=%d)", status, duration);
+    MLogger::LOG(Level::DEBUG, "Init: 7. Create Kinesis Video Client: status = %X, (Duration=%d)", status, duration);
 
     // step 8: createKinesisVideoStreamSync();
     start = std::chrono::high_resolution_clock::now();
     status = createKinesisVideoStreamSync(clientHandle, pStreamInfo, sPStreamHandle);
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    MLogger::LOG(Level::DEBUG, "Init: 8. createKinesisVideoStreamSync: result = %X, (Duration=%d)", status, duration);
+    MLogger::LOG(Level::DEBUG, "Init: 8. createKinesisVideoStreamSync: status = %X, (Duration=%d)", status, duration);
 
     return 0;
 }
@@ -397,7 +411,7 @@ int KvsProducer::SetStreamName(PCHAR name) {
 
 STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
     static int i = 0;
-    if (i == 0) {
+    /*if (i == 0) {
         StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
         CHAR tagName1[10] = {'\0'};
         CHAR tagValue1[10] = {'\0'};
@@ -411,12 +425,15 @@ STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
         MLogger::LOG(Level::DEBUG, "putKinesisVideoEventMetadata: result=%H", s);
         i++;
     }
+     */
     STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
+    //printf("PutVideoFrame: %08x\n", s);
     return s;
 }
 
 STATUS KvsProducer::PutAudioFrame(PFrame pFrame) {
-    static int i = 0;
+    //static int i = 0;
     STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
+    //printf("PutAudioFrame: %08x\n", s);
     return s;
 }
