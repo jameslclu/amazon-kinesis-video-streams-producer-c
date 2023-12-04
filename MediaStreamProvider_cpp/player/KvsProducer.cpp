@@ -232,10 +232,12 @@ int KvsProducer::Init() {
 #ifdef CONFIG_VIDEO_AUDIO_BOTH
     status = createRealtimeAudioVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
                                                   AUDIO_CODEC_ID_AAC, &pStreamInfo);
-#elifdef CONFIG_AUDIO_ONLY
+#else
+#ifdef CONFIG_AUDIO_ONLY
     status = createRealtimeAudioStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, AUDIO_CODEC_ID_AAC, &pStreamInfo);
-#elifdef CONFIG_VIDEO_ONLY
+#else CONFIG_VIDEO_ONLY
     status = createOfflineVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264, &pStreamInfo);
+#endif
 #endif
 
     auto stop = std::chrono::high_resolution_clock::now();
@@ -365,7 +367,8 @@ int KvsProducer::SetStreamName(PCHAR name) {
 
 STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
     static int i = 0;
-    /*if (i == 0) {
+    STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
+    if (i == 0) {
         StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
         CHAR tagName1[10] = {'\0'};
         CHAR tagValue1[10] = {'\0'};
@@ -373,14 +376,13 @@ STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
         Meta.values[0] = tagValue1;
         MEMCPY(tagName1, (PCHAR) "TYPE", STRLEN("tagName"));
         MEMCPY(tagValue1, (PCHAR) "Value", STRLEN("tagValue"));
-        STATUS s = putKinesisVideoEventMetadata(*sPStreamHandle,
+        STATUS s2 = putKinesisVideoEventMetadata(*sPStreamHandle,
                                                 STREAM_EVENT_TYPE_NOTIFICATION,
                                                 &Meta);
-        MLogger::LOG(Level::DEBUG, "putKinesisVideoEventMetadata: result=%H", s);
+        MLogger::LOG(Level::DEBUG, "PutVideoFrame: result=0x%08x", s);
+        MLogger::LOG(Level::DEBUG, "PutVideoFrame: putKinesisVideoEventMetadata: result=0x%08x", s2);
         i++;
     }
-     */
-    STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
     return s;
 }
 

@@ -135,9 +135,22 @@ CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-vide
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp.s"
 	/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp -o CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp.s
 
+CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o: CMakeFiles/fxnMediaStreamProvider.dir/flags.make
+CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o"
+	/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o -c /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp
+
+CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.i"
+	/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp > CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.i
+
+CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.s"
+	/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp -o CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.s
+
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp.o: CMakeFiles/fxnMediaStreamProvider.dir/flags.make
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp.o: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp.o"
 	/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp.o -c /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp
 
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp.i: cmake_force
@@ -150,7 +163,7 @@ CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-vide
 
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp.o: CMakeFiles/fxnMediaStreamProvider.dir/flags.make
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp.o: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp.o"
 	/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp.o -c /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp
 
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp.i: cmake_force
@@ -163,7 +176,7 @@ CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-vide
 
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp.o: CMakeFiles/fxnMediaStreamProvider.dir/flags.make
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp.o: /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp.o"
 	/usr/local/linaro-aarch64-2020.09-gcc10.2-linux5.4/bin/aarch64-linux-gnu-g++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp.o -c /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp
 
 CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp.i: cmake_force
@@ -182,6 +195,7 @@ fxnMediaStreamProvider_OBJECTS = \
 "CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/ComponentProvider.cpp.o" \
 "CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsPlayer.cpp.o" \
 "CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp.o" \
+"CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o" \
 "CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp.o" \
 "CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp.o" \
 "CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp.o"
@@ -195,6 +209,7 @@ fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces
 fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/ComponentProvider.cpp.o
 fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsPlayer.cpp.o
 fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp.o
+fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o
 fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.cpp.o
 fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.cpp.o
 fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp.o
@@ -210,7 +225,7 @@ fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarel
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/out/cv28m_doorbell/fakeroot/usr/lib/liboryx-video-address.so.2
 fxnMediaStreamProvider: /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a/json-c/usr/lib/libjson-c.so
 fxnMediaStreamProvider: CMakeFiles/fxnMediaStreamProvider.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable fxnMediaStreamProvider"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable fxnMediaStreamProvider"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/fxnMediaStreamProvider.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

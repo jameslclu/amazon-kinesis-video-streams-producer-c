@@ -13,6 +13,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/ComponentProvider.cpp" "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/ComponentProvider.cpp.o"
   "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsPlayer.cpp" "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsPlayer.cpp.o"
   "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp" "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp.o"
+  "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp" "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/doorbell-build/CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -35,6 +36,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a/glib2/include/gio-unix-2.0"
   "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer"
   "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/makefile_doorbell/./../common"
+  "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/makefile_doorbell/./../player"
   "/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/makefile_doorbell/../inc"
   "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a/json-c/include"
   "/home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/kvs/inc"

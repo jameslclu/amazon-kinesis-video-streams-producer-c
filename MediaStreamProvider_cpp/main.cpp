@@ -1,17 +1,10 @@
-#include <stdio.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include <signal.h>
-#include <unistd.h>
 #include <json-c/json.h>
-
-//#include "LibFxnDBus.h"
-//#include "LibFxnUtils.h"
-//#include "FmspCommon.h"
 
 #ifdef CV28_BUILD
 #include "FmspServer.h"
 #include "OryxStreaming.h"
+#include "player/KvsProducer.h"
 #endif
 #include "inc/FmspConfig.h"
 #include "common/MLogger.h"
@@ -63,29 +56,15 @@ int main() {
     JamesService service;
     JamesServiceStub serviceStub(&service);
     sp_ServiceStub = &serviceStub;
-    //if( LIB_UTILS_PROGRAM_ALREADY_EXECUTE ==
-    //  LibUtilProgramIsExecute( FXN_PROGRAM_NAME ) )
-    //  FXNLOGD( "%s Already Execute ..", FXN_PROGRAM_NAME );
-    //else
-    //{
-        //LibUtilSystemSignalReg( &LibDBusClientLoopTerminate );
 
-    //( void )LibUtilInit();
-    //( void )LibUtilHWTimerOpen();
-
-    //LibDBusClientInit();
-#ifdef DOORBELL
-    retStatus = OryxStreamingCreate();
-#endif
-    //}
+//#ifdef DOORBELL
+//    retStatus = OryxStreamingCreate();
+//#endif
 
 //    if( EXIT_SUCCESS == retStatus ) {
 //        retStatus = FmspServerCreate();
 //    }
 
-    //if( EXIT_SUCCESS == retStatus ) {
-    //    LibDBusClientLoop();
-    // }
     service.Init();
     MLogger::LOG(Level::INFO, "main: service stub init");
     serviceStub.Init();

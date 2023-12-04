@@ -366,6 +366,33 @@ home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvid
 	$(MAKE) -f CMakeFiles/fxnMediaStreamProvider.dir/build.make CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp.s
 .PHONY : home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp.s
 
+home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.o: home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o
+
+.PHONY : home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.o
+
+# target to build an object file
+home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o:
+	$(MAKE) -f CMakeFiles/fxnMediaStreamProvider.dir/build.make CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o
+.PHONY : home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o
+
+home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.i: home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.i
+
+.PHONY : home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.i
+
+# target to preprocess a source file
+home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.i:
+	$(MAKE) -f CMakeFiles/fxnMediaStreamProvider.dir/build.make CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.i
+.PHONY : home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.i
+
+home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.s: home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.s
+
+.PHONY : home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.s
+
+# target to generate assembly for a file
+home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.s:
+	$(MAKE) -f CMakeFiles/fxnMediaStreamProvider.dir/build.make CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.s
+.PHONY : home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -402,6 +429,9 @@ help:
 	@echo "... home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.o"
 	@echo "... home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.i"
 	@echo "... home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.s"
+	@echo "... home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.o"
+	@echo "... home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.i"
+	@echo "... home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.s"
 .PHONY : help
 
 

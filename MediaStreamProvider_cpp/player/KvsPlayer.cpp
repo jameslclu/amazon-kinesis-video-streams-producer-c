@@ -70,11 +70,13 @@ static PVOID putVideoFrameRoutine(PVOID args) {
 #ifdef CONFIG_VIDEO_AUDIO_BOTH
     // Confirmed
     frame.duration = 0;
-#elifdef CONFIG_AUDIO_ONLY
+#else
+#ifdef CONFIG_AUDIO_ONLY
     frame.duration = 0;
-#elifdef CONFIG_VIDEO_ONLY
+#else CONFIG_VIDEO_ONLY
     // Confirmed
     frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
+#endif
 #endif
     frame.decodingTs = 0;
     frame.presentationTs = 0;
@@ -92,6 +94,7 @@ static PVOID putVideoFrameRoutine(PVOID args) {
         } else if (frame.flags == FRAME_FLAG_KEY_FRAME) {
             // generate an image and notification event at the start of the video stream.
             //putKinesisVideoEventMetadata(streamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
+            //MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: FirstKeyFrarme: ");
             // only push this once in this sample. A customer may use this whenever it is necessary though
         }
 
@@ -240,12 +243,14 @@ int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
         THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, NULL);
         THREAD_JOIN(videoSendTid, nullptr);
         THREAD_JOIN(audioSendTid, nullptr);
-#elifdef CONFIG_VIDEO_ONLY
+#else
+#ifdef CONFIG_VIDEO_ONLY
         THREAD_CREATE(&videoSendTid, putVideoFrameRoutine, NULL);
         THREAD_JOIN(videoSendTid, nullptr);
 #elifdef CONFIG_AUDIO_ONLY
         THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, NULL);
         THREAD_JOIN(audioSendTid, nullptr);
+#endif
 #endif
         ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseDeinit();
     }

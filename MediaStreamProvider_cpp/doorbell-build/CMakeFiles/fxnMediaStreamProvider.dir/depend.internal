@@ -318,19 +318,24 @@ CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-vide
  /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer/com/amazonaws/kinesis/video/state/Include.h
  /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer/com/amazonaws/kinesis/video/utils/Include.h
  /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer/com/amazonaws/kinesis/video/view/Include.h
+ /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/kvs/inc/LibFxnMediaProviderDef.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/MLogger.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/MethodQueue.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/ResultQueue.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/ServiceBase.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/inc/FmspConfig.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/inc/FmspServer.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/inc/OryxStreaming.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/IJamesService.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesService.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/james/JamesServiceStub.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/main.cpp
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/AllInterfaces.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/ComponentProvider.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsServiceConfig.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/SampleStreamSource.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.h
  /usr/include/glib-2.0/gio/gaction.h
  /usr/include/glib-2.0/gio/gactiongroup.h
  /usr/include/glib-2.0/gio/gactiongroupexporter.h
@@ -612,6 +617,9 @@ CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-vide
  /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer/com/amazonaws/kinesis/video/utils/Include.h
  /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer/com/amazonaws/kinesis/video/view/Include.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/MLogger.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/MethodQueue.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/ResultQueue.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/ServiceBase.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/AllInterfaces.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/ComponentProvider.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsPlayer.cpp
@@ -630,9 +638,14 @@ CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-vide
  /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer/com/amazonaws/kinesis/video/state/Include.h
  /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer/com/amazonaws/kinesis/video/utils/Include.h
  /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/inc/kvsProducer/com/amazonaws/kinesis/video/view/Include.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/common/MLogger.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/AllInterfaces.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/ComponentProvider.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.cpp
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsProducer.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/KvsServiceConfig.h
  /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/SampleStreamSource.h
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.h
+CMakeFiles/fxnMediaStreamProvider.dir/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp.o
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.cpp
+ /home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/MediaStreamProvider_cpp/player/Settings.h

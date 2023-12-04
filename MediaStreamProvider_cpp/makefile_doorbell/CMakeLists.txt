@@ -59,6 +59,11 @@ set(kvsproducer_inc
         ${PREBUILD_OSS_DIR}/glib2/include/gio-unix-2.0
 )
 
+set(player_inc
+        ./../player
+)
+
+
 list(APPEND common_src
 #        ./../common/JsonUtility.cpp
         ./../common/MethodQueue.cpp
@@ -105,7 +110,8 @@ set(common_lib_libs
 set(player_src
     ./../player/ComponentProvider.cpp
     ./../player/KvsPlayer.cpp
-    ./../player/KvsProducer.cpp)
+    ./../player/KvsProducer.cpp
+        ./../player/Settings.cpp)
 
 add_executable(${modulename}
         ${common_src}
@@ -127,6 +133,7 @@ target_include_directories(${modulename}
         ${KVS_PRODUCER_LIBS_INC_DIR}
 #        ${oryxv2_inc}
         ${common_inc}
+        ${player_inc}
         ../inc
         /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/prebuild/oss/armv8-a/json-c/include
         /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/kvs/inc
