@@ -206,6 +206,128 @@ static PStreamCallbacks pStreamCallbacks = NULL;
 static CLIENT_HANDLE clientHandle = INVALID_CLIENT_HANDLE_VALUE;
 BYTE aacAudioCpd[KVS_AAC_CPD_SIZE_BYTE];
 
+STATUS StreamCB_StreamUnderflowReportFunc(UINT64, STREAM_HANDLE) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onStreamUnderflowReportFunc");
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_BufferDurationOverflowPressureFunc(UINT64, STREAM_HANDLE, UINT64) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onBufferDurationOverflowPressureFunc");
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_StreamLatencyPressureFunc(UINT64, STREAM_HANDLE, UINT64) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onStreamLatencyPressureFunc");
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_StreamConnectionStaleFunc(UINT64, STREAM_HANDLE, UINT64) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onStreamConnectionStaleFunc");
+    static bool sent = false;
+    if (!sent) {
+        StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
+        CHAR tagName1[10] = {'\0'};
+        CHAR tagValue1[10] = {'\0'};
+        Meta.names[0] = tagName1;
+        Meta.values[0] = tagValue1;
+        MEMCPY(tagName1, (PCHAR) "TYPE", STRLEN("tagName"));
+        MEMCPY(tagValue1, (PCHAR) "Value", STRLEN("tagValue"));
+        STATUS s2 = putKinesisVideoEventMetadata(*sPStreamHandle,
+                                                 STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION,
+                                                 &Meta);
+        MLogger::LOG(Level::DEBUG, "onStreamConnectionStaleFunc: putKinesisVideoEventMetadata: result=0x%08x", s2);
+        sent = true;
+    }
+    return STATUS_SUCCESS;
+}
+STATUS StreamCB_DroppedFrameReportFunc(UINT64, STREAM_HANDLE, UINT64) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onDroppedFrameReportFunc");
+    return STATUS_SUCCESS;
+}
+STATUS StreamCB_DroppedFragmentReportFunc(UINT64, STREAM_HANDLE, UINT64) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onDroppedFragmentReportFunc");
+    return STATUS_SUCCESS;
+}
+STATUS StreamCB_StreamErrorReportFunc(UINT64, STREAM_HANDLE, UPLOAD_HANDLE, UINT64, STATUS) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onStreamErrorReportFunc");
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_FragmentAckReceivedFunc(UINT64, STREAM_HANDLE, UPLOAD_HANDLE, PFragmentAck) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onFragmentAckReceivedFunc");
+    static bool sent = false;
+    if (!sent) {
+        StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
+        CHAR tagName1[10] = {'\0'};
+        CHAR tagValue1[10] = {'\0'};
+        Meta.names[0] = tagName1;
+        Meta.values[0] = tagValue1;
+        MEMCPY(tagName1, (PCHAR) "TYPE", STRLEN("tagName"));
+        MEMCPY(tagValue1, (PCHAR) "Value", STRLEN("tagValue"));
+        STATUS s2 = putKinesisVideoEventMetadata(*sPStreamHandle,
+                                                 STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION,
+                                                 &Meta);
+        MLogger::LOG(Level::DEBUG, "onFragmentAckReceivedFunc: putKinesisVideoEventMetadata: result=0x%08x", s2);
+        sent = true;
+    }
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_StreamDataAvailableFunc(UINT64, STREAM_HANDLE, PCHAR, UPLOAD_HANDLE, UINT64, UINT64) {
+    //MLogger::LOG(Level::DEBUG, "StreamCB-onStreamDataAvailableFunc");
+    static bool sent = false;
+    if (!sent) {
+        StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
+        CHAR tagName1[10] = {'\0'};
+        CHAR tagValue1[10] = {'\0'};
+        Meta.names[0] = tagName1;
+        Meta.values[0] = tagValue1;
+        MEMCPY(tagName1, (PCHAR) "TYPE", STRLEN("tagName"));
+        MEMCPY(tagValue1, (PCHAR) "Value", STRLEN("tagValue"));
+        STATUS s2 = putKinesisVideoEventMetadata(*sPStreamHandle,
+                                                 STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION,
+                                                 &Meta);
+        MLogger::LOG(Level::DEBUG, "onStreamDataAvailableFunc: putKinesisVideoEventMetadata: result=0x%08x", s2);
+        sent = true;
+    }
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_StreamReadyFunc(UINT64, STREAM_HANDLE) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onStreamReadyFunc");
+    static bool sent = false;
+    if (!sent) {
+        StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
+        CHAR tagName1[10] = {'\0'};
+        CHAR tagValue1[10] = {'\0'};
+        Meta.names[0] = tagName1;
+        Meta.values[0] = tagValue1;
+        MEMCPY(tagName1, (PCHAR) "TYPE", STRLEN("tagName"));
+        MEMCPY(tagValue1, (PCHAR) "Value", STRLEN("tagValue"));
+        STATUS s2 = putKinesisVideoEventMetadata(*sPStreamHandle,
+                                                 STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION,
+                                                 &Meta);
+        MLogger::LOG(Level::DEBUG, "onStreamReadyFunc: putKinesisVideoEventMetadata: result=0x%08x", s2);
+        sent = true;
+    }
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_StreamClosedFunc(UINT64, STREAM_HANDLE, UPLOAD_HANDLE) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onStreamClosedFunc");
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_StreamShutdownFunc(UINT64, STREAM_HANDLE, BOOL) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onStreamShutdownFunc");
+    return STATUS_SUCCESS;
+}
+
+STATUS StreamCB_FreeStreamCallbacksFunc(PUINT64) {
+    MLogger::LOG(Level::DEBUG, "StreamCB-onFreeStreamCallbacksFunc");
+    return STATUS_SUCCESS;
+}
+
 int KvsProducer::Init() {
     mSettings.Init();
     // Step: 0
@@ -287,6 +409,24 @@ int KvsProducer::Init() {
     // step 5: createStreamCallbacks();
     start = std::chrono::high_resolution_clock::now();
     status = createStreamCallbacks(&pStreamCallbacks);
+
+
+    pStreamCallbacks->streamUnderflowReportFn = NULL;
+    pStreamCallbacks->bufferDurationOverflowPressureFn = StreamCB_BufferDurationOverflowPressureFunc;
+    pStreamCallbacks->streamLatencyPressureFn = StreamCB_StreamLatencyPressureFunc;
+    pStreamCallbacks->streamConnectionStaleFn = StreamCB_StreamConnectionStaleFunc;
+    pStreamCallbacks->droppedFrameReportFn = StreamCB_DroppedFrameReportFunc;
+    pStreamCallbacks->droppedFragmentReportFn = StreamCB_DroppedFragmentReportFunc;
+    pStreamCallbacks->streamErrorReportFn = StreamCB_StreamErrorReportFunc;
+    pStreamCallbacks->fragmentAckReceivedFn = StreamCB_FragmentAckReceivedFunc;
+    pStreamCallbacks->streamDataAvailableFn = StreamCB_StreamDataAvailableFunc;
+    pStreamCallbacks->streamReadyFn = StreamCB_StreamReadyFunc;
+    pStreamCallbacks->streamClosedFn = StreamCB_StreamClosedFunc;
+    pStreamCallbacks->streamShutdownFn = StreamCB_StreamShutdownFunc;
+    pStreamCallbacks->freeStreamCallbacksFn = StreamCB_FreeStreamCallbacksFunc;
+
+    // Specialized cleanup callback
+    FreeStreamCallbacksFunc freeStreamCallbacksFn;
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     MLogger::LOG(Level::DEBUG, "Init: Create Stream Callbacks: %x, (Duration=%d)", status, duration);
@@ -300,10 +440,9 @@ int KvsProducer::Init() {
 
     // step 7: createKinesisVideoClient();
     start = std::chrono::high_resolution_clock::now();
-    status = createKinesisVideoClient(sPDeviceInfo, pClientCallbacks, &clientHandle);
+    status = createKinesisVideoClient(sPDeviceInfo, pClientCallbacks, &clientHandle); // ToDo: Implement the callback functions
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    //status = createKinesisVideoClient(sPDeviceInfo, pClientCallbacks, &clientHandle);
     MLogger::LOG(Level::DEBUG, "Init: 7. Create Kinesis Video Client: status = %X, (Duration=%d)", status, duration);
 
     // step 8: createKinesisVideoStreamSync();
@@ -352,7 +491,7 @@ int KvsProducer::Deinit() {
 
     // 6
     start = std::chrono::high_resolution_clock::now();
-    status = freeCallbacksProvider(&mpClientCallbacks);
+    status = freeCallbacksProvider(&mpClientCallbacks); //ToDo: implement the callback functions
     stop = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     MLogger::LOG(Level::DEBUG, "Deinit: freeCallbacksProvider: result = %X, (Duration=%d)", status, duration);
@@ -366,7 +505,7 @@ int KvsProducer::SetStreamName(PCHAR name) {
 }
 
 STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
-    static int i = 0;
+    static int i = 1;
     STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
     if (i == 0) {
         StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
@@ -377,7 +516,7 @@ STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
         MEMCPY(tagName1, (PCHAR) "TYPE", STRLEN("tagName"));
         MEMCPY(tagValue1, (PCHAR) "Value", STRLEN("tagValue"));
         STATUS s2 = putKinesisVideoEventMetadata(*sPStreamHandle,
-                                                STREAM_EVENT_TYPE_NOTIFICATION,
+                                                 STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION,
                                                 &Meta);
         MLogger::LOG(Level::DEBUG, "PutVideoFrame: result=0x%08x", s);
         MLogger::LOG(Level::DEBUG, "PutVideoFrame: putKinesisVideoEventMetadata: result=0x%08x", s2);

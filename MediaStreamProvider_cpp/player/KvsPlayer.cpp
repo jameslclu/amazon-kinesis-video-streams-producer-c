@@ -38,7 +38,7 @@ static PVOID putAudioFrameRoutine(PVOID args) {
                 //printf("putKinesisVideoFrame for audio failed with 0x%08x\n", status);
                 MLogger::LOG(Level::ERROR, "putAudioFrameRoutine, (index=%d), status = 0x%08x", frame.index, status);
             } else {
-                MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine, (index=%d), status = 0x%08x", frame.index, status);
+                //MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine, (index=%d), status = 0x%08x", frame.index, status);
             }
 
             frame.presentationTs += SAMPLE_AUDIO_FRAME_DURATION;
@@ -110,7 +110,7 @@ static PVOID putVideoFrameRoutine(PVOID args) {
             // reduce sleep time a little for smoother video
             THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
         }
-        MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame, (index=%d), status = 0x%08x", frameID, status);
+        //MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame, (index=%d), status = 0x%08x", frameID, status);
         frameID++;
     }
     MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: -");
