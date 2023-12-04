@@ -8,6 +8,62 @@ UINT64 streamStartTime;
 UINT64 streamStopTime;
 DOUBLE startUpLatency;
 UINT64 startTime = GETTIME();
+
+static PVOID putAVFrameRoutine(PVOID args) {
+    STATUS status;
+    UINT64 pts = 0;
+    static Frame frame;
+    UINT64 runningTime;
+    UINT32 fileIndex = 0;
+#ifdef CV28_BUILD
+    ComponentProvider::GetInstance()->GetStreamSource(ORYX)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
+
+
+#endif
+    frame.version = FRAME_CURRENT_VERSION;
+    frame.trackId = DEFAULT_VIDEO_TRACK_ID;
+#ifdef CONFIG_VIDEO_AUDIO_BOTH
+    // Confirmed
+    frame.duration = 0;
+#else
+#ifdef CONFIG_AUDIO_ONLY
+    frame.duration = 0;
+#else CONFIG_VIDEO_ONLY
+    // Confirmed
+    frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
+#endif
+#endif
+    frame.decodingTs = 0;
+    frame.presentationTs = 0;
+    frame.index = 0;
+    uint32_t frameID = 0;
+    frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
+    MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: +");
+
+    while (GETTIME() < streamStopTime) {
+        status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutVideoFrame(&frame);
+        if (!firstVideoFramePut) {
+            startUpLatency = (DOUBLE) (GETTIME() - startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
+            DLOGD("Start up latency: %lf ms", startUpLatency);
+            firstVideoFramePut = true;
+        }
+        frame.presentationTs += SAMPLE_VIDEO_FRAME_DURATION;
+        frame.decodingTs = frame.presentationTs;
+        frame.index++;
+
+        frame.flags = frame.index % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;;
+        ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
+
+        runningTime = GETTIME() - streamStartTime;
+        if (runningTime < frame.presentationTs) {
+            THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
+        }
+        frameID++;
+    }
+    MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: -");
+    return 0;
+}
+
 static PVOID putAudioFrameRoutine(PVOID args) {
     STATUS status;
     UINT64 pts = 0;
@@ -31,8 +87,11 @@ static PVOID putAudioFrameRoutine(PVOID args) {
     MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine: +");
     while( GETTIME() < streamStopTime) {
         if (firstVideoFramePut) {
-            ComponentProvider::GetInstance()->GetStreamSource(FAKE)->
-                GetAudioFrame(&frame.frameData, &frame.size, &pts);
+#ifdef CV28_BUILD
+            ComponentProvider::GetInstance()->GetStreamSource(ORYX)->GetAudioFrame(&frame.frameData, &frame.size, &pts);
+#else
+            ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetAudioFrame(&frame.frameData, &frame.size, &pts);
+#endif
             status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutAudioFrame(&frame);
             if (STATUS_FAILED(status)) {
                 //printf("putKinesisVideoFrame for audio failed with 0x%08x\n", status);
@@ -64,7 +123,11 @@ static PVOID putVideoFrameRoutine(PVOID args) {
     static Frame frame;
     UINT64 runningTime;
     UINT32 fileIndex = 0;
+#ifdef CV28_BUILD
+    ComponentProvider::GetInstance()->GetStreamSource(ORYX)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
+#else
     ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
+#endif
     frame.version = FRAME_CURRENT_VERSION;
     frame.trackId = DEFAULT_VIDEO_TRACK_ID;
 #ifdef CONFIG_VIDEO_AUDIO_BOTH
@@ -229,12 +292,16 @@ static PVOID putVideoFrameRoutineDone(PVOID args) {
 }
 */
 
-static TID audioSendTid, videoSendTid;
+static TID audioSendTid, videoSendTid, avSentTid;
 int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
     startTime = GETTIME();
     streamStartTime = GETTIME();
     streamStopTime = streamStartTime + DEFAULT_STREAM_DURATION;
     if ("Start" == method.m_method) {
+#ifdef CV28_BUILD
+        THREAD_CREATE(&avSentTid, putAVFrameRoutine, NULL);
+        THREAD_JOIN(avSentTid, nullptr);
+#else
         ComponentProvider::GetInstance()->GetStreamSource(FAKE)->Reset();
         ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
         // Either of Video only or Audio Only: is avalable
@@ -250,6 +317,7 @@ int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
 #elifdef CONFIG_AUDIO_ONLY
         THREAD_CREATE(&audioSendTid, putAudioFrameRoutine, NULL);
         THREAD_JOIN(audioSendTid, nullptr);
+#endif
 #endif
 #endif
         ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseDeinit();

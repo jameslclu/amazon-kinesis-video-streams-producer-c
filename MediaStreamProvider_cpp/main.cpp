@@ -31,7 +31,6 @@ static void signalHandler(int signal) {
     }
 }
 
-
 int main() {
     (void)MLogger::Instance().Init("MSProvider", "/data/tmp/middleware", "msprovider", 0, 10);
     MLogger::Instance().SetPrintLevel(Level::DEBUG);
@@ -57,9 +56,10 @@ int main() {
     JamesServiceStub serviceStub(&service);
     sp_ServiceStub = &serviceStub;
 
-//#ifdef DOORBELL
-//    retStatus = OryxStreamingCreate();
-//#endif
+#ifdef CV28_BUILD
+    retStatus = OryxStreamingCreate();
+    //ComponentProvider::GetInstance()->SetStreamSource(ORYX, &mSampleStreamSource);
+#endif
 
 //    if( EXIT_SUCCESS == retStatus ) {
 //        retStatus = FmspServerCreate();
