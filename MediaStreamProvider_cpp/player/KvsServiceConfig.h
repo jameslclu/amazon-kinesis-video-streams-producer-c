@@ -30,6 +30,10 @@
 #define FILE_LOGGING_BUFFER_SIZE (100 * 1024)
 #define MAX_NUMBER_OF_LOG_FILES  5
 
+//#define CONFIG_AUDIO_ONLY 1
+//#define CONFIG_VIDEO_ONLY 1
+#define CONFIG_VIDEO_AUDIO_BOTH 1
+
 //#define USER_DB_DIR "/data/etc/fxnserviceb"
 //#define BUS_NAME "fxn.kvsservice"
 //#define OBJECT_PATH "/fxn/kvsservice"

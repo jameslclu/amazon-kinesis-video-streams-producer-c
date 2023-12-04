@@ -229,10 +229,15 @@ int KvsProducer::Init() {
     start = std::chrono::high_resolution_clock::now();
     // Audio-Only : status = createRealtimeAudioStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, AUDIO_CODEC_ID_AAC, &pStreamInfo);
     //status = createOfflineVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264, &pStreamInfo);
+#ifdef CONFIG_VIDEO_AUDIO_BOTH
     status = createRealtimeAudioVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
                                                   AUDIO_CODEC_ID_AAC, &pStreamInfo);
+#elifdef CONFIG_AUDIO_ONLY
+    status = createRealtimeAudioStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, AUDIO_CODEC_ID_AAC, &pStreamInfo);
+#elifdef CONFIG_VIDEO_ONLY
+    status = createOfflineVideoStreamInfoProviderWithCodecs((PCHAR )mStreamName.data(), DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264, &pStreamInfo);
+#endif
 
-    //start = std::chrono::high_resolution_clock::now();
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     MLogger::LOG(Level::DEBUG, "Init: createDefaultCallbacksProviderWithIotCertificate: %X, (duration=%d)", status, duration);
@@ -309,57 +314,6 @@ int KvsProducer::Init() {
     return 0;
 }
 
-//int KvsProducer::Init() {
-//    createDefaultDeviceInfo(&mpDeviceInfo);
-//    mpDeviceInfo->clientInfo.loggerLogLevel = LOG_LEVEL_DEBUG;
-//    //Init-001
-//    {
-//        createRealtimeAudioVideoStreamInfoProviderWithCodecs(mStreamName, DEFAULT_RETENTION_PERIOD, DEFAULT_BUFFER_DURATION, VIDEO_CODEC_ID_H264,
-//                                                             AUDIO_CODEC_ID_AAC, &mpStreamInfo);
-//        // set up audio cpd.
-//        mpAudioTrack = mpStreamInfo->streamCaps.trackInfoList[0].trackId == DEFAULT_AUDIO_TRACK_ID ? &mpStreamInfo->streamCaps.trackInfoList[0]
-//                                                                                                   : &mpStreamInfo->streamCaps.trackInfoList[1];
-//        mpAudioTrack->codecPrivateData = mAACAudioCpd;
-//        mpAudioTrack->codecPrivateDataSize = KVS_AAC_CPD_SIZE_BYTE;
-//        mkvgenGenerateAacCpd(AAC_LC, AAC_AUDIO_TRACK_SAMPLING_RATE, AAC_AUDIO_TRACK_CHANNEL_CONFIG, mpAudioTrack->codecPrivateData,
-//                             mpAudioTrack->codecPrivateDataSize);
-//    }
-//    mpStreamInfo->streamCaps.absoluteFragmentTimes = FALSE;
-//    // Init2
-//    {
-//        const PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
-//        /*
-//        PCHAR pIotCoreCert = "/media/sf_workspaces/kvs_files/cert";
-//        PCHAR pIotCorePrivateKey = "/media/sf_workspaces/kvs_files/privkey";
-//        PCHAR pCaCert = "/media/sf_workspaces/kvs_files/rootca.pem";
-//        */
-//        const PCHAR pIotCoreCert = "/tmp/kvs_files/cert";
-//        const PCHAR pIotCorePrivateKey = "/tmp/kvs_files/privkey";
-//        const PCHAR pCaCert = "/tmp/kvs_files/rootca.pem";
-//        const PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
-//        const PCHAR pThingName = "db-B813329BB08C";
-//        const PCHAR pRegion = "ca-central-1";
-//        createDefaultCallbacksProviderWithIotCertificate(pIotCoreCredentialEndPoint, pIotCoreCert, pIotCorePrivateKey, pCaCert,
-//                                                         pIotCoreRoleAlias, pThingName, pRegion, nullptr, nullptr, &mpClientCallbacks);
-//    }
-//    STATUS retStatus = STATUS_SUCCESS;
-//    if (NULL != getenv(ENABLE_FILE_LOGGING)) {
-//        if ((retStatus = addFileLoggerPlatformCallbacksProvider(mpClientCallbacks, FILE_LOGGING_BUFFER_SIZE, MAX_NUMBER_OF_LOG_FILES,
-//                                                                (PCHAR) FILE_LOGGER_LOG_FILE_DIRECTORY_PATH, TRUE) != STATUS_SUCCESS)) {
-//            printf("File logging enable option failed with 0x%08x error code\n", retStatus);
-//        }
-//    }
-//    // Init3
-//    {
-//        createStreamCallbacks(&mpStreamCallbacks);
-//        addStreamCallbacks(mpClientCallbacks, mpStreamCallbacks);
-//    }
-//    // Init4
-//    createKinesisVideoClient(mpDeviceInfo, mpClientCallbacks, &mClientHandle);
-//    createKinesisVideoStreamSync(mClientHandle, mpStreamInfo, mpStreamHandle);//&mStreamHandle);
-//    return 0;
-//}
-
 int KvsProducer::Deinit() {
     //1
     auto start = std::chrono::high_resolution_clock::now();
@@ -427,13 +381,10 @@ STATUS KvsProducer::PutVideoFrame(PFrame pFrame) {
     }
      */
     STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
-    //printf("PutVideoFrame: %08x\n", s);
     return s;
 }
 
 STATUS KvsProducer::PutAudioFrame(PFrame pFrame) {
-    //static int i = 0;
     STATUS s = putKinesisVideoFrame(*sPStreamHandle, pFrame);
-    //printf("PutAudioFrame: %08x\n", s);
     return s;
 }
