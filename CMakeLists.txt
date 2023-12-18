@@ -420,6 +420,12 @@ if(BUILD_COMMON_CURL)
             ${fxnMediaStreamProvider_root}/common/ServiceBase.cpp
             ${fxnMediaStreamProvider_root}/common/MLogger.cpp)
 
+    list(APPEND oryx_inc
+            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include/stream
+            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include/utility
+            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/application/auto/demo/amba_dvr
+            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include )
+
     list(APPEND common_inc
             ${fxnMediaStreamProvider_root}/common)
     # {
@@ -485,6 +491,7 @@ if(BUILD_COMMON_CURL)
             ${JSONCPP_INCLUDE_DIRS}
             ${common_inc}
             ${james_inc}
+            ${oryx_inc}
             ${player_inc}
             #           ${cv28_inc}
     )
