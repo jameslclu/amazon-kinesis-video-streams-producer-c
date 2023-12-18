@@ -3,13 +3,10 @@
 #include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
-
+#include "MLogger.h"
 #include "am_base_include.h"
 #include "am_define.h"
 #include "am_export_if.h"
-//#include "gst/gst.h"
-//#include "gst/app/gstappsink.h"
-
 #include "OryxStreaming.h"
 
 /* ---- Constants ---------------------------------------------------------- */
@@ -151,8 +148,6 @@ int32_t OryxStreamingGetFrame( FmspFramePlaybackInfo_u * pInfo )
 
     return ( ( 0 == retStatus ) ? EXIT_SUCCESS : EXIT_FAILURE );
 }
-
-/* ----------------------------------------------------------- */
 int32_t OryxStreamingGetLiveFrame( FmspFramePlaybackInfo_u * pInfo )
 {
     FMSPSystemLink_t * p;
@@ -204,9 +199,3 @@ int32_t OryxStreamingGetLiveFrame( FmspFramePlaybackInfo_u * pInfo )
 
     return ( ( 0 == retStatus ) ? EXIT_SUCCESS : EXIT_FAILURE );
 }
-
-/* ---- Private Function --------------------------------------------------- */
-
-/* ---- Call-back Functions ------------------------------------------------ */
-
-/* ------------------------------------------------------------------------- */
