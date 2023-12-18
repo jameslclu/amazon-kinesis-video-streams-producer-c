@@ -1,5 +1,5 @@
 #ifndef _COMPONENTPROVIDER_H
-#define _RESOURCEPROVIDER_H
+#define _COMPONENTPROVIDER_H
 
 #include "AllInterfaces.h"
 

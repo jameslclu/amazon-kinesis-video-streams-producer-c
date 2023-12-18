@@ -13,6 +13,22 @@ enum KvsPlayerState {
     Deinited = 6
 };
 
+enum PLAYER_SOURCE {
+    NONE = 0,
+    LOCALFILE = 1,
+    ORXY
+};
+
+enum PLAY_OUTPUT {
+    NO = 0,
+    KVS
+};
+
+enum AV_CONFIG {
+    IN_A_THREAD = 0,
+    IN_TWO_THREADS = 1
+};
+
 class KvsPlayer: public ServiceBase {
   public:
     KvsPlayer();
@@ -23,7 +39,7 @@ class KvsPlayer: public ServiceBase {
     // int SetSource(IStreamSource &streamSource);
     // Get the render from the RenderPROVIDER
     // int SetRender(KvsOutput &kvsOutput);
-    int Start();
+    int Start(std::string option);
     int Pause();
     int Stop();
     int GetStatus(KvsPlayerState state);

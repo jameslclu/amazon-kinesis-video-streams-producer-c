@@ -17,12 +17,15 @@ public:
     int StartUpload();
     int SetHandler(STREAM_HANDLE* handler);
     int Init();
+    int Init2();
     int Deinit();
     int SetStreamName(PCHAR name);
     virtual int BaseInit();
     virtual int BaseDeinit();
     virtual STATUS PutVideoFrame(PFrame pFrame);
     virtual STATUS PutAudioFrame(PFrame pFrame);
+    virtual STATUS PutAVFrame(PFrame pFrame);
+    virtual void KvsProducerPutFrameRoutine(MediaStreamConfig *streamConfig, AMExportPacket *packet);
   private:
     std::string mStreamName;
     std::string mIotCoreCredentialEndPoint;
