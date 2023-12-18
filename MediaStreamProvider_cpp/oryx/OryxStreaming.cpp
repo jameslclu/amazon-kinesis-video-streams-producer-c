@@ -8,6 +8,43 @@
 #include "am_define.h"
 #include "am_export_if.h"
 #include "OryxStreaming.h"
+#include "KvsServiceConfig.h"
+
+#define FMSP_PACKET_TYPE_UNKNOWN    ( 0 )
+#define FMSP_PACKET_TYPE_VIDEO      ( 1 )
+#define FMSP_PACKET_TYPE_AUDIO      ( 2 )
+#define FMSP_PACKET_TYPE_OTHER      ( 3 )
+
+#define FMSP_PACKAGE_MSG_NORMAL     ( 0 )
+#define FMSP_PACKAGE_MSG_RESTART    ( 1 )
+
+#define FMSP_STREAMING_MEDIA_NORMAL ( 0 )
+#define FMSP_STREAMING_MEDIA_FINISH ( 1 )
+
+#define FMSP_CMD_BUFFER_SIZE        ( 128 )
+#define FMSP_CMD_PROGRAM_NAME_SIZE  ( 64 )
+#define FMSP_CMD_UNKNOWN            ( 0 )
+#define FMSP_CMD_START              ( 1 )
+#define FMSP_CMD_STOP               ( 2 )
+#define FMSP_CMD_CONFIG             ( 3 )
+#define FMSP_CMD_RESET              ( 4 )
+
+#define FMSP_PACKET_PAYLOAD_SIZE    ( 512 * 1024 )
+#define FMSP_PACKET_BUFFER_SIZE     ( FMSP_PACKET_PAYLOAD_SIZE + 64 )
+
+typedef union{
+    char Buffer[ FMSP_PACKET_BUFFER_SIZE ];
+    struct{
+        uint8_t Type;
+        uint8_t IsStop;
+        uint8_t IsKeyFrame;
+        uint8_t IsRestart;
+        int32_t Size;
+        int64_t pts;
+        uint8_t Buffer[ FMSP_PACKET_PAYLOAD_SIZE ];
+    } data;
+} FmspFramePlaybackInfo_u;
+
 static AMIExportClient *spAVClient = nullptr; ///< Pointer to the AMI Export client.
 static AMIExportClient *spAClient = nullptr; ///< Pointer to the AMI Export client.
 static AMIExportClient *spVClient = nullptr; ///< Pointer to the AMI Export client.
