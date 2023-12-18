@@ -10,6 +10,7 @@ project(${modulename}
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-Wno-error=deprecated-declarations -Wno-deprecated-declarations")
 add_definitions(-DDOORBELL)
+add_definitions(-DCV28_BUILD)
 #set(DOORBELL 11)
 #option(DOORBELL "Use openssl as crypto library" ON)
 find_package(PkgConfig REQUIRED)
@@ -111,13 +112,13 @@ set(player_src
     ./../player/ComponentProvider.cpp
     ./../player/KvsPlayer.cpp
     ./../player/KvsProducer.cpp
-        ./../player/Settings.cpp)
+    ./../player/Settings.cpp)
 
 add_executable(${modulename}
         ${common_src}
         ${player_src}
         ${james_src}
-#        ../oryx/OryxStreaming.cpp
+        ../oryx/OryxStreaming.cpp
 #        ../FmspServer.c
         #FmspMain.c
         ../main.cpp
@@ -131,7 +132,7 @@ target_include_directories(${modulename}
         ${JSONCPP_INCLUDE_DIRS}
         ${common_lib_includes}
         ${KVS_PRODUCER_LIBS_INC_DIR}
-#        ${oryxv2_inc}
+        ${oryxv2_inc}
         ${common_inc}
         ${player_inc}
         ../inc

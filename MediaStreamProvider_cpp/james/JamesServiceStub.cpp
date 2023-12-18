@@ -101,6 +101,7 @@ gboolean JamesServiceStub::handle_set_property(GDBusConnection *connection, cons
 
 void JamesServiceStub::on_bus_acquired(GDBusConnection *connection, const gchar *name, gpointer user_data) {
     (void) user_data;
+    (void) name;
     guint registration_id;
     //MLogger::LOG(Level::DEBUG, "on_bus_acquired: %s", name);
 
@@ -130,12 +131,14 @@ void JamesServiceStub::on_bus_acquired(GDBusConnection *connection, const gchar 
 void JamesServiceStub::on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_data) {
     (void) connection;
     (void) user_data;
+    (void) name;
     //MLogger::LOG(Level::DEBUG, "on_name_acquired: %s", name);
 }
 
 void JamesServiceStub::on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data) {
     (void) connection;
     (void) user_data;
+    (void) name;
     //MLogger::LOG(Level::DEBUG, "on_name_lost: %s", name);
 }
 //==============================================
@@ -148,8 +151,7 @@ JamesServiceStub::JamesServiceStub(IJamesService *pservice) {
     }
 }
 
-JamesServiceStub::~JamesServiceStub() {
-}
+JamesServiceStub::~JamesServiceStub() = default;
 
 int JamesServiceStub::Init() {
     int v;
@@ -178,6 +180,7 @@ int JamesServiceStub::Init() {
     return v;
 }
 int JamesServiceStub::Interrupt(int cmd) {
+    (void) cmd;
     g_main_quit(sp_loop);
     return 0;
 }
