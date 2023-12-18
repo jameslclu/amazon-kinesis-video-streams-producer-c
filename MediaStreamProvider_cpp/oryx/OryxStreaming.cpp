@@ -1,14 +1,3 @@
-/**
- * Copyright (c) 2022 D Group / PCEBG / SHPBU, Foxconn .
- * All rights reserved.
- */
-
-/**
- * @ingroup FXN-MEDIA-STREAMING-PROVIDER-STREAMING
- * @file    FmspStreaming.c
- * @brief   Source files for Fxn streaming provider about media source control procedure.
- */
-
 /* ---- Includes ----------------------------------------------------------- */
 #include <stdint.h>
 #include <stdbool.h>
