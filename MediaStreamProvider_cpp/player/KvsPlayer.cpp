@@ -5,7 +5,8 @@
 #include "am_base_include.h"
 #include "am_define.h"
 #include "am_export_if.h"
-
+#include "../pc/AllPCStructures.h"
+static PCSampleCustomData sPCSampleCustomData;
 volatile ATOMIC_BOOL firstVideoFramePut = false;
 UINT64 streamStartTime;
 UINT64 streamStopTime;
@@ -377,26 +378,36 @@ int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
     startTime = GETTIME();
     streamStartTime = GETTIME();
     streamStopTime = streamStartTime + DEFAULT_STREAM_DURATION;
+
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
+
+    if (method.m_method.find("pc") !=std::string::npos ) {
+        MEMSET(&sPCSampleCustomData, 0x00, SIZEOF(PCSampleCustomData));
+        ATOMIC_STORE_BOOL(&sPCSampleCustomData.firstVideoFramePut, FALSE);
+        sPCSampleCustomData.startTime = GETTIME();
+        sPCSampleCustomData.firstFrame = TRUE;
+        sPCSampleCustomData.streamStopTime = streamStopTime;
+        //sPCSampleCustomData.streamHandle = streamHandle;
+        sPCSampleCustomData.streamStartTime = GETTIME();
+    }
+
     if ("Start" == method.m_method && "pc" == method.m_data) {
-        ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
-        THREAD_CREATE(&vSendTid, PCVideoFrameThread, NULL);
+        THREAD_CREATE(&vSendTid, PCVideoFrameThread, &sPCSampleCustomData);
         THREAD_JOIN(vSendTid, nullptr);
     } else if ("Start" == method.m_method && "pc-av" == method.m_data) {
-        ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
-        THREAD_CREATE(&avSendTid, PCAVFrameThread, NULL);
+        THREAD_CREATE(&avSendTid, PCAVFrameThread, &sPCSampleCustomData);
         THREAD_JOIN(avSendTid, nullptr);
     } else if ("Start" == method.m_method) {
-        ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
         // ToDo: Parse parameter to choose one item among
         // AV concurrency
         switch (sAVCONFIG) {
             case AV_CONFIG::IN_A_THREAD:
-                THREAD_CREATE(&avSendTid, deviceAVPlayThread, NULL);
+                THREAD_CREATE(&avSendTid, deviceAVPlayThread, &sPCSampleCustomData);
                 THREAD_JOIN(avSendTid, nullptr);
                 break;
             case AV_CONFIG::IN_TWO_THREADS:
-                THREAD_CREATE(&vSendTid, deviceVideoThread, NULL);
-                THREAD_CREATE(&aSendTid, deviceAudioThread, NULL);
+                THREAD_CREATE(&vSendTid, deviceVideoThread, &sPCSampleCustomData);
+                THREAD_CREATE(&aSendTid, deviceAudioThread, &sPCSampleCustomData);
                 THREAD_JOIN(vSendTid, nullptr);
                 THREAD_JOIN(aSendTid, nullptr);
                 break;
