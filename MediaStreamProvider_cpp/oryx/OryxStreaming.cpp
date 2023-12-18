@@ -8,6 +8,135 @@
 #include "am_define.h"
 #include "am_export_if.h"
 #include "OryxStreaming.h"
+static AMIExportClient *spAVClient = nullptr; ///< Pointer to the AMI Export client.
+static AMIExportClient *spAClient = nullptr; ///< Pointer to the AMI Export client.
+static AMIExportClient *spVClient = nullptr; ///< Pointer to the AMI Export client.
+
+static AMExportConfig sAVconfig;             ///< Configuration for AMI Export.
+static AMExportConfig sAconfig;             ///< Configuration for AMI Export.
+static AMExportConfig sVconfig;             ///< Configuration for AMI Export.
+
+void OryxStreamingDestroy( void );
+int32_t OryxStreamingVideoCreate( void );
+int32_t OryxStreamingAudioCreate( void );
+int32_t OryxStreamingAVCreate( void );
+int32_t OryxStreamingACreate( void );
+int32_t OryxStreamingVCreate( void );
+int32_t OryxStreamingCreate( void );
+
+int32_t OryxStreamingGetLiveAudioFrame( FmspFramePlaybackInfo_u * pInfo );
+int32_t OryxStreamingGetLiveVideoFrame( FmspFramePlaybackInfo_u * pInfo );
+
+int OryxStreaming::Init() {
+    MLogger::LOG(Level::DEBUG, "OryxStreaming::Init");
+
+#ifdef CONFIG_VIDEO_AUDIO_BOTH
+    //OryxStreamingCreate();
+    MLogger::LOG(Level::DEBUG, "OryxStreaming::Init:CONFIG_VIDEO_AUDIO_BOTH");
+    //MLogger::LOG(Level::DEBUG, "OryxStreaming::Init: -> OryxStreamingAVCreate");
+    OryxStreamingAVCreate();
+    //OryxStreamingACreate();
+    //OryxStreamingVCreate();
+    //MLogger::LOG(Level::DEBUG, "OryxStreaming::Init: -> OryxStreamingAVCreate");
+    //OryxStreamingAudioCreate();
+#endif
+#ifdef CONFIG_VIDEO_ONLY
+    MLogger::LOG(Level::DEBUG, "OryxStreaming::Init: -> OryxStreamingVideoCreate");
+    OryxStreamingAVCreate();
+    MLogger::LOG(Level::DEBUG, "OryxStreaming::Init: <- OryxStreamingVideoCreate");
+#endif
+
+#ifdef CONFIG_AUDIO_ONLY
+    MLogger::LOG(Level::DEBUG, "OryxStreaming::Init: -> OryxStreamingCreate");
+    OryxStreamingAudioCreate();
+    MLogger::LOG(Level::DEBUG, "OryxStreaming::Init: <- OryxStreamingCreate");
+#endif
+    return 0;
+}
+
+int OryxStreaming::Deinit() {
+    OryxStreamingDestroy();
+    return 0;
+}
+
+int OryxStreaming::Reset() {
+    return 0;
+}
+
+int OryxStreaming::ReleaseAVFrame(AMExportPacket* pPackage) {
+    spAVClient->release(pPackage);
+    return 0;
+}
+
+int OryxStreaming::ReleaseAFrame(AMExportPacket* pPackage) {
+    spAClient->release(pPackage);
+    return 0;
+}
+
+int OryxStreaming::ReleaseVFrame(AMExportPacket* pPackage) {
+    spVClient->release(pPackage);
+    return 0;
+}
+
+int g_timeout = -1;
+int OryxStreaming::GetAVFrame(AMExportPacket* pPackage) {
+    if (spAVClient->receive(pPackage, g_timeout) == 0) {
+        return 0;
+    }
+    return 1;
+}
+
+int OryxStreaming::GetAFrame(AMExportPacket* pPackage) {
+    if (spAClient->receive(pPackage, g_timeout) == 0) {
+        return 0;
+    }
+    return 1;
+}
+
+int OryxStreaming::GetVFrame(AMExportPacket* pPackage) {
+    if (spVClient->receive(pPackage, g_timeout) == 0) {
+        return 0;
+    }
+    return 1;
+}
+
+
+int OryxStreaming::GetVideoFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) {
+
+    FmspFramePlaybackInfo_u pInfo;
+    OryxStreamingGetLiveVideoFrame(&pInfo );
+    MLogger::LOG(Level::DEBUG, "GetVideoFrame: Type=%d, IsStop=%d, IsKeyFrame=%d, IsRestart=%d, Size=%d, pts=%d",
+                 pInfo.data.Type, pInfo.data.IsStop, pInfo.data.IsKeyFrame, pInfo.data.IsRestart, pInfo.data.Size, pInfo.data.pts);
+    while(pInfo.data.Type != 1) {
+        MLogger::LOG(Level::DEBUG, "Type != 1");
+        OryxStreamingGetLiveVideoFrame(&pInfo );
+        MLogger::LOG(Level::DEBUG, "GetVideoFrame: Type=%d, IsStop=%d, IsKeyFrame=%d, IsRestart=%d, Size=%d, pts=%d",
+        pInfo.data.Type, pInfo.data.IsStop, pInfo.data.IsKeyFrame, pInfo.data.IsRestart, pInfo.data.Size, pInfo.data.pts);
+    }
+    *pdata = pInfo.data.Buffer;
+    *psize = pInfo.data.Size;
+    //memcpy(*pdata, &pInfo.data.Buffer[ 0 ], pInfo.data.Size);
+    return 0;
+}
+int OryxStreaming::GetAudioFrame(PBYTE* pdata, UINT32 *psize, UINT64* pPTS) {
+
+    FmspFramePlaybackInfo_u pInfo;
+    MLogger::LOG(Level::DEBUG, "GetAudioFrame: ->OryxStreamingGetLiveAudioFrame");
+    OryxStreamingGetLiveAudioFrame(&pInfo );
+    MLogger::LOG(Level::DEBUG, "GetAudioFrame: Type=%d, IsStop=%d, IsKeyFrame=%d, IsRestart=%d, Size=%d, pts=%d",
+                 pInfo.data.Type, pInfo.data.IsStop, pInfo.data.IsKeyFrame, pInfo.data.IsRestart, pInfo.data.Size, pInfo.data.pts);
+    while(pInfo.data.Type != AM_EXPORT_PACKET_TYPE_AUDIO_DATA) {
+        MLogger::LOG(Level::DEBUG, "Type != AM_EXPORT_PACKET_TYPE_AUDIO_DATA");
+        OryxStreamingGetLiveAudioFrame(&pInfo );
+        MLogger::LOG(Level::DEBUG, "GetAudioFrame: Type=%d, IsStop=%d, IsKeyFrame=%d, IsRestart=%d, Size=%d, pts=%d",
+                     pInfo.data.Type, pInfo.data.IsStop, pInfo.data.IsKeyFrame, pInfo.data.IsRestart, pInfo.data.Size, pInfo.data.pts);
+    }
+    //memcpy(*pdata, &pInfo.data.Buffer[ 0 ], pInfo.data.Size);
+    *pdata = pInfo.data.Buffer;
+    *psize = pInfo.data.Size;
+    *pPTS = pInfo.data.pts;
+    return 0;
+}
 
 /* ---- Constants ---------------------------------------------------------- */
 #define FMSP_LINK_INDEX_PLAYBACK    ( 0 )
