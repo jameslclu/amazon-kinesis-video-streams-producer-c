@@ -54,26 +54,26 @@ list(APPEND player_inc
     player)
 
 list(APPEND oryx_src
-        oryx/OryxStreaming.cpp)
+    oryx/OryxStreaming.cpp)
 
 list(APPEND oryx_inc
-        /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include
-        oryx)
+    /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include
+    oryx)
 
 list(APPEND cv28_inc
-        /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/kvs/inc
-        ${oryx_inc}
+    /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/kvs/inc
+    ${oryx_inc}
 )
 
 list(APPEND SDK_ROOT
-        ./..
+    ./..
 )
 
 list(APPEND sdk_src
-        ${KVS_COMMON_SOURCE_FILES_BASE}
-        ${KVS_COMMON_SOURCE_FILES_LWS}
-        ${KVS_COMMON_SOURCE_FILES_CURL}
-        ${PRODUCER_C_SOURCE_FILES}
+    ${KVS_COMMON_SOURCE_FILES_BASE}
+    ${KVS_COMMON_SOURCE_FILES_LWS}
+    ${KVS_COMMON_SOURCE_FILES_CURL}
+    ${PRODUCER_C_SOURCE_FILES}
 )
 
 list(APPEND sdk_inc
@@ -109,7 +109,6 @@ PUBLIC
     ${player_inc}
 #			/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/src/include
 #			/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug
-#           ${cv28_inc}
     ${sdk_inc}
 )
 
