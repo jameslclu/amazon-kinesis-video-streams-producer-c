@@ -395,7 +395,6 @@ static PVOID PCAVFrameThread(PVOID args) {
             vframe.index++;
             fileIndex = (fileIndex + 1) % NUMBER_OF_VIDEO_FRAME_FILES;
             vframe.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
-
             aframe.presentationTs += SAMPLE_VIDEO_FRAME_DURATION;
             aframe.decodingTs = aframe.presentationTs;
             aframe.index++;
