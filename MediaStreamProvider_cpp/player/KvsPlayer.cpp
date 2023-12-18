@@ -7,11 +7,6 @@
 #include "am_export_if.h"
 #include "../pc/AllPCStructures.h"
 static PCSampleCustomData sPCSampleCustomData;
-//volatile ATOMIC_BOOL firstVideoFramePut = false;
-//UINT64 streamStartTime;
-//UINT64 streamStopTime;
-//DOUBLE startUpLatency;
-//UINT64 startTime = GETTIME();
 MediaStreamConfig sEventConfig = {.serviceType = EVENT};
 MediaStreamConfig sManualConfig = {.serviceType = MANUAL};
 
@@ -251,7 +246,6 @@ static PVOID deviceVideoThread(PVOID args) {
     return 0;
 }
 
-
 static PVOID PCAudioFrameThread(PVOID args) {
     STATUS status;
     UINT64 pts = 0;
@@ -279,7 +273,7 @@ static PVOID PCAudioFrameThread(PVOID args) {
         MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine: firstVideoFramePut = true");
         firstVideoFramePut = true;
 #endif
-        if (data->firstVideoFramePut) {
+        if (ATOMIC_LOAD_BOOL(&data->firstVideoFramePut)) {
             ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetAudioFrame(&frame.frameData, &frame.size, &pts);
             status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutAudioFrame(&frame);
             if (STATUS_FAILED(status)) {
@@ -292,7 +286,6 @@ static PVOID PCAudioFrameThread(PVOID args) {
             frame.presentationTs += SAMPLE_AUDIO_FRAME_DURATION;
             frame.decodingTs = frame.presentationTs;
             frame.index++;
-            frame.flags =  frame.index % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
 
             // synchronize putKinesisVideoFrame to running time
             runningTime = GETTIME() - data->streamStartTime;
@@ -315,23 +308,13 @@ static PVOID PCVideoFrameThread(PVOID args) {
     UINT64 runningTime;
     UINT32 fileIndex = 0;
     double startUpLatency;
-    ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
     frame.version = FRAME_CURRENT_VERSION;
     frame.trackId = DEFAULT_VIDEO_TRACK_ID;
-
-#ifdef CONFIG_VIDEO_AUDIO_BOTH
-    // Confirmed
-    frame.duration = 0;
-#else
-    // Confirmed
-    frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
-#endif
-
     frame.duration = 0;
     frame.decodingTs = 0;
     frame.presentationTs = 0;
     frame.index = 0;
-    frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
+    frame.flags = FRAME_FLAG_KEY_FRAME;
     MLogger::LOG(Level::DEBUG, "PCVideoFrameThread: +");
     ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
 
@@ -339,8 +322,8 @@ static PVOID PCVideoFrameThread(PVOID args) {
         status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER)->PutVideoFrame(&frame);
 
         if (data->firstFrame) {
-            startUpLatency = (DOUBLE) (GETTIME() - data->startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
-            DLOGD("Start up latency: %lf ms", startUpLatency);
+            //startUpLatency = (DOUBLE) (GETTIME() - data->startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
+            //DLOGD("Start up latency: %lf ms", startUpLatency);
             data->firstFrame = false;
         } else if (frame.flags == FRAME_FLAG_KEY_FRAME) {
             // generate an image and notification event at the start of the video stream.
@@ -364,7 +347,7 @@ static PVOID PCVideoFrameThread(PVOID args) {
         frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
         ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
 
-        runningTime = GETTIME() - data->streamStartTime;;
+        runningTime = GETTIME() - data->streamStartTime;
         if (runningTime < frame.presentationTs) {
             // reduce sleep time a little for smoother video
             THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
@@ -448,6 +431,8 @@ static PVOID PCAVFrameThread(PVOID args) {
 
 static TID audioSendTid, videoSendTid, avSendTid, aSendTid, vSendTid;
 int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
+    UINT64 streamStopTime = GETTIME() + DEFAULT_STREAM_DURATION;
+
     ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
 
     if (method.m_data.find("pc") !=std::string::npos ) {
@@ -455,7 +440,7 @@ int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
         ATOMIC_STORE_BOOL(&sPCSampleCustomData.firstVideoFramePut, FALSE);
         sPCSampleCustomData.startTime = GETTIME();
         sPCSampleCustomData.firstFrame = TRUE;
-        sPCSampleCustomData.streamStopTime =  GETTIME() + DEFAULT_STREAM_DURATION;
+        sPCSampleCustomData.streamStopTime =  streamStopTime;
         sPCSampleCustomData.streamStartTime = GETTIME();
         ATOMIC_STORE_BOOL(&sPCSampleCustomData.firstVideoFramePut, FALSE);
     }
