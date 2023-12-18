@@ -202,13 +202,23 @@ INT32 main(INT32 argc, CHAR* argv[])
 
     data.startTime = GETTIME();
     data.firstFrame = TRUE;
+    // Production Server
+    PCHAR pIotCoreCredentialEndPoint = "cj6efcl5h1wjt.credentials.iot.ca-central-1.amazonaws.com";
+    PCHAR pIotCoreCert = "/media/sf_workspaces/kvs_files/production/cert";
+    PCHAR pIotCorePrivateKey = "/media/sf_workspaces/kvs_files/production/privkey";
+    PCHAR pCaCert = "/media/sf_workspaces/kvs_files/production/rootca.pem";
+    PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
+    PCHAR pThingName = "SH20-manualStream-db-B813329BC042";
+    PCHAR pRegion = "ca-central-1";
+    /*
     PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
-    PCHAR pIotCoreCert = "/tmp/cert";
-    PCHAR pIotCorePrivateKey = "/tmp/privkey";
-    PCHAR pCaCert = "/tmp/rootca.pem";
+    PCHAR pIotCoreCert = "/media/sf_workspaces/kvs_files/cert";
+    PCHAR pIotCorePrivateKey = "/media/sf_workspaces/kvs_files/privkey";
+    PCHAR pCaCert = "/media/sf_workspaces/kvs_files/rootca.pem";
     PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
     PCHAR pThingName = "db-B813329BB08C";
     PCHAR pRegion = "ca-central-1";
+     */
     CHK_STATUS(createDefaultCallbacksProviderWithIotCertificate(
                 pIotCoreCredentialEndPoint,
                 pIotCoreCert,
@@ -220,8 +230,8 @@ INT32 main(INT32 argc, CHAR* argv[])
                 NULL,
                 NULL,
                 &pClientCallbacks));
-    //CHK_STATUS(createDefaultCallbacksProviderWithAwsCredentials(accessKey, secretKey, sessionToken, MAX_UINT64, region, cacertPath, NULL, NULL,
-    //                                                            &pClientCallbacks));
+    CHK_STATUS(createDefaultCallbacksProviderWithAwsCredentials(accessKey, secretKey, sessionToken, MAX_UINT64, region, cacertPath, NULL, NULL,
+                                                                &pClientCallbacks));
 
     if (NULL != getenv(ENABLE_FILE_LOGGING)) {
         if ((retStatus = addFileLoggerPlatformCallbacksProvider(pClientCallbacks, FILE_LOGGING_BUFFER_SIZE, MAX_NUMBER_OF_LOG_FILES,
