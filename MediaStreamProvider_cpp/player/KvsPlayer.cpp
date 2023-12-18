@@ -7,11 +7,11 @@
 #include "am_export_if.h"
 #include "../pc/AllPCStructures.h"
 static PCSampleCustomData sPCSampleCustomData;
-volatile ATOMIC_BOOL firstVideoFramePut = false;
-UINT64 streamStartTime;
-UINT64 streamStopTime;
-DOUBLE startUpLatency;
-UINT64 startTime = GETTIME();
+//volatile ATOMIC_BOOL firstVideoFramePut = false;
+//UINT64 streamStartTime;
+//UINT64 streamStopTime;
+//DOUBLE startUpLatency;
+//UINT64 startTime = GETTIME();
 MediaStreamConfig sEventConfig = {.serviceType = EVENT};
 MediaStreamConfig sManualConfig = {.serviceType = MANUAL};
 
@@ -251,10 +251,12 @@ static PVOID deviceVideoThread(PVOID args) {
     return 0;
 }
 
+
 static PVOID PCAudioFrameThread(PVOID args) {
     STATUS status;
     UINT64 pts = 0;
     static Frame frame;
+    PPCSampleCustomData data = (PPCSampleCustomData) args;
     frame.version = FRAME_CURRENT_VERSION;
 #ifdef CONFIG_AUDIO_ONLY
     frame.trackId = DEFAULT_AUDIO_ONLY_TRACK_ID;
@@ -272,12 +274,12 @@ static PVOID PCAudioFrameThread(PVOID args) {
 #endif
     UINT64 runningTime;
     MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine: +");
-    while( GETTIME() < streamStopTime) {
+    while( GETTIME() < data->streamStopTime) {
 #ifdef CONFIG_AUDIO_ONLY
         MLogger::LOG(Level::DEBUG, "putAudioFrameRoutine: firstVideoFramePut = true");
         firstVideoFramePut = true;
 #endif
-        if (firstVideoFramePut) {
+        if (data->firstVideoFramePut) {
             ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetAudioFrame(&frame.frameData, &frame.size, &pts);
             status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutAudioFrame(&frame);
             if (STATUS_FAILED(status)) {
@@ -293,7 +295,7 @@ static PVOID PCAudioFrameThread(PVOID args) {
             frame.flags =  frame.index % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
 
             // synchronize putKinesisVideoFrame to running time
-            runningTime = GETTIME() - streamStartTime;
+            runningTime = GETTIME() - data->streamStartTime;
             if (runningTime < frame.presentationTs) {
                 THREAD_SLEEP(frame.presentationTs - runningTime);
             }
@@ -308,95 +310,174 @@ static PVOID PCAudioFrameThread(PVOID args) {
 static PVOID PCVideoFrameThread(PVOID args) {
     STATUS status;
     UINT64 pts = 0;
+    PPCSampleCustomData data = (PPCSampleCustomData) args;
     static Frame frame;
     UINT64 runningTime;
     UINT32 fileIndex = 0;
+    double startUpLatency;
     ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
     frame.version = FRAME_CURRENT_VERSION;
     frame.trackId = DEFAULT_VIDEO_TRACK_ID;
+
 #ifdef CONFIG_VIDEO_AUDIO_BOTH
     // Confirmed
-    frame.duration = 0;
-#else
-#ifdef CONFIG_AUDIO_ONLY
     frame.duration = 0;
 #else
     // Confirmed
     frame.duration = HUNDREDS_OF_NANOS_IN_A_SECOND / DEFAULT_FPS_VALUE;
 #endif
-#endif
+
+    frame.duration = 0;
     frame.decodingTs = 0;
     frame.presentationTs = 0;
     frame.index = 0;
-    uint32_t frameID = 0;
     frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
-    MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: +");
+    MLogger::LOG(Level::DEBUG, "PCVideoFrameThread: +");
+    ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
 
-    while (GETTIME() < streamStopTime) {
+    while (GETTIME() < data->streamStopTime) {
         status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER)->PutVideoFrame(&frame);
-        //status = ComponentProvider::GetInstance()->GetKvsRender(EMPTY)->PutVideoFrame(&frame);
 
-        if (STATUS_SUCCEEDED(status)) {
-            //MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame, (index=%d), status = 0x%08x", frameID, status);
-        } else {
-            MLogger::LOG(Level::ERROR, "putKinesisVideoFrame, (index=%d), status = 0x%08x", frame.index, status);
-        }
-        if (!firstVideoFramePut) {
-            startUpLatency = (DOUBLE) (GETTIME() - startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
+        if (data->firstFrame) {
+            startUpLatency = (DOUBLE) (GETTIME() - data->startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
             DLOGD("Start up latency: %lf ms", startUpLatency);
-            firstVideoFramePut = true;
+            data->firstFrame = false;
         } else if (frame.flags == FRAME_FLAG_KEY_FRAME) {
             // generate an image and notification event at the start of the video stream.
             //putKinesisVideoEventMetadata(streamHandle, STREAM_EVENT_TYPE_NOTIFICATION | STREAM_EVENT_TYPE_IMAGE_GENERATION, NULL);
             //MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: FirstKeyFrarme: ");
             // only push this once in this sample. A customer may use this whenever it is necessary though
         }
+        ATOMIC_STORE_BOOL(&data->firstVideoFramePut, TRUE);
+
+        if (STATUS_SUCCEEDED(status)) {
+            //MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame, (index=%d), status = 0x%08x", frameID, status);
+        } else {
+            MLogger::LOG(Level::ERROR, "putKinesisVideoFrame, (index=%d), status = 0x%08x", frame.index, status);
+        }
 
         frame.presentationTs += SAMPLE_VIDEO_FRAME_DURATION;
         frame.decodingTs = frame.presentationTs;
         frame.index++;
 
-        frame.flags = frame.index % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
-#ifdef CV28_BUILD
-        ComponentProvider::GetInstance()->GetStreamSource(ORYX)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
-#else
+        fileIndex = (fileIndex + 1) % NUMBER_OF_VIDEO_FRAME_FILES;
+        frame.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
         ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
-#endif
 
-        runningTime = GETTIME() - streamStartTime;
+        runningTime = GETTIME() - data->streamStartTime;;
         if (runningTime < frame.presentationTs) {
             // reduce sleep time a little for smoother video
             THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
         }
     }
-    MLogger::LOG(Level::DEBUG, "putVideoFrameRoutine: -");
+    MLogger::LOG(Level::DEBUG, "PCVideoFrameThread: -");
+    return 0;
+}
+
+static PVOID PCAVFrameThread(PVOID args) {
+    STATUS status;
+    UINT64 pts = 0;
+    PPCSampleCustomData data = (PPCSampleCustomData) args;
+    static Frame aframe;
+    static Frame vframe;
+    UINT64 runningTime;
+    UINT32 fileIndex = 0;
+
+    MLogger::LOG(Level::DEBUG, "PCAVFrameThread: +");
+    while (GETTIME() < data->streamStopTime) {
+        ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&vframe.frameData, &vframe.size, &pts);
+        ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetAudioFrame(&aframe.frameData, &aframe.size, &pts);
+        if (data->firstFrame) {
+            // Init vFrame
+            vframe.version = FRAME_CURRENT_VERSION;
+            vframe.trackId = DEFAULT_VIDEO_TRACK_ID;
+            vframe.duration = 0;
+            vframe.decodingTs = 0;
+            vframe.presentationTs = 0;
+            vframe.index = 0;
+            vframe.flags = FRAME_FLAG_KEY_FRAME;
+
+            // Init aFrame
+            aframe.version = FRAME_CURRENT_VERSION;
+            aframe.trackId = DEFAULT_AUDIO_TRACK_ID;
+            aframe.duration = 0;
+            aframe.decodingTs = 0;
+            aframe.presentationTs = 0;
+            aframe.index = 0;
+
+            data->firstFrame = false;
+        } else {
+            vframe.presentationTs += SAMPLE_VIDEO_FRAME_DURATION;
+            vframe.decodingTs = vframe.presentationTs;
+            vframe.index++;
+            fileIndex = (fileIndex + 1) % NUMBER_OF_VIDEO_FRAME_FILES;
+            vframe.flags = fileIndex % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;
+
+            aframe.presentationTs += SAMPLE_VIDEO_FRAME_DURATION;
+            aframe.decodingTs = aframe.presentationTs;
+            aframe.index++;
+        }
+        status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER)->PutVideoFrame(&vframe);
+        //status = putKinesisVideoFrame(*sPStreamHandle, &vframe);
+        if (!STATUS_SUCCEEDED(status)) {
+            MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: Video: status=0x%08x", status);
+        } else {
+            MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: Video: status=0x%08x", status);
+        }
+        ATOMIC_STORE_BOOL(&data->firstVideoFramePut, TRUE);
+
+        //status = putKinesisVideoFrame(*sPStreamHandle, &aframe);
+        status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER)->PutAudioFrame(&aframe);
+        if (!STATUS_SUCCEEDED(status)) {
+            MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: Audio: status=0x%08x", status);
+        } else {
+            MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: Audio: status=0x%08x", status);
+        }
+
+        // synchronize putKinesisVideoFrame to running time
+        runningTime = GETTIME() - data->streamStartTime;
+        if (runningTime < vframe.presentationTs) {
+            // reduce sleep time a little for smoother video
+            THREAD_SLEEP((vframe.presentationTs - runningTime) * 0.9);
+        }
+
+    }
+    MLogger::LOG(Level::DEBUG, "PCAVFrameThread: -");
     return 0;
 }
 
 static TID audioSendTid, videoSendTid, avSendTid, aSendTid, vSendTid;
 int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
-    startTime = GETTIME();
-    streamStartTime = GETTIME();
-    streamStopTime = streamStartTime + DEFAULT_STREAM_DURATION;
-
     ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
 
-    if (method.m_method.find("pc") !=std::string::npos ) {
+    if (method.m_data.find("pc") !=std::string::npos ) {
         MEMSET(&sPCSampleCustomData, 0x00, SIZEOF(PCSampleCustomData));
         ATOMIC_STORE_BOOL(&sPCSampleCustomData.firstVideoFramePut, FALSE);
         sPCSampleCustomData.startTime = GETTIME();
         sPCSampleCustomData.firstFrame = TRUE;
-        sPCSampleCustomData.streamStopTime = streamStopTime;
-        //sPCSampleCustomData.streamHandle = streamHandle;
+        sPCSampleCustomData.streamStopTime =  GETTIME() + DEFAULT_STREAM_DURATION;
         sPCSampleCustomData.streamStartTime = GETTIME();
+        ATOMIC_STORE_BOOL(&sPCSampleCustomData.firstVideoFramePut, FALSE);
     }
 
-    if ("Start" == method.m_method && "pc" == method.m_data) {
+    if ("Start" == method.m_method && "pc-v" == method.m_data) {
         THREAD_CREATE(&vSendTid, PCVideoFrameThread, &sPCSampleCustomData);
         THREAD_JOIN(vSendTid, nullptr);
     } else if ("Start" == method.m_method && "pc-av" == method.m_data) {
-        THREAD_CREATE(&avSendTid, PCAVFrameThread, &sPCSampleCustomData);
-        THREAD_JOIN(avSendTid, nullptr);
+        switch (sAVCONFIG) {
+            case AV_CONFIG::IN_A_THREAD:
+                THREAD_CREATE(&avSendTid, PCAVFrameThread, &sPCSampleCustomData);
+                THREAD_JOIN(avSendTid, nullptr);
+                break;
+            case AV_CONFIG::IN_TWO_THREADS:
+                THREAD_CREATE(&vSendTid, PCVideoFrameThread, &sPCSampleCustomData);
+                THREAD_CREATE(&aSendTid, PCAudioFrameThread, &sPCSampleCustomData);
+                THREAD_JOIN(vSendTid, nullptr);
+                THREAD_JOIN(aSendTid, nullptr);
+                break;
+            default:
+                break;
+        }
     } else if ("Start" == method.m_method) {
         // ToDo: Parse parameter to choose one item among
         // AV concurrency

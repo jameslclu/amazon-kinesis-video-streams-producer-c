@@ -364,7 +364,7 @@ STATUS StreamCB_StreamErrorReportFunc(UINT64, STREAM_HANDLE, UPLOAD_HANDLE, UINT
 
 STATUS StreamCB_FragmentAckReceivedFunc(UINT64, STREAM_HANDLE, UPLOAD_HANDLE, PFragmentAck) {
     MLogger::LOG(Level::DEBUG, "StreamCB-onFragmentAckReceivedFunc");
-    static bool sent = false;
+    static bool sent = true;
     if (!sent) {
         StreamEventMetadata Meta{STREAM_EVENT_METADATA_CURRENT_VERSION, NULL, 1, {}, {}};
         CHAR tagName1[10] = {'\0'};

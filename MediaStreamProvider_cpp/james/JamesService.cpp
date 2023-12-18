@@ -59,7 +59,7 @@ int JamesService::cmd2(std::string const &str, std::string &result) {
 int JamesService::HandleAsyncMethod(const MethodItem& method) {
     if ("cmd1" == method.m_method) {
         MLogger::LOG(Level::DEBUG, "JamesService::HandleAsyncMethod:cmd1: -> sKvsPlayer.Start");
-        sKvsPlayer.Start("pc");
+        sKvsPlayer.Start("pc-av");
         MLogger::LOG(Level::DEBUG, "JamesService::HandleAsyncMethod:cmd1: <- sKvsPlayer.Start");
         //sFakePlayer.Start();
     } else if ("cmd2" == method.m_method) {
