@@ -5,7 +5,8 @@ static IStreamSource* psFakeStreamSource = nullptr;
 static IStreamSource* psOryxStreamSource = nullptr;
 
 static IKVSRender* psEMPTYRender = nullptr;
-static IKVSRender* psAwsProducer = nullptr;
+static IKVSRender* psAwsProducer_eventstream = nullptr;
+static IKVSRender* psAwsProducer_manualstream = nullptr;
 
 ComponentProvider::ComponentProvider() {}
 
@@ -44,8 +45,10 @@ int ComponentProvider::SetKvsRender(RenderType type, IKVSRender *pKvsPlayer) {
     int result = 0;
     if (type == RenderType::EMPTY) {
         psEMPTYRender = pKvsPlayer;
-    } else if (type == RenderType::AWSPRODUCER) {
-        psAwsProducer = pKvsPlayer;
+    } else if (type == RenderType::AWSPRODUCER_EVENTSTREAM) {
+        psAwsProducer_eventstream = pKvsPlayer;
+    } else if (type == RenderType::AWSPRODUCER_MANUALSTERAM) {
+        psAwsProducer_manualstream = pKvsPlayer;
     } else {
         result = 1;
     }
@@ -55,8 +58,10 @@ int ComponentProvider::SetKvsRender(RenderType type, IKVSRender *pKvsPlayer) {
 IKVSRender* ComponentProvider::GetKvsRender(RenderType type) {
     if (type == RenderType::EMPTY) {
         return psEMPTYRender;
-    } else if (type == RenderType::AWSPRODUCER) {
-        return psAwsProducer;
+    } else if (type == RenderType::AWSPRODUCER_MANUALSTERAM) {
+        return psAwsProducer_manualstream;
+    } else if (type == RenderType::AWSPRODUCER_EVENTSTREAM) {
+        return psAwsProducer_eventstream;
     } else {
         return nullptr;
     }

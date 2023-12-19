@@ -56,8 +56,6 @@ static PVOID deviceAVPlayThread(PVOID args) {
 
 //#ifdef CV28_BUILD
     AMExportPacket packet;
-    AMExportPacket aPacket;
-    AMExportPacket vPacket;
     MLogger::LOG(Level::DEBUG, "KvsPlayer::deviceAVPlayThread: +");
     while(true) {
 #ifdef CONFIG_AV_IN_ONE_SOURCE
@@ -70,7 +68,7 @@ static PVOID deviceAVPlayThread(PVOID args) {
 
             if (sManualConfig.start_pts != 0 && packet.pts >= sManualConfig.start_pts)
             {
-                ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)
+                ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER_MANUALSTERAM)
                     ->KvsProducerPutFrameRoutine(&sManualConfig, &packet);
             }
             ComponentProvider::GetInstance()->GetStreamSource(ORYX)->ReleaseAVFrame(&packet);
@@ -96,36 +94,6 @@ static PVOID deviceAVPlayThread(PVOID args) {
 #endif
     }
     MLogger::LOG(Level::DEBUG, "KvsPlayer::deviceAVPlayThread: -");
-//#endif
-
-    //MLogger::LOG(Level::DEBUG, "putAVFrameRoutine: +");
-
-    //while (GETTIME() < streamStopTime) {
-        //status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutVideoFrame(&frame);
-        //if (!firstVideoFramePut) {
-        //    startUpLatency = (DOUBLE) (GETTIME() - startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
-        //    DLOGD("Start up latency: %lf ms", startUpLatency);
-        //    firstVideoFramePut = true;
-        //}
-        //if (firstPTSSetted == false) {
-        //    firstVideoPTS = pts;
-        //    firstPTSSetted = true;
-        //}
-        //frame.presentationTs = (pts - firstVideoPTS) * 111;
-        //frame.decodingTs = frame.presentationTs;
-        //frame.index++;
-
-        //frame.flags = frame.index % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;;
-        //ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
-
-        //runningTime = GETTIME() - streamStartTime;
-        //if (runningTime < frame.presentationTs) {
-//            THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
-//        }
-//        frameID++;
-//    }
-    MLogger::LOG(Level::DEBUG, "deviceAVPlayThread: -");
-    //return ;
 }
 
 static PVOID deviceAudioThread(PVOID args) {
@@ -147,52 +115,21 @@ static PVOID deviceAudioThread(PVOID args) {
     MLogger::LOG(Level::DEBUG, "KvsPlayer::putAFrameRoutine: +");
     while(true) {
         if (ComponentProvider::GetInstance()->GetStreamSource(ORYX)->GetAFrame(&aPacket) == 0) {
-            ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)
+            ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER_MANUALSTERAM)
                 ->KvsProducerPutFrameRoutine(&sManualConfig, &aPacket);
         } else {
             MLogger::LOG(Level::ERROR, "KvsPlayer::GetAFrame: ERROR");
         }
         ComponentProvider::GetInstance()->GetStreamSource(ORYX)->ReleaseAFrame(&aPacket);
     }
-    MLogger::LOG(Level::DEBUG, "KvsPlayer::putAFrameRoutine: -");
-    //#endif
-
-    //MLogger::LOG(Level::DEBUG, "putAVFrameRoutine: +");
-
-    //while (GETTIME() < streamStopTime) {
-    //status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutVideoFrame(&frame);
-    //if (!firstVideoFramePut) {
-    //    startUpLatency = (DOUBLE) (GETTIME() - startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
-    //    DLOGD("Start up latency: %lf ms", startUpLatency);
-    //    firstVideoFramePut = true;
-    //}
-    //if (firstPTSSetted == false) {
-    //    firstVideoPTS = pts;
-    //    firstPTSSetted = true;
-    //}
-    //frame.presentationTs = (pts - firstVideoPTS) * 111;
-    //frame.decodingTs = frame.presentationTs;
-    //frame.index++;
-
-    //frame.flags = frame.index % DEFAULT_KEY_FRAME_INTERVAL == 0 ? FRAME_FLAG_KEY_FRAME : FRAME_FLAG_NONE;;
-    //ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
-
-    //runningTime = GETTIME() - streamStartTime;
-    //if (runningTime < frame.presentationTs) {
-    //            THREAD_SLEEP((frame.presentationTs - runningTime) * 0.9);
-    //        }
-    //        frameID++;
-    //    }
-    MLogger::LOG(Level::DEBUG, "putAVFrameRoutine: -");
-    return 0;
 }
 
 static PVOID deviceVideoThread(PVOID args) {
-    STATUS status;
-    UINT64 pts = 0;
+    //STATUS status;
+    //UINT64 pts = 0;
     static Frame vFrame, aFrame;
-    UINT64 runningTime;
-    UINT32 fileIndex = 0;
+    //UINT64 runningTime;
+    //UINT32 fileIndex = 0;
     sManualConfig.start_vpts = get_current_pts();
     sManualConfig.vFrame.version = FRAME_CURRENT_VERSION;
     sManualConfig.vFrame.trackId = DEFAULT_VIDEO_TRACK_ID;
@@ -206,7 +143,7 @@ static PVOID deviceVideoThread(PVOID args) {
     MLogger::LOG(Level::DEBUG, "KvsPlayer::putVFrameRoutine: +");
     while(true) {
         if (ComponentProvider::GetInstance()->GetStreamSource(ORYX)->GetVFrame(&vPacket) == 0) {
-            ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)
+            ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER_MANUALSTERAM)
                 ->KvsProducerPutFrameRoutine(&sManualConfig, &vPacket);
         } else {
             MLogger::LOG(Level::ERROR, "KvsPlayer::GetVFrame: ERROR");
@@ -275,7 +212,7 @@ static PVOID PCAudioFrameThread(PVOID args) {
 #endif
         if (ATOMIC_LOAD_BOOL(&data->firstVideoFramePut)) {
             ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetAudioFrame(&frame.frameData, &frame.size, &pts);
-            status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->PutAudioFrame(&frame);
+            status = ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER_MANUALSTERAM)->PutAudioFrame(&frame);
             if (STATUS_FAILED(status)) {
                 //printf("putKinesisVideoFrame for audio failed with 0x%08x\n", status);
                 MLogger::LOG(Level::ERROR, "putAudioFrameRoutine, (index=%d), status = 0x%08x", frame.index, status);
@@ -319,7 +256,7 @@ static PVOID PCVideoFrameThread(PVOID args) {
     ComponentProvider::GetInstance()->GetStreamSource(FAKE)->GetVideoFrame(&frame.frameData, &frame.size, &pts);
 
     while (GETTIME() < data->streamStopTime) {
-        status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER)->PutVideoFrame(&frame);
+        status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER_MANUALSTERAM)->PutVideoFrame(&frame);
 
         if (data->firstFrame) {
             //startUpLatency = (DOUBLE) (GETTIME() - data->startTime) / (DOUBLE) HUNDREDS_OF_NANOS_IN_A_MILLISECOND;
@@ -399,7 +336,7 @@ static PVOID PCAVFrameThread(PVOID args) {
             aframe.decodingTs = aframe.presentationTs;
             aframe.index++;
         }
-        status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER)->PutVideoFrame(&vframe);
+        status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER_MANUALSTERAM)->PutVideoFrame(&vframe);
         //status = putKinesisVideoFrame(*sPStreamHandle, &vframe);
         if (!STATUS_SUCCEEDED(status)) {
             MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: Video: status=0x%08x", status);
@@ -409,7 +346,7 @@ static PVOID PCAVFrameThread(PVOID args) {
         ATOMIC_STORE_BOOL(&data->firstVideoFramePut, TRUE);
 
         //status = putKinesisVideoFrame(*sPStreamHandle, &aframe);
-        status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER)->PutAudioFrame(&aframe);
+        status = ComponentProvider::GetInstance()->GetKvsRender(AWSPRODUCER_MANUALSTERAM)->PutAudioFrame(&aframe);
         if (!STATUS_SUCCEEDED(status)) {
             MLogger::LOG(Level::DEBUG, "putKinesisVideoFrame: Audio: status=0x%08x", status);
         } else {
@@ -432,7 +369,8 @@ static TID audioSendTid, videoSendTid, avSendTid, aSendTid, vSendTid;
 int KvsPlayer::HandleAsyncMethod(const MethodItem& method) {
     UINT64 streamStopTime = GETTIME() + DEFAULT_STREAM_DURATION;
 
-    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseInit();
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER_MANUALSTERAM)->BaseInit();
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER_EVENTSTREAM)->BaseInit();
 
     if (method.m_data.find("pc") !=std::string::npos ) {
         MEMSET(&sPCSampleCustomData, 0x00, SIZEOF(PCSampleCustomData));
@@ -520,7 +458,8 @@ int KvsPlayer::Pause() {
 }
 
 int KvsPlayer::Stop() {
-    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER)->BaseDeinit();
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER_MANUALSTERAM)->BaseDeinit();
+    ComponentProvider::GetInstance()->GetKvsRender(RenderType::AWSPRODUCER_EVENTSTREAM)->BaseDeinit();
     return 0;
 }
 //======================================================

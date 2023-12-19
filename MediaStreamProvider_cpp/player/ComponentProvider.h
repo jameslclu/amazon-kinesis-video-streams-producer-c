@@ -5,12 +5,14 @@
 
 enum StreamSourceType {
     FAKE,
-    ORYX
+    ORYX,
+    ORYX_WITHBUFFER
 };
 
 enum RenderType {
     EMPTY = 0,
-    AWSPRODUCER = 1
+    AWSPRODUCER_EVENTSTREAM = 1,
+    AWSPRODUCER_MANUALSTERAM = 2
 };
 
 class ComponentProvider {

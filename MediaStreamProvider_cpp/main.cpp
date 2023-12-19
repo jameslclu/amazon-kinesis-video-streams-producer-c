@@ -62,9 +62,11 @@ int main() {
 
     int retStatus;
 
-    KvsProducer mKvsProducer;
+    KvsProducer mKvsProducer_eventstream;
+    KvsProducer mKvsProducer_manualstream;
     //mKvsProducer.Init();
-    ComponentProvider::GetInstance()->SetKvsRender(AWSPRODUCER, &mKvsProducer);
+    ComponentProvider::GetInstance()->SetKvsRender(AWSPRODUCER_EVENTSTREAM, &mKvsProducer_eventstream);
+    ComponentProvider::GetInstance()->SetKvsRender(AWSPRODUCER_MANUALSTERAM, &mKvsProducer_manualstream);
 
     SampleProducer mSampleProducer;
     ComponentProvider::GetInstance()->SetKvsRender(EMPTY, &mSampleProducer);
