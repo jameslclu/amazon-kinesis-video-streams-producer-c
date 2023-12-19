@@ -50,16 +50,16 @@ static AMIExportClient *spAClient = nullptr; ///< Pointer to the AMI Export clie
 static AMIExportClient *spVClient = nullptr; ///< Pointer to the AMI Export client.
 
 static AMExportConfig sAVconfig;             ///< Configuration for AMI Export.
-static AMExportConfig sAconfig;             ///< Configuration for AMI Export.
-static AMExportConfig sVconfig;             ///< Configuration for AMI Export.
+//static AMExportConfig sAconfig;             ///< Configuration for AMI Export.
+//static AMExportConfig sVconfig;             ///< Configuration for AMI Export.
 
 void OryxStreamingDestroy( void );
-int32_t OryxStreamingVideoCreate( void );
-int32_t OryxStreamingAudioCreate( void );
+//int32_t OryxStreamingVideoCreate( void );
+//int32_t OryxStreamingAudioCreate( void );
 int32_t OryxStreamingAVCreate( void );
-int32_t OryxStreamingACreate( void );
-int32_t OryxStreamingVCreate( void );
-int32_t OryxStreamingCreate( void );
+//int32_t OryxStreamingACreate( void );
+//int32_t OryxStreamingVCreate( void );
+//int32_t OryxStreamingCreate( void );
 
 int32_t OryxStreamingGetLiveAudioFrame( FmspFramePlaybackInfo_u * pInfo );
 int32_t OryxStreamingGetLiveVideoFrame( FmspFramePlaybackInfo_u * pInfo );
@@ -201,146 +201,8 @@ static FmspConfig_t gVConfig;
 static FmspConfig_t gVideoConfig;
 static FmspConfig_t gAudioConfig;
 
-/* ---- Global Functions --------------------------------------------------- */
-
 /* ----------------------------------------------------------- */
-int32_t OryxStreamingAudioCreate( void )
-{
-    FMSPSystemLink_t * p;
-    int32_t Index = FMSP_LINK_INDEX_LIVEVIEW;
 
-    std::string url = "/run/oryx/export.socket";
-    int32_t  retStatus;
-    printf( "[Media Provider][Audio] KvsStreamingAudioCreate: +\n");
-
-    //for( Index = 0; Index < FMSP_LINK_INDEX_MAX; Index++ )
-    //{
-    p = &gAudioConfig.Link[ Index ];
-
-    retStatus = EXIT_SUCCESS;
-
-    p->Client           = nullptr;
-    p->Config.video_map = 0x0; /*!< 0x01: Stream 1 / 0x02: Stream 2 ... */
-    p->Config.audio_map = 1LL << 10; /*!< 48K / AAC */
-    printf( "[Media Provider][Audio] KvsStreamingAudioCreate: 1\n");
-    if( FMSP_LINK_INDEX_PLAYBACK == Index )
-        p->Config.client_max_queue_size = 1024;
-    else
-        p->Config.client_max_queue_size = 0;
-    //printf( "[Media Provider][Audio] KvsStreamingAudioCreate: 2\n");
-    p->Client = AMIExportClient::create( &p->Config );
-    //printf( "[Media Provider][Audio] KvsStreamingAudioCreate: 3\n");
-    if( nullptr == p->Client )
-    {
-        printf( "[Media Provider][Audio] nullptr == p->Client\n");
-        retStatus = EXIT_FAILURE;
-        OryxStreamingDestroy();
-    }
-    else
-    {
-        printf( "[Media Provider][Audio] KvsStreamingAudioCreate: 2\n");
-        retStatus = p->Client->connect_server( url.c_str() );
-        if( 0 != retStatus )
-        {
-            printf( "[Media Provider][Audio] Connect media server failed, return code = %d\n", retStatus );
-            retStatus = EXIT_FAILURE;
-        }
-    }
-    //}
-
-    printf( "[Media Provider][Audio] KvsStreamingAudioCreate: -\n");
-    p = NULL;
-
-    return retStatus;
-}
-int32_t OryxStreamingVideoCreate( void )
-{
-    FMSPSystemLink_t * p;
-    int32_t Index = FMSP_LINK_INDEX_LIVEVIEW;
-
-    std::string url = "/run/oryx/export.socket";
-    int32_t  retStatus;
-    //for( Index = 0; Index < FMSP_LINK_INDEX_MAX; Index++ )
-    {
-        Index = FMSP_LINK_INDEX_LIVEVIEW;
-        p = &gVideoConfig.Link[ FMSP_LINK_INDEX_LIVEVIEW ];
-
-        retStatus = EXIT_SUCCESS;
-
-        p->Client           = nullptr;
-        p->Config.video_map = 0x1; /*!< 0x01: Stream 1 / 0x02: Stream 2 ... */
-        p->Config.audio_map = 0;
-        if( FMSP_LINK_INDEX_PLAYBACK == Index )
-            p->Config.client_max_queue_size = 1024;
-        else
-            p->Config.client_max_queue_size = 0;
-
-        p->Client = AMIExportClient::create( &p->Config );
-
-        if( nullptr == p->Client )
-        {
-            retStatus = EXIT_FAILURE;
-            OryxStreamingDestroy();
-        }
-        else
-        {
-            retStatus = p->Client->connect_server( url.c_str() );
-            if( 0 != retStatus )
-            {
-                printf( "[Media Provider] Connect media server failed, return code = %d\n", retStatus );
-                retStatus = EXIT_FAILURE;
-            }
-        }
-    }
-
-    p = NULL;
-    printf( "[Media Provider][Video] KvsStreamingVideoCreate, return code = %d\n", retStatus );
-    return retStatus;
-}
-int32_t OryxStreamingCreate( void )
-{
-    FMSPSystemLink_t * p;
-    int32_t Index;
-
-    std::string url = "/run/oryx/export.socket";
-    int32_t  retStatus;
-
-    for( Index = 0; Index < FMSP_LINK_INDEX_MAX; Index++ )
-    {
-        p = &gConfig.Link[ Index ];
-
-        retStatus = EXIT_SUCCESS;
-
-        p->Client           = nullptr;
-        p->Config.video_map = 0x1; /*!< 0x01: Stream 1 / 0x02: Stream 2 ... */
-        p->Config.audio_map = 1LL << 10; /*!< 48K / AAC */
-        if( FMSP_LINK_INDEX_PLAYBACK == Index )
-            p->Config.client_max_queue_size = 1024;
-        else
-            p->Config.client_max_queue_size = 0;
-
-        p->Client = AMIExportClient::create( &p->Config );
-
-        if( nullptr == p->Client )
-        {
-            retStatus = EXIT_FAILURE;
-            OryxStreamingDestroy();
-        }
-        else
-        {
-            retStatus = p->Client->connect_server( url.c_str() );
-            if( 0 != retStatus )
-            {
-                printf( "[Media Provider] Connect media server failed, return code = %d\n", retStatus );
-                retStatus = EXIT_FAILURE;
-            }
-        }
-    }
-
-    p = NULL;
-
-    return retStatus;
-}
 int32_t OryxStreamingAVCreate( void )
 {
     printf( "[Media Provider] OryxStreamingAVCreate: +\n");
@@ -375,14 +237,15 @@ int32_t OryxStreamingAVCreate( void )
     printf( "[Media Provider] OryxStreamingAVCreate: -\n");
     return retStatus;
 }
+/*
 int32_t OryxStreamingACreate( void )
 {
     printf( "[Media Provider] OryxStreamingAVCreate: +\n");
     std::string url = "/run/oryx/export.socket";
     int32_t  retStatus;
 
-    sAconfig.video_map = 0; /*!< 0x01: Stream 1 / 0x02: Stream 2 ... */
-    sAconfig.audio_map = 1LL << 10; /*!< 48K / AAC */
+    sAconfig.video_map = 0; //*!< 0x01: Stream 1 / 0x02: Stream 2 ...
+    sAconfig.audio_map = 1LL << 10; //*!< 48K / AAC
     sAconfig.client_max_queue_size = 0;
     printf( "[Media Provider] OryxStreamingAVCreate: 1\n");
     spAClient = AMIExportClient::create(&sAconfig);
@@ -409,14 +272,15 @@ int32_t OryxStreamingACreate( void )
     printf( "[Media Provider] OryxStreamingAVCreate: -\n");
     return retStatus;
 }
-
+*/
+/*
 int32_t OryxStreamingVCreate( void )
 {
     printf( "[Media Provider] OryxStreamingVCreate: +\n");
     std::string url = "/run/oryx/export.socket";
     int32_t  retStatus;
-    sVconfig.video_map = 1; /*!< 0x01: Stream 1 / 0x02: Stream 2 ... */
-    sVconfig.audio_map = 0;//1LL << 10; /*!< 48K / AAC */
+    sVconfig.video_map = 1; //*!< 0x01: Stream 1 / 0x02: Stream 2 ...
+    sVconfig.audio_map = 0;//1LL << 10; /*!< 48K / AAC
     sVconfig.client_max_queue_size = 0;
     printf( "[Media Provider] OryxStreamingVCreate: 1\n");
     spVClient = AMIExportClient::create(&sVconfig);
@@ -443,7 +307,7 @@ int32_t OryxStreamingVCreate( void )
     printf( "[Media Provider] OryxStreamingVCreate: -\n");
     return retStatus;
 }
-
+*/
 /* ----------------------------------------------------------- */
 void OryxStreamingDestroy( void )
 {
@@ -648,3 +512,143 @@ int32_t OryxStreamingGetLiveFrame( FmspFramePlaybackInfo_u * pInfo )
 
     return ( ( 0 == retStatus ) ? EXIT_SUCCESS : EXIT_FAILURE );
 }
+
+/*
+int32_t OryxStreamingAudioCreate( void )
+{
+    FMSPSystemLink_t * p;
+    int32_t Index = FMSP_LINK_INDEX_LIVEVIEW;
+
+std::string url = "/run/oryx/export.socket";
+int32_t  retStatus;
+printf( "[Media Provider][Audio] KvsStreamingAudioCreate: +\n");
+
+//for( Index = 0; Index < FMSP_LINK_INDEX_MAX; Index++ )
+//{
+p = &gAudioConfig.Link[ Index ];
+
+retStatus = EXIT_SUCCESS;
+
+p->Client           = nullptr;
+p->Config.video_map = 0x0; //!< 0x01: Stream 1 / 0x02: Stream 2 ...
+p->Config.audio_map = 1LL << 10; //*!< 48K / AAC
+printf( "[Media Provider][Audio] KvsStreamingAudioCreate: 1\n");
+if( FMSP_LINK_INDEX_PLAYBACK == Index )
+    p->Config.client_max_queue_size = 1024;
+else
+    p->Config.client_max_queue_size = 0;
+//printf( "[Media Provider][Audio] KvsStreamingAudioCreate: 2\n");
+p->Client = AMIExportClient::create( &p->Config );
+//printf( "[Media Provider][Audio] KvsStreamingAudioCreate: 3\n");
+if( nullptr == p->Client )
+{
+    printf( "[Media Provider][Audio] nullptr == p->Client\n");
+    retStatus = EXIT_FAILURE;
+    OryxStreamingDestroy();
+}
+else
+{
+    printf( "[Media Provider][Audio] KvsStreamingAudioCreate: 2\n");
+    retStatus = p->Client->connect_server( url.c_str() );
+    if( 0 != retStatus )
+    {
+        printf( "[Media Provider][Audio] Connect media server failed, return code = %d\n", retStatus );
+        retStatus = EXIT_FAILURE;
+    }
+}
+//}
+
+printf( "[Media Provider][Audio] KvsStreamingAudioCreate: -\n");
+p = NULL;
+
+return retStatus;
+}
+int32_t OryxStreamingVideoCreate( void )
+{
+    FMSPSystemLink_t * p;
+    int32_t Index = FMSP_LINK_INDEX_LIVEVIEW;
+
+    std::string url = "/run/oryx/export.socket";
+    int32_t  retStatus;
+    //for( Index = 0; Index < FMSP_LINK_INDEX_MAX; Index++ )
+    {
+        Index = FMSP_LINK_INDEX_LIVEVIEW;
+        p = &gVideoConfig.Link[ FMSP_LINK_INDEX_LIVEVIEW ];
+
+        retStatus = EXIT_SUCCESS;
+
+        p->Client           = nullptr;
+        p->Config.video_map = 0x1; //!< 0x01: Stream 1 / 0x02: Stream 2 ...
+        p->Config.audio_map = 0;
+        if( FMSP_LINK_INDEX_PLAYBACK == Index )
+            p->Config.client_max_queue_size = 1024;
+        else
+            p->Config.client_max_queue_size = 0;
+
+        p->Client = AMIExportClient::create( &p->Config );
+
+        if( nullptr == p->Client )
+        {
+            retStatus = EXIT_FAILURE;
+            OryxStreamingDestroy();
+        }
+        else
+        {
+            retStatus = p->Client->connect_server( url.c_str() );
+            if( 0 != retStatus )
+            {
+                printf( "[Media Provider] Connect media server failed, return code = %d\n", retStatus );
+                retStatus = EXIT_FAILURE;
+            }
+        }
+    }
+
+    p = NULL;
+    printf( "[Media Provider][Video] KvsStreamingVideoCreate, return code = %d\n", retStatus );
+    return retStatus;
+}
+int32_t OryxStreamingCreate( void )
+{
+    FMSPSystemLink_t * p;
+    int32_t Index;
+
+    std::string url = "/run/oryx/export.socket";
+    int32_t  retStatus;
+
+    for( Index = 0; Index < FMSP_LINK_INDEX_MAX; Index++ )
+    {
+        p = &gConfig.Link[ Index ];
+
+        retStatus = EXIT_SUCCESS;
+
+        p->Client           = nullptr;
+        p->Config.video_map = 0x1; //!< 0x01: Stream 1 / 0x02: Stream 2 ...
+        p->Config.audio_map = 1LL << 10; //!< 48K / AAC
+        if( FMSP_LINK_INDEX_PLAYBACK == Index )
+            p->Config.client_max_queue_size = 1024;
+        else
+            p->Config.client_max_queue_size = 0;
+
+        p->Client = AMIExportClient::create( &p->Config );
+
+        if( nullptr == p->Client )
+        {
+            retStatus = EXIT_FAILURE;
+            OryxStreamingDestroy();
+        }
+        else
+        {
+            retStatus = p->Client->connect_server( url.c_str() );
+            if( 0 != retStatus )
+            {
+                printf( "[Media Provider] Connect media server failed, return code = %d\n", retStatus );
+                retStatus = EXIT_FAILURE;
+            }
+        }
+    }
+
+    p = NULL;
+
+    return retStatus;
+}
+*/
