@@ -71,10 +71,12 @@ void KvsProducer::KvsProducerPutFrameRoutine(MediaStreamConfig *streamConfig, AM
                                           (packet->frame_type == AM_VIDEO_FRAME_TYPE_I))
                 ? FRAME_FLAG_KEY_FRAME
                 : FRAME_FLAG_NONE;
+            if (FRAME_FLAG_KEY_FRAME == streamConfig->vFrame.flags) {
+                printf("AM_EXPORT_PACKET_TYPE_VIDEO_DATA::   FRAME_FLAG_KEY_FRAME\n");
+            }
             streamConfig->vFrame.frameData = packet->data_ptr;
             streamConfig->vFrame.size = packet->data_size;
 
-            // printf("vcurr pts:%ld video pts:%ld ,keyFrame:%d ,size:%d\n", get_current_pts(),vFrame.presentationTs/100,vFrame.flags,vFrame.size);
             if (*sPStreamHandle == INVALID_STREAM_HANDLE_VALUE)
             {
                 printf("stream_handle is invalid in put video fram\n");
@@ -439,7 +441,7 @@ STATUS StreamCB_FreeStreamCallbacksFunc(PUINT64) {
     return STATUS_SUCCESS;
 }
 
-int KvsProducer::Init2() {
+int KvsProducer::Init() {
     mSettings.Init();
     // Step: 0
     //auto start = std::chrono::high_resolution_clock::now();
@@ -524,7 +526,7 @@ int KvsProducer::Init2() {
     return 0;
 }
 
-int KvsProducer::Init() {
+int KvsProducer::Init2() {
     mSettings.Init();
     // Step: 0
     auto start = std::chrono::high_resolution_clock::now();

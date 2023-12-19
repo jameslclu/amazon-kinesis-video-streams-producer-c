@@ -20,7 +20,7 @@ int Settings::GetString(Setting id, std::string &str) {
     int result = 0;
     switch (id) {
         case STREAM_NAME:
-            str = "SH20-eventStream-db-B813329BB08C";
+            str = "SH20-manualStream-db-B813329BB08C";
             break;
         case END_POINT:
             str = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";

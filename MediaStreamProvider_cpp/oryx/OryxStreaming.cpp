@@ -349,7 +349,7 @@ int32_t OryxStreamingAVCreate( void )
 
     sAVconfig.video_map = 1; /*!< 0x01: Stream 1 / 0x02: Stream 2 ... */
     sAVconfig.audio_map = 1LL << 10; /*!< 48K / AAC */
-    sAVconfig.client_max_queue_size = 0;
+    sAVconfig.client_max_queue_size = 1024;
     printf( "[Media Provider] OryxStreamingAVCreate: 1\n");
     spAVClient = AMIExportClient::create(&sAVconfig);
 
