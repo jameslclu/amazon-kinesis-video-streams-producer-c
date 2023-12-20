@@ -5,37 +5,21 @@
 #include <com/amazonaws/kinesis/video/cproducer/Include.h>
 
 #include "KvsServiceConfig.h"
-#include "SampleStreamSource.h"
+#include "StreamSource.h"
 #include "AllInterfaces.h"
-#include "Settings.h"
-
-class KvsProducer: public IKVSRender {
+class KvsProducer: public IKvsRender {
 public:
     KvsProducer();
     virtual ~KvsProducer();
-    int SetDataSource(SampleStreamSource* psource);
+    int SetDataSource(StreamSource* psource);
     int StartUpload();
     int SetHandler(STREAM_HANDLE* handler);
     int Init();
-    int Init2();
     int Deinit();
     int SetStreamName(PCHAR name);
     virtual int BaseInit();
     virtual int BaseDeinit();
-    virtual STATUS PutVideoFrame(PFrame pFrame);
-    virtual STATUS PutAudioFrame(PFrame pFrame);
-    virtual STATUS PutAVFrame(PFrame pFrame);
-    virtual void KvsProducerPutFrameRoutine(MediaStreamConfig *streamConfig, AMExportPacket *packet);
-  private:
-    std::string mStreamName;
-    std::string mIotCoreCredentialEndPoint;
-    std::string mIotCoreCert;
-    std::string mIotCorePrivateKey;
-    std::string mCaCert;
-    std::string mIotCoreRoleAlias;
-    std::string mThingName;
-    std::string mRegion;
-    Settings mSettings;
+    virtual STATUS PutVideoFrame(STREAM_HANDLE streamHandle, PFrame pFrame);
 };
 
 #endif // KVSAUDIOVIDEOSTREAMINGSAMPLE_KVSPRODUCER_H

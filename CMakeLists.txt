@@ -345,9 +345,9 @@ if(BUILD_COMMON_CURL)
             ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSample.c)
     target_link_libraries(kvsAudioVideoStreamingSample cproducer)
 
-#    add_executable(kvsAudioVideoStreamingSampleNew
-#            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSampleNew.c)
-#    target_link_libraries(kvsAudioVideoStreamingSampleNew cproducer)
+    add_executable(kvsAudioVideoStreamingSampleNew
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsAudioVideoStreamingSampleNew.c)
+    target_link_libraries(kvsAudioVideoStreamingSampleNew cproducer)
 
 #    add_executable(kvsProducerService
 #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp)
@@ -368,33 +368,33 @@ if(BUILD_COMMON_CURL)
     pkg_check_modules(GIO_UNIX REQUIRED IMPORTED_TARGET gio-unix-2.0)
     pkg_check_modules(JSONCPP REQUIRED jsoncpp)
 
-#    add_executable(kvsProducerService
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/JsonUtility.cpp
-    ##            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/MethodQueue.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/ServiceBase.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsProducer.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/StreamSource.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsPlayer.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsService.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceStub.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceProxy.cpp
-    #            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/ComponentProvider.cpp
-    #            samples/src/KvsPlayer.cpp)
+    add_executable(kvsProducerService
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/KvsProducerService.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/JsonUtility.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/MethodQueue.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/common/ServiceBase.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsProducer.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/StreamSource.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsPlayer.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsService.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceStub.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/KvsServiceProxy.cpp
+            ${KINESIS_VIDEO_PRODUCER_C_SRC}/samples/src/ComponentProvider.cpp
+            samples/src/KvsPlayer.cpp)
 
-    #target_include_directories(kvsProducerService
-    #            PUBLIC
-    #            ${GIO_INCLUDE_DIRS}
-    #            ${GLIB_INCLUDE_DIRS}
-    #            ${GIO_UNIX_INCLUDE_DIRS}
-    #            ${JSONCPP_INCLUDE_DIRS})
+    target_include_directories(kvsProducerService
+            PUBLIC
+            ${GIO_INCLUDE_DIRS}
+            ${GLIB_INCLUDE_DIRS}
+            ${GIO_UNIX_INCLUDE_DIRS}
+            ${JSONCPP_INCLUDE_DIRS})
 
-    #target_link_libraries(kvsProducerService
-    #            PUBLIC ${GIO_LIBRARIES}
-    #            ${GLIB_LIBRARIES}
-    #        ${GIO_UNIX_LIBRARIES}
-    #            ${JSONCPP_LIBRARIES}
-    #       cproducer)
+    target_link_libraries(kvsProducerService
+            PUBLIC ${GIO_LIBRARIES}
+            ${GLIB_LIBRARIES}
+            ${GIO_UNIX_LIBRARIES}
+            ${JSONCPP_LIBRARIES}
+            cproducer)
 
     if (BUILD_TEST)
         add_subdirectory(tst)
@@ -413,50 +413,41 @@ if(BUILD_COMMON_CURL)
     #set(kvsproducer_libs
     #        -L${PREBUILD_OSS_DIR}/glib2/usr/lib/ -lgio-2.0
     #)
-    #----
     list(APPEND common_src
             ${fxnMediaStreamProvider_root}/common/JsonUtility.cpp
             ${fxnMediaStreamProvider_root}/common/MethodQueue.cpp
             ${fxnMediaStreamProvider_root}/common/ServiceBase.cpp
             ${fxnMediaStreamProvider_root}/common/MLogger.cpp)
 
-    list(APPEND oryx_inc
-            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include/stream
-            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include/utility
-            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/application/auto/demo/amba_dvr
-            /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include )
-
     list(APPEND common_inc
             ${fxnMediaStreamProvider_root}/common)
-    # {
-        list(APPEND james_src
+
+    list(APPEND james_src
             ${fxnMediaStreamProvider_root}/james/JamesService.cpp
             ${fxnMediaStreamProvider_root}/james/JamesServiceStub.cpp)
 
-        list(APPEND james_inc
+    list(APPEND james_inc
             ${fxnMediaStreamProvider_root}/james)
-    # }
+
     list(APPEND player_src
             ${fxnMediaStreamProvider_root}/player/ComponentProvider.cpp
             ${fxnMediaStreamProvider_root}/player/KvsPlayer.cpp
-            ${fxnMediaStreamProvider_root}/player/Settings.cpp
             ${fxnMediaStreamProvider_root}/player/KvsProducer.cpp)
 
     list(APPEND player_inc
             ${fxnMediaStreamProvider_root}/player)
-    #
+
     list(APPEND oryx_src
             ${fxnMediaStreamProvider_root}/oryx/OryxStreaming.cpp)
 
     list(APPEND oryx_inc
             /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/oryx_v2/include
             ${fxnMediaStreamProvider_root}/oryx)
-    #
+
     list(APPEND cv28_inc
             /home/jh/camera/AmbaCV28_3012/cv28_linux_sdk_3.0/ambarella/vendor/aws/kvs/inc
             ${oryx_inc}
     )
-    #
 
     list(APPEND SDK_ROOT
             ./..
@@ -491,7 +482,6 @@ if(BUILD_COMMON_CURL)
             ${JSONCPP_INCLUDE_DIRS}
             ${common_inc}
             ${james_inc}
-            ${oryx_inc}
             ${player_inc}
             #           ${cv28_inc}
     )
@@ -505,6 +495,7 @@ if(BUILD_COMMON_CURL)
             cproducer
             #-L/home/jh/workspaces/aws/amazon-kinesis-video-streams-producer-c/cmake-build-debug/ -lcproducer
             -lpthread -lm)
+
 endif()
 
 #add_subdirectory(kvsservice)

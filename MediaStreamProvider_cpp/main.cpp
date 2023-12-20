@@ -1,102 +1,69 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include <signal.h>
+#include <unistd.h>
 #include <json-c/json.h>
 
+//#include "LibFxnDBus.h"
+//#include "LibFxnUtils.h"
+
+//#include "FmspCommon.h"
 #ifdef CV28_BUILD
-#include "FmspServer.h"
-#include "OryxStreaming.h"
-#include "player/KvsProducer.h"
+//#include "FmspServer.h"
+//#include "OryxStreaming.h"
 #endif
 #include "inc/FmspConfig.h"
 #include "common/MLogger.h"
 #include "james/JamesService.h"
 #include "james/JamesServiceStub.h"
 #include "player/ComponentProvider.h"
-#include "player/SampleStreamSource.h"
-#include "KvsProducer.h"
-#include "oryx/OryxStreaming.h"
-#include "SampleProducer.h"
-
-JamesServiceStub* sp_ServiceStub;
-
-static void signalHandler(int signal) {
-    switch (signal) {
-        case SIGINT:
-        case SIGQUIT:
-        case SIGKILL:
-        case SIGTERM:
-            if (sp_ServiceStub != nullptr) {
-                (void) sp_ServiceStub->Interrupt(1);
-            }
-            break;
-        default:
-            break;
-    }
-}
-#ifdef CV28_BUILD
-int main2() {
-    (void)MLogger::Instance().Init("MSProvider", "/data/tmp/middleware", "msprovider", 0, 10);
-    MLogger::Instance().SetPrintLevel(Level::DEBUG);
-    SampleProducer mSampleProducer;
-    ComponentProvider::GetInstance()->SetKvsRender(EMPTY, &mSampleProducer);
-
-    OryxStreaming oryxStreaming;
-    oryxStreaming.Init();
-    static Frame frame;
-    for (int i=0; i<3; i++) {
-        int status = oryxStreaming.GetVideoFrame(&frame.frameData, &frame.size, &frame.presentationTs);
-        MLogger::LOG(Level::DEBUG, "GetVideoFrame: ret=%d", status);
-    }
-    (void)MLogger::Instance().Deinit();
-    return 0;
-}
-#endif
+#include "player/StreamSource.h"
 
 int main() {
     (void)MLogger::Instance().Init("MSProvider", "/data/tmp/middleware", "msprovider", 0, 10);
     MLogger::Instance().SetPrintLevel(Level::DEBUG);
-
-    (void)signal(SIGINT, signalHandler);
-    (void)signal(SIGQUIT, signalHandler);
-    (void)signal(SIGKILL, signalHandler);
-    (void)signal(SIGTERM, signalHandler);
-
     int retStatus;
-
-    KvsProducer mKvsProducer_eventstream;
-    KvsProducer mKvsProducer_manualstream;
-    //mKvsProducer.Init();
-    ComponentProvider::GetInstance()->SetKvsRender(AWSPRODUCER_EVENTSTREAM, &mKvsProducer_eventstream);
-    ComponentProvider::GetInstance()->SetKvsRender(AWSPRODUCER_MANUALSTERAM, &mKvsProducer_manualstream);
-
-    SampleProducer mSampleProducer;
-    ComponentProvider::GetInstance()->SetKvsRender(EMPTY, &mSampleProducer);
-
-    SampleStreamSource mSampleStreamSource;
-    mSampleStreamSource.SetDataSource("/home/camera/kvs/samples");
-    mSampleStreamSource.Init();
-    ComponentProvider::GetInstance()->SetStreamSource(FAKE, &mSampleStreamSource);
+    StreamSource mStreamSource;
+    mStreamSource.SetDataSource("/home/camera/kvs/samples");
+    mStreamSource.Init();
+    MLogger::LOG(Level::INFO, "main: 1");
+    ComponentProvider::GetInstance()->SetStreamSource(FAKE, &mStreamSource);
 
     retStatus = EXIT_FAILURE;
     JamesService service;
     JamesServiceStub serviceStub(&service);
-    sp_ServiceStub = &serviceStub;
+    MLogger::LOG(Level::INFO, "main: 2");
+    //if( LIB_UTILS_PROGRAM_ALREADY_EXECUTE ==
+    //  LibUtilProgramIsExecute( FXN_PROGRAM_NAME ) )
+    //  FXNLOGD( "%s Already Execute ..", FXN_PROGRAM_NAME );
+    //else
+    //{
+        //LibUtilSystemSignalReg( &LibDBusClientLoopTerminate );
 
+    //( void )LibUtilInit();
+    //( void )LibUtilHWTimerOpen();
+
+    //LibDBusClientInit();
 #ifdef CV28_BUILD
-    OryxStreaming mOryxStreaming;
-    mOryxStreaming.Init();
-    ComponentProvider::GetInstance()->SetStreamSource(ORYX, &mOryxStreaming);
+    retStatus = OryxStreamingCreate();
 #endif
+    MLogger::LOG(Level::INFO, "main: 3");
+    //}
 
 //    if( EXIT_SUCCESS == retStatus ) {
 //        retStatus = FmspServerCreate();
 //    }
 
+    //if( EXIT_SUCCESS == retStatus ) {
+    //    LibDBusClientLoop();
+    // }
     service.Init();
-    MLogger::LOG(Level::INFO, "main: service stub init 2");
+    //MLogger::LOG(Level::INFO, "main: 4");
     serviceStub.Init();
     //MLogger::LOG(Level::INFO, "main: 5");
 #ifdef CV28_BUILD
-    //FmspServerDestroy();
+    FmspServerDestroy();
 #endif
     //OryxStreamingDestroy();
 

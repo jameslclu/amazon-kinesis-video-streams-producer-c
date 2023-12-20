@@ -8,7 +8,7 @@
 
 STREAM_HANDLE mStreamHandle = INVALID_STREAM_HANDLE_VALUE;
 int main() {
-    SampleStreamSource mStreamSource;
+    StreamSource mStreamSource;
     KvsProducer mKvsProducer;
 
     // StreamSource Init
@@ -22,8 +22,7 @@ int main() {
         mKvsProducer.SetStreamName(streamName);
 
         mKvsProducer.SetHandler(&mStreamHandle);
-        mKvsProducer.Init();
-
+        //mKvsProducer.Init();
         mStreamSource.SetHandler(mStreamHandle);
 
         ATOMIC_STORE_BOOL(&mStreamSource.firstVideoFramePut, FALSE);

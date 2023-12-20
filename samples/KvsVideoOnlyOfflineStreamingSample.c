@@ -120,15 +120,6 @@ INT32 main(INT32 argc, CHAR* argv[])
 
     startTime = GETTIME();
 
-    // Production Server
-//    PCHAR pIotCoreCredentialEndPoint = "cj6efcl5h1wjt.credentials.iot.ca-central-1.amazonaws.com";
-//    PCHAR pIotCoreCert = "/media/sf_workspaces/kvs_files/production/cert";
-//    PCHAR pIotCorePrivateKey = "/media/sf_workspaces/kvs_files/production/privkey";
-//    PCHAR pCaCert = "/media/sf_workspaces/kvs_files/production/rootca.pem";
-//    PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
-//    PCHAR pThingName = "db-B813329BC042";
-//    PCHAR pRegion = "ca-central-1";
-
     PCHAR pIotCoreCredentialEndPoint = "cne66nccv56pg.credentials.iot.ca-central-1.amazonaws.com";
     PCHAR pIotCoreCert = "/media/sf_workspaces/kvs_files/cert";
     PCHAR pIotCorePrivateKey = "/media/sf_workspaces/kvs_files/privkey";
@@ -136,7 +127,6 @@ INT32 main(INT32 argc, CHAR* argv[])
     PCHAR pIotCoreRoleAlias = "KvsCameraIoTRoleAlias";
     PCHAR pThingName = "db-B813329BB08C";
     PCHAR pRegion = "ca-central-1";
-
     CHK_STATUS(createDefaultCallbacksProviderWithIotCertificate(
         pIotCoreCredentialEndPoint,
         pIotCoreCert,
