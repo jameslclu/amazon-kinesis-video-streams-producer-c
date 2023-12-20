@@ -441,11 +441,11 @@ STATUS StreamCB_FreeStreamCallbacksFunc(PUINT64) {
     return STATUS_SUCCESS;
 }
 
-int KvsProducer::Init() {
+int KvsProducer::Init2() {
     mSettings.Init();
     // Step: 0
     //auto start = std::chrono::high_resolution_clock::now();
-    mSettings.GetString(STREAM_NAME, mStreamName);
+    mSettings.GetString(EVENT_STREAM_NAME, mStreamName);
     mSettings.GetString(END_POINT, mIotCoreCredentialEndPoint);
     mSettings.GetString(CERT_LOCATION, mIotCoreCert);
     mSettings.GetString(KEY_LOCATION, mIotCorePrivateKey);
@@ -513,7 +513,7 @@ int KvsProducer::Init() {
 
     // step 6: addStreamCallbacks();
     status = addStreamCallbacks(pClientCallbacks, pStreamCallbacks);
-    MLogger::LOG(Level::DEBUG, "Init: Add Stream Callbacks: %x, (Duration=%d)", status);
+    MLogger::LOG(Level::DEBUG, "Init: Add Stream Callbacks: %x", status);
 
     // step 7: createKinesisVideoClient();
     status = createKinesisVideoClient(sPDeviceInfo, pClientCallbacks, &clientHandle); // ToDo: Implement the callback functions
@@ -526,11 +526,11 @@ int KvsProducer::Init() {
     return 0;
 }
 
-int KvsProducer::Init2() {
+int KvsProducer::Init() {
     mSettings.Init();
     // Step: 0
     auto start = std::chrono::high_resolution_clock::now();
-    mSettings.GetString(STREAM_NAME, mStreamName);
+    mSettings.GetString(EVENT_STREAM_NAME, mStreamName);
     mSettings.GetString(END_POINT, mIotCoreCredentialEndPoint);
     mSettings.GetString(CERT_LOCATION, mIotCoreCert);
     mSettings.GetString(KEY_LOCATION, mIotCorePrivateKey);

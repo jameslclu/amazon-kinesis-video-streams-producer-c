@@ -3,7 +3,8 @@
 #include <string>
 
 enum Setting {
-    STREAM_NAME,
+    EVENT_STREAM_NAME,
+    MANUAL_STREAM_NAME,
     END_POINT,
     CERT_LOCATION,
     KEY_LOCATION,
